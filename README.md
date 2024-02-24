@@ -1,27 +1,56 @@
 # MessageApp
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.2.1.
+## Descrição
 
-## Development server
+Painel de configuração com manejamento de usuarios e coma determinação de cargos
+Uso de manipulação de mensagens disparadas
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
 
-## Code scaffolding
+## Requisitos
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+> [Git](https://git-scm.com)
 
-## Build
+> [Node.js](https://nodejs.org/dist/v20.11.1/node-v20.11.1-x64.msi) (versão LTS 20.11,inclui npm)
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+## Optional 
+> [Github Desktop](https://desktop.github.com/)
 
-## Running unit tests
+Além disto é bom ter um editor para trabalhar com o código como [VSCode](https://code.visualstudio.com/)
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+> obs: Se estiver utilizando o [VSCode](https://code.visualstudio.com/), baixe as extensões recomendadas
 
-## Running end-to-end tests
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+## 🛠 Tecnologias
 
-## Further help
+As seguintes ferramentas foram usadas na construção do projeto:
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+![Angular](https://img.shields.io/badge/Angular-DD0031?style=for-the-badge&logo=angular&logoColor=white)
+![Nodejs](https://img.shields.io/badge/Nodejs-3C873A?style=for-the-badge&labelColor=black&logo=node.js&logoColor=3C873A)
+![VSCode](https://img.shields.io/badge/Visual_Studio-0078d7?style=for-the-badge&logo=visual%20studio&logoColor=white)
+![Git](https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=git&logoColor=white)
+![Github](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)
+![Firebase](https://img.shields.io/badge/Firebase-039BE5?style=for-the-badge&logo=Firebase&logoColor=white)
+
+### ● [ANGULAR](https://angular.dev/) ● [NODE.JS](https://nodejs.org/pt-br) ● [NPM](https://www.npmjs.com/) ●  [PRIMENG](https://primeng.org/) ●  [PRIMEFLEX](https://primeflex.org/) ● [ FIREBASE ](https://firebase.google.com)
+
+## 🎲 Rodando a aplicação
+
+```bash
+# Clone este repositório
+$ git clone <url> 
+
+# Acesse a pasta do projeto no terminal/cmd
+$ cd message-app
+
+# Instale as dependências
+$ npm install
+
+# Execute a aplicação em modo de desenvolvimento
+$ npm start
+
+# O servidor iniciará na porta:4200 - acesse <http://localhost:4200>
+```
+
+## 🗯️ informações auxiliares
+NVM - NODE VERSION MANEGER
+> [INSTALL NVM](https://github.com/nvm-sh/nvm) 
