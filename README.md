@@ -1,56 +1,46 @@
-# MessageApp
+# Campus Connect
 
-## Descrição
+**Campus Connect** é uma aplicação projetada para facilitar a comunicação entre coordenadores de grupos de cursos e seus discentes em um ambiente universitário. Composta por três componentes principais - uma API, uma interface web e um aplicativo móvel - o **Campus Connect** oferece uma solução abrangente para gerenciar mensagens e notificações.
 
-Painel de configuração com manejamento de usuarios e coma determinação de cargos
-Uso de manipulação de mensagens disparadas
+## Funcionalidades Principais
 
+1. **Mensagens e Notificações**:
+   - Coordenadores podem enviar mensagens importantes para todos os discentes de um grupo específico.
+   - Notificações instantâneas são enviadas para dispositivos móveis dos discentes, garantindo que eles estejam sempre atualizados.
 
-## Requisitos
+2. **Gerenciamento de Grupos**:
+   - Coordenadores podem criar e gerenciar grupos de cursos.
+   - Discentes podem se inscrever em grupos relevantes.
 
-> [Git](https://git-scm.com)
+## Componentes
 
-> [Node.js](https://nodejs.org/dist/v20.11.1/node-v20.11.1-x64.msi) (versão LTS 20.11,inclui npm)
+### 1. API
+A API do **Campus Connect** é responsável por processar solicitações, autenticar usuários e fornecer acesso aos dados. Ela oferece endpoints para:
+   - Autenticação de coordenadores e discentes.
+   - Envio de mensagens e notificações.
+   - Gerenciamento de grupos.
 
-## Optional 
-> [Github Desktop](https://desktop.github.com/)
+### 2. Interface Web
+A interface web é acessada por coordenadores e discentes por meio de um navegador. Ela oferece as seguintes funcionalidades:
+   - Painel de controle para coordenadores gerenciarem grupos e enviar mensagens.
+   - Visualização de mensagens e notificações para discentes.
+   - Perfis personalizados para discentes.
 
-Além disto é bom ter um editor para trabalhar com o código como [VSCode](https://code.visualstudio.com/)
+### 3. Aplicativo Móvel
+O aplicativo móvel **Campus Connect** será disponibilizado para dispositivos iOS e Android. Ele permite que discentes recebam notificações em tempo real e acessem suas mensagens. Funcionalidades incluem:
+   - Recebimento de notificações push.
+   - Navegação fácil entre mensagens.
 
-> obs: Se estiver utilizando o [VSCode](https://code.visualstudio.com/), baixe as extensões recomendadas
+## Configuração
 
+1. Clone repositórios.
+2. Configure a API com as credenciais de banco de dados e autenticação.
+3. Inicie a API, a interface web e o aplicativo móvel.
 
-## 🛠 Tecnologias
+## Equipe
 
-As seguintes ferramentas foram usadas na construção do projeto:
+> - [Taui Silva](https://github.com/tauisilva) 🐲🦄🦕🦖🐳
+> - [Johnatan Santos](https://github.com/Johnatan-Caetano) 👻🦁🦐🦜
+> - [Carla Mariana](https://github.com/TekhneDev) 🦝🦙🐍
 
-![Angular](https://img.shields.io/badge/Angular-DD0031?style=for-the-badge&logo=angular&logoColor=white)
-![Nodejs](https://img.shields.io/badge/Nodejs-3C873A?style=for-the-badge&labelColor=black&logo=node.js&logoColor=3C873A)
-![VSCode](https://img.shields.io/badge/Visual_Studio-0078d7?style=for-the-badge&logo=visual%20studio&logoColor=white)
-![Git](https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=git&logoColor=white)
-![Github](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)
-![Firebase](https://img.shields.io/badge/Firebase-039BE5?style=for-the-badge&logo=Firebase&logoColor=white)
-
-### ● [ANGULAR](https://angular.dev/) ● [NODE.JS](https://nodejs.org/pt-br) ● [NPM](https://www.npmjs.com/) ●  [PRIMENG](https://primeng.org/) ●  [PRIMEFLEX](https://primeflex.org/) ● [ FIREBASE ](https://firebase.google.com)
-
-## 🎲 Rodando a aplicação
-
-```bash
-# Clone este repositório
-$ git clone <url> 
-
-# Acesse a pasta do projeto no terminal/cmd
-$ cd message-app
-
-# Instale as dependências
-$ npm install
-
-# Execute a aplicação em modo de desenvolvimento
-$ npm start
-
-# O servidor iniciará na porta:4200 - acesse <http://localhost:4200>
-```
-
-## 🗯️ informações auxiliares
-NVM - NODE VERSION MANEGER
-> [INSTALL NVM](https://github.com/nvm-sh/nvm) 
+**Campus Connect** é uma ferramenta essencial para coordenadores e discentes se conectarem e compartilharem informações de forma eficiente. Esperamos que esta aplicação torne a experiência universitária mais colaborativa e produtiva! 🎓📱🌟
