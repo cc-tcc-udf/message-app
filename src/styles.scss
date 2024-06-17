@@ -1,1 +1,29 @@
-/* You can add global styles to this file, and also import other style files */
+@import 'primeflex/primeflex.scss';
+@import 'assets/styles/_variables.scss';
+
+@mixin color-scheme($bg, $secundary, $primary, $text_secundary, $text) {
+  background-color: $bg;
+  color: $text;
+
+  button {
+    all: unset;
+    cursor: pointer;
+  }
+
+  button.default {
+    background: $secundary;
+    color: $text_secundary;
+  }
+}
+
+.isDark {
+  @include color-scheme($dark_background, $dark_tertiary, $dark_secondary, $dark_primary, #fff);
+}
+
+.isLight {
+  @include color-scheme(#fafafa, $light_btn, $light_secondary, $light_primary, #000);
+}
+
+body {
+  margin: 0;
+}
