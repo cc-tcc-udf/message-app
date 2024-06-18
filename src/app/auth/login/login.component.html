@@ -1,0 +1,33 @@
+<section class="login h-full">
+  <section class="content h-full">
+    <section class="img">
+      <img src="assets/img/svg/login.svg" alt="">
+    </section>
+    <section class="form">
+      <section class="content">
+        <section class="top">
+          <p class="title">Login</p>
+          <img src="assets/img/logo/white.svg" alt="">
+        </section>
+        <section class="w-full">
+          <form [formGroup]="form">
+            <section class="forms">
+              <div class="flex flex-column gap-2">
+                <label for="username">Email</label>
+                <input pInputText id="username" aria-describedby="username-help" formControlName="email" />
+              </div>
+              <div class="flex flex-column w-full gap-2">
+                <label for="pass">Senha</label>
+                <p-password formControlName="password" [feedback]="false" />
+              </div>
+            </section>
+          </form>
+          <p class="no_user font-light">Ainda não possui contato? <a class="font-bold">Solicitar acesso!</a></p>
+          <section class="btn">
+            <button class="default">Acessar</button>
+          </section>
+        </section>
+      </section>
+    </section>
+  </section>
+</section>

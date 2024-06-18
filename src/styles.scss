@@ -1,5 +1,6 @@
 @import 'primeflex/primeflex.scss';
 @import 'assets/styles/_variables.scss';
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
 
 @mixin color-scheme($bg, $secundary, $primary, $text_secundary, $text) {
   background-color: $bg;
@@ -14,16 +15,24 @@
     background: $secundary;
     color: $text_secundary;
   }
+
+  .auth {
+    .p-divider .p-divider-content {
+      background-color: $bg;
+    }
+  }
 }
 
-.isDark {
+.dark {
   @include color-scheme($dark_background, $dark_tertiary, $dark_secondary, $dark_primary, #fff);
 }
 
-.isLight {
+.light {
   @include color-scheme(#fafafa, $light_btn, $light_secondary, $light_primary, #000);
 }
 
 body {
   margin: 0;
+  font-family: "Inter", sans-serif;
+  font-optical-sizing: auto;
 }

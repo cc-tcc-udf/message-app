@@ -1,6 +1,7 @@
 import { NgClass } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { ThemeService } from './utils/services/theme.service';
 
 @Component({
   selector: 'app-root',
@@ -10,6 +11,6 @@ import { RouterOutlet } from '@angular/router';
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
+  theme = inject(ThemeService);
   title = 'message-app';
-  isDark = true;
 }

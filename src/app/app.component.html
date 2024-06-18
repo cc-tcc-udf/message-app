@@ -1,6 +1,6 @@
-<main class="w-full h-screen" [ngClass]="isDark? 'isDark': 'isLight'">
-  <section class="content w-full h-full flex justify-content-center align-items-center gap-2">
-    <h1> TESTE DE TEMA</h1>
-    <button class="default" (click)="isDark = !isDark">tema</button>
+<main class="w-full h-screen" [ngClass]="theme.getTheme()">
+  <!-- <button class="default" (click)="isDark = !isDark">tema</button> -->
+  <section class="content w-full h-full">
+    <router-outlet></router-outlet>
   </section>
 </main>
