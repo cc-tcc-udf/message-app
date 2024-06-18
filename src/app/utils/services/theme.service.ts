@@ -8,7 +8,7 @@ export class ThemeService {
   constructor() { }
 
   getTheme() {
-    if (typeof window !== 'undefined' && typeof window.sessionStorage !== 'undefined') {
+    if (this.verify()) {
       const exist = this.getLocalValue();
       if (exist) {
         this.setTheme(exist);
@@ -23,6 +23,14 @@ export class ThemeService {
     return localStorage.getItem('theme');
   }
 
+  getLogos() {
+    const value = this.getTheme();
+    if (value === 'light') {
+      return 'dark';
+    }
+    return 'light';
+  }
+
   setThemeNavegador() {
     const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
     const value = isDark ? 'dark' : 'light';
@@ -31,11 +39,15 @@ export class ThemeService {
   }
 
   setTheme(theme: string) {
-    localStorage.setItem('theme', theme);
+    if (this.verify()) {
+      localStorage.setItem('theme', theme);
+    }
   }
 
-
-  // toggleTheme() {
-  //   this.setTheme(this.activeTheme === 'dark' ? 'light' : 'dark');
-  // }
+  verify() {
+    if (typeof window !== 'undefined' && typeof window.sessionStorage !== 'undefined') {
+      return true;
+    }
+    return false;
+  }
 }

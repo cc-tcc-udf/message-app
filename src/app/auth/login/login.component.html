@@ -1,13 +1,14 @@
 <section class="login h-full">
   <section class="content h-full">
     <section class="img">
-      <img src="assets/img/svg/login.svg" alt="">
+      <!-- <img src="assets/img/svg/login.svg" alt=""> -->
+      <img [src]="'assets/img/svg/login_' + theme.getLogos() + '.svg'" alt="">
     </section>
     <section class="form">
       <section class="content">
         <section class="top">
           <p class="title">Login</p>
-          <img src="assets/img/logo/white.svg" alt="">
+          <img [src]="'assets/img/logo/' + theme.getLogos() + '.svg'" alt="">
         </section>
         <section class="w-full">
           <form [formGroup]="form">
@@ -24,7 +25,8 @@
           </form>
           <p class="no_user font-light">Ainda não possui contato? <a class="font-bold">Solicitar acesso!</a></p>
           <section class="btn">
-            <button class="default">Acessar</button>
+            <button class="default" (click)="send()">Acessar</button>
+            <!-- <app-toggle-theme></app-toggle-theme> -->
           </section>
         </section>
       </section>

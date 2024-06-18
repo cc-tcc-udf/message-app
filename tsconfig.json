@@ -19,10 +19,13 @@
     "target": "ES2022",
     "module": "ES2022",
     "useDefineForClassFields": false,
-    "lib": [
-      "ES2022",
-      "dom"
-    ]
+    "lib": ["ES2022", "dom"],
+    "paths": {
+      "@auth/*": ["./src/app/auth/*"],
+      "@components/*": ["./src/app/components/*"],
+      "@layout/*": ["./src/app/layout/*"],
+      "@utils/*": ["./src/app/utils/*"]
+    }
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
