@@ -6,7 +6,7 @@ import { HomeComponent } from './components/home/home.component';
 import { LayoutComponent } from './layout/layout.component';
 
 export const routes: Routes = [
-  // No authenticated
+  // !Authenticated
   {
     path: 'auth', component: AuthComponent, children: [
       { path: 'login', component: LoginComponent }
@@ -20,5 +20,5 @@ export const routes: Routes = [
       { path: 'home', component: HomeComponent }
     ]
   },
-  { path: '**', redirectTo: 'auth/login' }
+  // { path: '**', redirectTo: 'auth/login' }
 ];

@@ -6,7 +6,10 @@ import { ToggleThemeComponent } from '@layout/toolbar/toggle-theme/toggle-theme.
 import { ThemeService } from '@utils/services/theme.service';
 import { InputTextModule } from 'primeng/inputtext';
 
+import { AlertService } from '@utils/services/alert.service';
 import { PasswordModule } from 'primeng/password';
+import { UserResponse } from '../../interfaces/UserResponse';
+import { Usuario } from '../../interfaces/Usuario';
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -25,6 +28,8 @@ export class LoginComponent implements OnInit {
   private router = inject(Router);
   private auth = inject(AuthService);
   public theme = inject(ThemeService);
+  public alert = inject(AlertService);
+
 
   form!: FormGroup;
 
@@ -41,8 +46,41 @@ export class LoginComponent implements OnInit {
   }
 
   send() {
-    console.log(this.form.getRawValue());
-    this.router.navigate(['']);
+    const usr = this.form.getRawValue();
+    this.auth.login(usr as Usuario)
+      .subscribe({
+        next: (res: UserResponse) => {
+          sessionStorage.setItem('access_token', res.token);
+          sessionStorage.setItem('user_email', res.email);
+          this.getUser(res);
+        },
+        error: (error) => {
+          let summary = '';
+          if (error.status >= 400 && error.status < 500) {
+            summary = 'Não autorizado';
+          } else if (error.status >= 500) {
+            summary = 'Erro';
+          }
+          this.alert.showMsg('error', summary, error.error?.message);
+        }
+      })
+  }
+
+  private getUser(usr: UserResponse) {
+    this.auth.getUser(usr)
+      .subscribe({
+        next: (user: Usuario) => {
+          this.alert.showMsg('success', 'Bem vindo', user.name);
+          this.router.navigate(['']);
+        },
+        error: (error) => {
+          this.alert.showMsg(
+            'error',
+            "Erro ao recuperar usuário",
+            error.error?.message
+          );
+        }
+      });
   }
 
   private verify() {

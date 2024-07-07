@@ -1,8 +1,7 @@
 <section class="w-full h-3rem toolbar flex align-items-center justify-content-between">
-  <span class="flex font-light">Bem vindo! <p class="pl-1 font-bold">{{name}}</p>
+  <span class="flex font-light">Bem vindo! <p class="pl-1 font-bold">{{user$?.name}}</p>
   </span>
   <section class="flex align-items-center gap-2">
-    <p>{{getDate()}}</p>
+    <p>{{ getDate() }}</p>
     <app-toggle-theme></app-toggle-theme>
   </section>
-</section>

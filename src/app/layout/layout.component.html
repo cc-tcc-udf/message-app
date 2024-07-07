@@ -1,6 +1,11 @@
 <section class="w-full layout py-3 px-4 h-full">
   <section class="flex flex-column">
     <app-toolbar></app-toolbar>
+    <section class="flex gap-2 justify-content-between">
+      <app-breadcrumb></app-breadcrumb>
+      <!-- <p-speedDial [model]="items" direction="down" transitionDelay="80" showIcon="bi bi-house" hideIcon="pi pi-times"
+        buttonClassName="p-button-outlined" /> -->
+    </section>
     <section class="content">
       <router-outlet></router-outlet>
     </section>

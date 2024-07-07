@@ -1,21 +1,41 @@
 import { DatePipe } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AuthService } from '@auth/auth.service';
+import { Subscription } from 'rxjs';
+import { Usuario } from '../../interfaces/Usuario';
 import { ToggleThemeComponent } from './toggle-theme/toggle-theme.component';
 
 @Component({
   selector: 'app-toolbar',
   standalone: true,
-  imports: [ToggleThemeComponent],
+  imports: [ToggleThemeComponent, DatePipe],
   templateUrl: './toolbar.component.html',
   styleUrl: './toolbar.component.scss'
 })
-export class ToolbarComponent {
-  name: string = "Taui Silva";
+export class ToolbarComponent implements OnInit, OnDestroy {
+  user$!: Usuario | null;
+  private userSubscription: Subscription | undefined;
 
-  constructor(private datePipe: DatePipe) { }
+  constructor(
+    private datePipe: DatePipe,
+    private auth: AuthService
+  ) { }
+
+  ngOnInit() {
+    this.userSubscription = this.auth.user$.subscribe(user => {
+      this.user$ = user;
+    });
+  }
+
+  ngOnDestroy() {
+    if (this.userSubscription) {
+      this.userSubscription.unsubscribe();
+    }
+  }
 
   getDate() {
-    const today = new Date(); // Obter data atual
-    return this.datePipe.transform(today, 'EEEE dd/MM/yyyy'); // Formatar a data
+    const today = new Date();
+    return this.datePipe.transform(today, 'EEEE, dd/MM/yyyy', 'pt-PT');
   }
+
 }

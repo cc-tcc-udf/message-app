@@ -2,26 +2,48 @@
 @import 'assets/styles/_variables.scss';
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
 
-@mixin color-scheme($bg, $secundary, $primary, $text_secundary, $text) {
+@mixin color-scheme($bg, $secondary, $primary, $text_secondary, $text) {
   background-color: $bg;
   color: $text;
+
+  transition: background-color 0.3s ease, color 0.3s ease;
 
   button {
     all: unset;
     cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
 
   button.default {
-    background: $secundary;
-    color: $text_secundary;
+    background: $secondary;
+    color: $text_secondary;
+    transition: background-color 0.3s ease, color 0.3s ease
   }
 
   .auth {
     .p-divider .p-divider-content {
       background-color: $bg;
+      transition: background-color 0.3s ease, color 0.3s ease
     }
   }
+
+  .p-breadcrumb .p-breadcrumb-list li .p-menuitem-link .p-menuitem-icon,
+  .p-breadcrumb .p-breadcrumb-list li.p-menuitem-separator,
+  .p-breadcrumb .p-breadcrumb-list li .p-menuitem-link .p-menuitem-text {
+    color: $text;
+    transition: color 0.3s ease, color 0.3s ease
+  }
 }
+
+.dark {
+  @include color-scheme($dark_background, $dark_tertiary, $dark_secondary, $dark_primary, #fff);
+}
+
+.light {
+  @include color-scheme(#fafafa, $light_btn, $light_secondary, $light_primary, #000);
+}
+
+
 
 .dark {
   @include color-scheme($dark_background, $dark_tertiary, $dark_secondary, $dark_primary, #fff);

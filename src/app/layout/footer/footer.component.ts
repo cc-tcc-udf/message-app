@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { ThemeService } from '@utils/services/theme.service';
 
 @Component({
   selector: 'app-footer',
@@ -8,5 +9,6 @@ import { Component } from '@angular/core';
   styleUrl: './footer.component.scss'
 })
 export class FooterComponent {
+  theme = inject(ThemeService);
 
 }
