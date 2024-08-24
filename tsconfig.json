@@ -22,7 +22,10 @@
     "lib": ["ES2022", "dom"],
     "paths": {
       "@auth/*": ["./src/app/auth/*"],
+      "@assets/*": ["./src/assets/*"],
       "@components/*": ["./src/app/components/*"],
+      "@env/*": ["./src/env/*"],
+      "@models/*": ["./src/app/interfaces/*"],
       "@layout/*": ["./src/app/layout/*"],
       "@utils/*": ["./src/app/utils/*"]
     }

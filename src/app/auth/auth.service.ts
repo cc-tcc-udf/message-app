@@ -1,9 +1,10 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { environment } from '@env/env.prod';
+import { UserResponse } from '@models/UserResponse';
+import { Usuario } from '@models/Usuario';
 import { BehaviorSubject, catchError, map, Observable, tap, throwError } from 'rxjs';
-import { environment } from '../../env/env';
-import { UserResponse } from '../interfaces/UserResponse';
-import { Usuario } from '../interfaces/Usuario';
+
 
 @Injectable({
   providedIn: 'root'

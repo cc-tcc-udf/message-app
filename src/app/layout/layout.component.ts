@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { MenuItem } from 'primeng/api';
-import { SpeedDialModule } from 'primeng/speeddial';
-import { BreadcrumbComponent } from './breadcrumb/breadcrumb.component';
-import { FooterComponent } from './footer/footer.component';
-import { ToolbarComponent } from './toolbar/toolbar.component';
+import { BreadcrumbComponent } from './components/breadcrumb/breadcrumb.component';
+import { FooterComponent } from './components/footer/footer.component';
+import { ToolbarComponent } from './components/toolbar/toolbar.component';
+
 
 @Component({
   selector: 'app-layout',
@@ -13,8 +13,7 @@ import { ToolbarComponent } from './toolbar/toolbar.component';
     BreadcrumbComponent,
     FooterComponent,
     RouterOutlet,
-    ToolbarComponent,
-    SpeedDialModule
+    ToolbarComponent
   ],
   templateUrl: './layout.component.html',
   styleUrl: './layout.component.scss'

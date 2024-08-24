@@ -9,9 +9,9 @@ import { provideAnimations } from '@angular/platform-browser/animations';
 import { HttpInterceptor } from '@utils/http.interceptor';
 import { MessageService } from 'primeng/api';
 import { routes } from './app.routes';
-import { ThemeService } from './utils/services/theme.service';
+import { ThemeService } from '@utils/services/theme.service';
 
-registerLocaleData(localePt, 'pt-BR');
+registerLocaleData(localePt, 'pt');
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -19,10 +19,9 @@ export const appConfig: ApplicationConfig = {
     provideClientHydration(),
     provideAnimations(),
     provideHttpClient(withFetch(), withInterceptors([HttpInterceptor])),
-    { provide: LOCALE_ID, useValue: 'pt-BR' },
+    { provide: LOCALE_ID, useValue: 'pt' },
     ThemeService,
     DatePipe,
-    ThemeService,
     MessageService
   ]
 };

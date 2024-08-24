@@ -1,3 +1,27 @@
 <section class="w-full h-full flex flex-column justify-content-center align-items-center">
   <p class="text-3xl">home works!</p>
 </section>
+<section class="flex">
+  <!-- <table class="table">
+    <thead>
+      <tr>
+        <th *ngFor="let column of columns" scope="col">{{ column.name }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let dado of dataSource">
+        <td *ngFor="let column of columns">
+          <ng-container *ngIf="column.property !== 'actions'; else actionColumn">
+            {{ dado[column.property] }}
+          </ng-container>
+          <ng-template #actionColumn>
+            <button class="btn btn-primary" (click)="editar(dado)">Editar</button>
+            <button class="btn btn-danger" (click)="excluir(dado)">Excluir</button>
+          </ng-template>
+        </td>
+      </tr>
+    </tbody>
+  </table> -->
+
+
+</section>

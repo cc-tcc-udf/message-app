@@ -1,8 +1,8 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AuthService } from '@auth/auth.service';
+import { Usuario } from '@models/Usuario';
 import { Subscription } from 'rxjs';
-import { Usuario } from '../../interfaces/Usuario';
 import { ToggleThemeComponent } from './toggle-theme/toggle-theme.component';
 
 @Component({
@@ -35,7 +35,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
 
   getDate() {
     const today = new Date();
-    return this.datePipe.transform(today, 'EEEE, dd/MM/yyyy', 'pt-PT');
+    return this.datePipe.transform(today, 'EEEE, dd/MM/yyyy', 'pt-BR');
   }
 
 }
