@@ -3,14 +3,25 @@ import { Component, inject, OnInit, ViewEncapsulation } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { BreadcrumbModule } from 'primeng/breadcrumb';
-import { BreadcrumbService } from './breadcrumb.service';
+import { BreadcrumbService } from '../services/breadcrumb.service';
 
 @Component({
   selector: 'app-breadcrumb',
   standalone: true,
   imports: [BreadcrumbModule, NgClass, NgIf, RouterLink],
-  templateUrl: './breadcrumb.component.html',
-  styleUrl: './breadcrumb.component.scss',
+  template: `
+  <section class="w-full flex">
+    <p-breadcrumb class="max-w-full" [model]="items" [home]="home" />
+  </section>
+  `,
+  styles: [`
+  .p-breadcrumb {
+    border-radius: 6px;
+    padding: .5rem 0rem;
+    background: none;
+    border: none;
+  }
+  `],
   encapsulation: ViewEncapsulation.None
 })
 export class BreadcrumbComponent implements OnInit {
@@ -21,6 +32,8 @@ export class BreadcrumbComponent implements OnInit {
 
   ngOnInit() {
     this.home = { icon: 'bi bi-house', routerLink: '/home' };
-    this.items = this.service.getBreadcrumbs();
+    this.service.breadcrumbs$.subscribe(breadcrumbs => {
+      this.items = breadcrumbs;
+    });
   }
 }

@@ -2,13 +2,13 @@ import { Component, OnInit, ViewEncapsulation, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '@auth/auth.service';
-import { ToggleThemeComponent } from '@layout/components/toolbar/toggle-theme/toggle-theme.component';
+import { ToggleThemeComponent } from '@layout/components/toggle-theme.component';
+import { UserResponse } from '@models/UserResponse';
+import { Usuario } from '@models/Usuario';
 import { AlertService } from '@utils/services/alert.service';
 import { ThemeService } from '@utils/services/theme.service';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
-import { UserResponse } from '../../interfaces/UserResponse';
-import { Usuario } from '../../interfaces/Usuario';
 
 @Component({
   selector: 'app-login',

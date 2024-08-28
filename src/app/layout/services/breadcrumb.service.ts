@@ -1,14 +1,15 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { MenuItem } from 'primeng/api';
-import { filter } from 'rxjs';
+import { BehaviorSubject, filter } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class BreadcrumbService {
 
-  private breadcrumbs: MenuItem[] = [];
+  private breadcrumbsSubject = new BehaviorSubject<MenuItem[]>([]);
+  breadcrumbs$ = this.breadcrumbsSubject.asObservable();
 
   constructor(
     private router: Router,
@@ -17,12 +18,9 @@ export class BreadcrumbService {
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe(() => {
-      this.breadcrumbs = this.createBreadcrumbs(this.route.root);
+      const breadcrumbs = this.createBreadcrumbs(this.route.root);
+      this.breadcrumbsSubject.next(breadcrumbs);
     });
-  }
-
-  getBreadcrumbs(): MenuItem[] {
-    return this.breadcrumbs;
   }
 
   private createBreadcrumbs(route: ActivatedRoute, url: string = '', breadcrumbs: MenuItem[] = []): MenuItem[] {

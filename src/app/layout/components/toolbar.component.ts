@@ -3,14 +3,30 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AuthService } from '@auth/auth.service';
 import { Usuario } from '@models/Usuario';
 import { Subscription } from 'rxjs';
-import { ToggleThemeComponent } from './toggle-theme/toggle-theme.component';
+import { ToggleThemeComponent } from './toggle-theme.component';
 
 @Component({
   selector: 'app-toolbar',
   standalone: true,
   imports: [ToggleThemeComponent, DatePipe],
-  templateUrl: './toolbar.component.html',
-  styleUrl: './toolbar.component.scss'
+  template: `
+  <section class="w-full h-3rem toolbar flex align-items-center justify-content-between">
+    <span class="flex font-light">Bem vindo! 
+      <p class="pl-1 font-bold">{{user$?.name}}</p>
+    </span>
+    <section class="flex align-items-center gap-2">
+      <p>{{ getDate() }}</p>
+      <app-toggle-theme></app-toggle-theme>
+    </section>
+  </section>
+  `,
+  styles: [`
+    .toolbar {
+      p {
+        margin: 0;
+      }
+    }
+  `]
 })
 export class ToolbarComponent implements OnInit, OnDestroy {
   user$!: Usuario | null;

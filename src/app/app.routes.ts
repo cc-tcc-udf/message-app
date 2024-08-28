@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { AuthComponent } from '@auth/auth.component';
 import { LoginComponent } from '@auth/login/login.component';
+import { ConfigsComponent } from '@components/configs/configs.component';
 import { HomeComponent } from '@components/home/home.component';
 import { MensageComponent } from '@components/mensage/mensage.component';
 import { LayoutComponent } from '@layout/layout.component';
@@ -19,7 +20,8 @@ export const routes: Routes = [
     children: [
       { path: '', redirectTo: 'home', pathMatch: 'full' },
       { path: 'home', component: HomeComponent, data: { breadcrumb: 'Home' } },
-      { path: 'msg', component: MensageComponent, data: { breadcrumb: 'Mensagem' } }
+      { path: 'msg', component: MensageComponent, data: { breadcrumb: 'Mensagem' } },
+      { path: 'configs', component: ConfigsComponent, data: { breadcrumb: 'Configurações' } },
     ]
   },
   { path: '**', redirectTo: 'auth/login' }

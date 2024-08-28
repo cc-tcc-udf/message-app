@@ -6,8 +6,20 @@ import { ThemeService } from '@utils/services/theme.service';
   selector: 'app-toggle-theme',
   standalone: true,
   imports: [NgClass],
-  templateUrl: './toggle-theme.component.html',
-  styleUrl: './toggle-theme.component.scss'
+  template: `
+  <button class="theme" (click)="toggleDarkMode()">
+    <div class="btn" [ngClass]="{'isDark': isDarkMode}">
+      <div class="btn__indicator">
+        <div class="btn__icon-container">
+          <i class="btn__icon bi"
+            [ngClass]="{ 'bi-moon-stars-fill': isDarkMode, 'bi-brightness-low-fill': !isDarkMode, 'animated': isAnimated }"></i>
+        </div>
+      </div>
+    </div>
+  </button>
+  `,
+  styleUrl: '../layout.component.scss',
+
 })
 export class ToggleThemeComponent implements OnInit {
   private service = inject(ThemeService);
