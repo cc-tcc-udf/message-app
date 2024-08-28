@@ -1,27 +1,28 @@
-<section class="w-full h-full flex flex-column justify-content-center align-items-center">
-  <p class="text-3xl">home works!</p>
-</section>
-<section class="flex">
-  <!-- <table class="table">
-    <thead>
-      <tr>
-        <th *ngFor="let column of columns" scope="col">{{ column.name }}</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let dado of dataSource">
-        <td *ngFor="let column of columns">
-          <ng-container *ngIf="column.property !== 'actions'; else actionColumn">
-            {{ dado[column.property] }}
-          </ng-container>
-          <ng-template #actionColumn>
-            <button class="btn btn-primary" (click)="editar(dado)">Editar</button>
-            <button class="btn btn-danger" (click)="excluir(dado)">Excluir</button>
-          </ng-template>
-        </td>
-      </tr>
-    </tbody>
-  </table> -->
+<section class="flex w-full gap-1">
+  <section class="flex w-full">
+    <div class="card">
+      <p-table [value]="products" [tableStyle]="{ 'min-width': '50rem' }">
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Code</th>
+            <th>Name</th>
+            <th>Category</th>
+            <th>Quantity</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-product>
+          <tr>
+            <td>{{ product.code }}</td>
+            <td>{{ product.name }}</td>
+            <td>{{ product.category }}</td>
+            <td>{{ product.quantity }}</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </section>
+  <section class="">
 
+  </section>
 
 </section>

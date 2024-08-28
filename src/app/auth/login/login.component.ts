@@ -55,13 +55,9 @@ export class LoginComponent implements OnInit {
           this.getUser(res);
         },
         error: (error) => {
-          let summary = '';
-          if (error.status >= 400 && error.status < 500) {
-            summary = 'Não autorizado';
-          } else if (error.status >= 500) {
-            summary = 'Erro';
+          if (error) {
+            this.alert.showMsg('error', 'Erro', 'Erro ao realizar o login');
           }
-          this.alert.showMsg('error', summary, error.error?.message);
         }
       })
   }

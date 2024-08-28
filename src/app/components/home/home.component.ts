@@ -1,39 +1,30 @@
-import { NgFor, NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-
+import { TableModule } from 'primeng/table';
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [NgFor, NgIf],
+  imports: [TableModule],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
 export class HomeComponent implements OnInit {
-  columns = [
-    { name: 'Tipo de Formação', property: 'tipoFormacao', visible: true },
-    { name: 'Curso', property: 'curso', visible: true },
-    { name: 'Instituição', property: 'instituicao', visible: true },
-    { name: 'Ano de Conclusão', property: 'anoConclusao', visible: true },
-    { name: 'Ações', property: 'actions', visible: true }
-  ];
-  dataSource: unknown[] = [];
-  visibleColumns: string[] = [];
+  products!: unknown[];
 
   ngOnInit(): void {
-    const data = [
-      { tipoFormacao: 'Graduação', curso: 'Direito', instituicao: 'UNB', anoConclusao: '1902' },
-      { tipoFormacao: 'Graduação', curso: 'Direito', instituicao: 'UNB', anoConclusao: '1902' },
-      { tipoFormacao: 'Graduação', curso: 'Direito', instituicao: 'UNB', anoConclusao: '1902' }
+    this.products = [
+      {
+        id: '1000',
+        code: 'f230fh0g3',
+        name: 'Bamboo Watch',
+        description: 'Product Description',
+        image: 'bamboo-watch.jpg',
+        price: 65,
+        category: 'Accessories',
+        quantity: 24,
+        inventoryStatus: 'INSTOCK',
+        rating: 5
+      },
     ];
-    this.dataSource = data;
-  }
-  editar(dado: unknown): void {
-    console.log('Editar:', dado);
-    // Lógica para editar
   }
 
-  excluir(dado: unknown): void {
-    console.log('Excluir:', dado);
-    // Lógica para excluir
-  }
 }
