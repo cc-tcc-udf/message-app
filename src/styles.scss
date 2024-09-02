@@ -1,23 +1,50 @@
 @import 'primeflex/primeflex.scss';
-@import 'assets/styles/_variables.scss';
+@import '@variables';
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
 
 @mixin color-scheme($bg, $secondary, $primary, $text_secondary, $text) {
   background-color: $bg;
   color: $text;
-
   transition: background-color 0.3s ease, color 0.3s ease;
 
-  button {
+  button.theme {
     all: unset;
-    cursor: pointer;
-    transition: background-color 0.3s ease, color 0.3s ease;
   }
 
   button.default {
+    all: unset;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
     background: $secondary;
     color: $text_secondary;
-    transition: background-color 0.3s ease, color 0.3s ease
+  }
+
+  button.add {
+    border-radius: $border_radius;
+    box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.02),
+      0px 0px 2px rgba(0, 0, 0, 0.05),
+      0px 1px 4px rgba(0, 0, 0, 0.08);
+    padding: .5rem 1rem;
+    display: flex;
+    align-items: center;
+    background-color: $primary;
+    color: $secondary;
+
+    &:hover {
+      background: $secondary;
+      color: $text_secondary;
+    }
+  }
+
+  span.tag {
+    background-color: $primary;
+    padding: .25rem .75rem;
+    box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.02),
+      0px 0px 2px rgba(0, 0, 0, 0.05),
+      0px 1px 4px rgba(0, 0, 0, 0.08);
+    border-radius: $border_radius;
+    color: $secondary;
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
 
   .auth {

@@ -1,5 +1,6 @@
 import { Component, inject, OnInit, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
+import { AuthService } from '@auth/auth.service';
 import { MenuItem } from 'primeng/api';
 import { MenubarModule } from 'primeng/menubar';
 
@@ -21,15 +22,17 @@ import { MenubarModule } from 'primeng/menubar';
       border-radius: 6px;
     }
   `],
+  providers: [AuthService],
   encapsulation: ViewEncapsulation.None
 })
 export class MenuBarComponent implements OnInit {
   private router = inject(Router);
+  private auth = inject(AuthService);
   items: MenuItem[] | undefined;
 
   ngOnInit(): void {
     this.items = [
-      { label: 'Home', icon: 'bi bi-house' },
+      { label: 'Home', icon: 'bi bi-house', command: () => { this.navigate('home') } },
       {
         label: 'Mensagem', icon: 'bi bi-chat-square-text-fill',
         items: [
@@ -37,48 +40,8 @@ export class MenuBarComponent implements OnInit {
         ]
       },
       { label: 'Configurações', icon: 'bi bi-sliders', command: () => { this.navigate('configs') } },
-      { label: 'Perfil', icon: 'bi bi-person-circle' },
-
-      // {
-      //   label: 'Features',
-      //   icon: 'pi pi-star'
-      // },
-      // {
-      //   label: 'Projects',
-      //   icon: 'pi pi-search',
-      //   items: [
-      //     {
-      //       label: 'Components',
-      //       icon: 'pi pi-bolt'
-      //     },
-      //     {
-      //       label: 'Blocks',
-      //       icon: 'pi pi-server'
-      //     },
-      //     {
-      //       label: 'UI Kit',
-      //       icon: 'pi pi-pencil'
-      //     },
-      //     {
-      //       label: 'Templates',
-      //       icon: 'pi pi-palette',
-      //       items: [
-      //         {
-      //           label: 'Apollo',
-      //           icon: 'pi pi-palette'
-      //         },
-      //         {
-      //           label: 'Ultima',
-      //           icon: 'pi pi-palette'
-      //         }
-      //       ]
-      //     }
-      //   ]
-      // },
-      // {
-      //   label: 'Contact',
-      //   icon: 'bi bi-envelope'
-      // }
+      // { label: 'Perfil', icon: 'bi bi-person-circle' },
+      { label: 'Sair', icon: 'bi bi-box-arrow-left', command: () => { this.auth.logout() } }
     ]
   }
 

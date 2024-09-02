@@ -27,7 +27,8 @@
       "@env/*": ["./src/env/*"],
       "@models/*": ["./src/app/interfaces/*"],
       "@layout/*": ["./src/app/layout/*"],
-      "@utils/*": ["./src/app/utils/*"]
+      "@utils/*": ["./src/app/utils/*"],
+      "@variables": ["./src/assets/styles/_variables.scss"]
     }
   },
   "angularCompilerOptions": {

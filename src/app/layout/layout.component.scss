@@ -1,4 +1,4 @@
-@import '@assets/styles/_variables.scss';
+@import '@variables';
 
 .layout {
   .content {
@@ -7,7 +7,7 @@
 }
 
 
-.theme {
+button.theme {
   height: 1.75rem;
   display: flex;
 

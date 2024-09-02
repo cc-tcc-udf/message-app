@@ -1,9 +1,11 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { environment } from '@env/env.prod';
+import { Router } from '@angular/router';
+import { environment } from '@env/env';
 import { UserResponse } from '@models/UserResponse';
 import { Usuario } from '@models/Usuario';
-import { BehaviorSubject, catchError, map, Observable, tap, throwError } from 'rxjs';
+import { AlertService } from '@utils/services/alert.service';
+import { BehaviorSubject, catchError, Observable, tap, throwError } from 'rxjs';
 
 
 @Injectable({
@@ -13,12 +15,14 @@ export class AuthService {
   private userSubject = new BehaviorSubject<Usuario | null>(null);
   user$: Observable<Usuario | null> = this.userSubject.asObservable();
 
-  constructor(private http: HttpClient) {
-  }
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    private alert: AlertService
+  ) { }
 
   private handleError(error: unknown): Observable<never> {
-    console.error('An error occurred:', error);
-    return throwError(() => new Error('Something went wrong'));
+    return throwError(() => error);
   }
 
   private setSessionStorage(response: UserResponse): void {
@@ -37,13 +41,8 @@ export class AuthService {
 
     if (userEmail && token) {
       this.getUser({ email: userEmail, token })
-        .pipe(
-          catchError(this.handleError),
-          map(user => {
-            return this.userSubject.next(user);
-          })
-        )
-        .subscribe();
+        .pipe(catchError(this.handleError))
+        .subscribe(user => this.userSubject.next(user));
     } else {
       this.userSubject.next(null);
     }
@@ -60,6 +59,7 @@ export class AuthService {
 
   logout(): void {
     this.clearSessionStorage();
+    this.router.navigate(['/auth/login']);
     this.userSubject.next(null);
   }
 
@@ -68,7 +68,12 @@ export class AuthService {
       return throwError(() => new Error('Missing token'));
     }
     const url = `${environment.API_URL}/private/auth/getUser?email=${encodeURIComponent(dados.email)}`;
-    return this.http.get<Usuario>(url).pipe(catchError(this.handleError));
+    return this.http.get<Usuario>(url).pipe
+      (catchError(error => {
+        this.logout();
+        return this.handleError(error);
+      })
+      );
   }
 
   isAuthenticated(): boolean {

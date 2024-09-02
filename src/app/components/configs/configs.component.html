@@ -1,1 +1,5 @@
-<p>configs works!</p>,
+<p-tabView>
+  <p-tabPanel *ngFor="let tab of tabs" [header]="tab.header">
+    <ng-container [ngComponentOutlet]="tab.component" />
+  </p-tabPanel>
+</p-tabView>
