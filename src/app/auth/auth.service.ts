@@ -4,7 +4,6 @@ import { Router } from '@angular/router';
 import { environment } from '@env/env';
 import { UserResponse } from '@models/UserResponse';
 import { Usuario } from '@models/Usuario';
-import { AlertService } from '@utils/services/alert.service';
 import { BehaviorSubject, catchError, Observable, tap, throwError } from 'rxjs';
 
 
@@ -17,8 +16,7 @@ export class AuthService {
 
   constructor(
     private http: HttpClient,
-    private router: Router,
-    private alert: AlertService
+    private router: Router
   ) { }
 
   private handleError(error: unknown): Observable<never> {
@@ -68,12 +66,7 @@ export class AuthService {
       return throwError(() => new Error('Missing token'));
     }
     const url = `${environment.API_URL}/private/auth/getUser?email=${encodeURIComponent(dados.email)}`;
-    return this.http.get<Usuario>(url).pipe
-      (catchError(error => {
-        this.logout();
-        return this.handleError(error);
-      })
-      );
+    return this.http.get<Usuario>(url).pipe(catchError(error => { this.logout(); return this.handleError(error); }));
   }
 
   isAuthenticated(): boolean {

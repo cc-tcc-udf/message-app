@@ -21,13 +21,13 @@ export class Course {
 }
 
 export class SubCourse {
-  id: number;
-  name: string;
-  description: string;
-  abbreviation: string;
-  resp: number;
-  courseGroupId: number;
-  isGroup: boolean;
+  id?: number | null;
+  name?: string;
+  description?: string;
+  abbreviation?: string;
+  resp?: number;
+  courseGroupId?: number;
+  isGroup?: boolean;
 
   constructor(obj: SubCourse) {
     this.id = obj.id;
@@ -48,6 +48,7 @@ export function getCourseCols() {
     { field: 'description', header: 'Descrição' },
     { field: 'abbreviation', header: 'Sigla', isTag: true },
     { field: 'isGroup', header: 'Grupo', isBoolean: true },
+    { field: 'qtdCursos', header: 'Qtd Cursos' },
     // { field: 'action', header: 'Ações', isAction: true },
   ]
 }

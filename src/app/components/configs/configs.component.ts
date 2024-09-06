@@ -14,7 +14,7 @@ import { CourseComponent } from "../course/course.component";
   styleUrl: './configs.component.scss',
 })
 export class ConfigsComponent implements OnInit {
-  tabs: { header: string, component: Type<any> }[] = [];
+  tabs: { header: string, component: Type<unknown> }[] = [];
 
   ngOnInit(): void {
     this.tabs = [

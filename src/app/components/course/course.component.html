@@ -5,84 +5,93 @@
       Novo
     </button>
   </section>
-  <p-table [value]="courses" dataKey="id">
-    <ng-template pTemplate="header">
-      <tr>
-        <th style="width: 3rem"></th>
-        @for (th of cols; track $index) {
-        <th>
-          {{th.header}}
-        </th>
-        }
-      </tr>
-    </ng-template>
-    <ng-template pTemplate="body" let-list let-expanded="expanded">
-      <tr>
-        <td>
-          <button class="cursor-pointer theme" [disabled]="list.isGroup && list.courses.length <= 0">
-            <i [hidden]="list.courses.length <= 0" class="bi" [pRowToggler]="list"
-              [ngClass]="expanded ? 'bi-chevron-down' : 'bi-chevron-right'"></i>
-          </button>
-        </td>
-        @for (td of cols; track $index) {
-        <td>
-          <span *ngIf="!td.isAction"
-            [ngClass]="{'tag' : td.isTag, 'bolTrue': td.isBoolean && list[td.field], 'bolFalse': td.isBoolean && !list[td.field] }">
-            {{list[td.field]}}
-          </span>
-        </td>
-        }
-        <td class="w-1">
-          <section class="flex gap-1">
-            <button class="add edit default" (click)="newCourse()">
-              <i class="text-base font-semibold bi bi-pencil"></i>
+  <section class="w-full" *ngIf="!loading">
+    <p-table [value]="courses" dataKey="id">
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="width: 3rem"></th>
+          @for (th of cols; track $index) {
+          <th>
+            {{th.header}}
+          </th>
+          }
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-list let-expanded="expanded">
+        <tr>
+          <td>
+            <button class="cursor-pointer theme" [disabled]="list.isGroup && list.courses?.length <= 0">
+              <i [hidden]="list.courses?.length <= 0" class="bi" [pRowToggler]="list"
+                [ngClass]="expanded ? 'bi-chevron-down' : 'bi-chevron-right'"></i>
             </button>
-            <button class="add del default" (click)="newCourse()">
-              <i class="text-base font-semibold bi bi-trash"></i>
-            </button>
-          </section>
-        </td>
-      </tr>
+          </td>
+          @for (td of cols; track $index) {
+          <td>
+            <span *ngIf="!td.isAction && td.field !== 'qtdCursos'"
+              [ngClass]="{'tag' : td.isTag, 'bolTrue': td.isBoolean && list[td.field], 'bolFalse': td.isBoolean && !list[td.field] }">
+              {{list[td.field]}}
+            </span>
+            <span *ngIf="!td.isAction && td.field === 'qtdCursos' && list.isGroup"
+              [ngClass]="{'tag' : td.isTag, 'bolTrue': td.isBoolean && list[td.field], 'bolFalse': td.isBoolean && !list[td.field] }">
+              {{list.courses ? list.courses.length : 0}}
+            </span>
+          </td>
+          }
+          <td class="w-1">
+            <section class="flex gap-1">
+              <button class="add edit default" (click)="newCourse(list)">
+                <i class="text-base font-semibold bi bi-pencil"></i>
+              </button>
+              <button class="add del default" (click)="newCourse()">
+                <i class="text-base font-semibold bi bi-trash"></i>
+              </button>
+            </section>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="rowexpansion" let-list>
+        <tr>
+          <td colspan="7">
+            <div class="p-3 shadow-1 border-round">
+              <p-table [value]="list.courses">
+                <ng-template pTemplate="header">
+        <tr>
+          @for (th of colsSub; track $index) {
+          <th>
+            {{th.header}}
+          </th>
+          }
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-list>
+        <tr>
+          @for (td of colsSub; track $index) {
+          <td>
+            <span [ngClass]="{'tag' : td.isTag, 'bolFalse': td.isBoolean }">
+              {{list[td.field]}}
+            </span>
+          </td>
+          }
+          <td class="w-1">
+            <section class="flex gap-1">
+              <button class="add edit default" (click)="newCourse(list)">
+                <i class="text-base font-semibold bi bi-pencil"></i>
+              </button>
+              <button class="add del default" (click)="newCourse()">
+                <i class="text-base font-semibold bi bi-trash"></i>
+              </button>
+            </section>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+    </div>
+    </td>
+    </tr>
     </ng-template>
-    <ng-template pTemplate="rowexpansion" let-list>
-      <tr>
-        <td colspan="7">
-          <div class="p-3 shadow-1 border-round">
-            <p-table [value]="list.courses">
-              <ng-template pTemplate="header">
-      <tr>
-        @for (th of colsSub; track $index) {
-        <th>
-          {{th.header}}
-        </th>
-        }
-      </tr>
-    </ng-template>
-    <ng-template pTemplate="body" let-list>
-      <tr>
-        @for (td of colsSub; track $index) {
-        <td>
-          <span [ngClass]="{'tag' : td.isTag, 'bolFalse': td.isBoolean }">
-            {{list[td.field]}}
-          </span>
-        </td>
-        }
-        <td class="w-1">
-          <section class="flex gap-1">
-            <button class="add edit default" (click)="newCourse()">
-              <i class="text-base font-semibold bi bi-pencil"></i>
-            </button>
-            <button class="add del default" (click)="newCourse()">
-              <i class="text-base font-semibold bi bi-trash"></i>
-            </button>
-          </section>
-        </td>
-      </tr>
-    </ng-template>
-  </p-table>
-  </div>
-  </td>
-  </tr>
-  </ng-template>
-  </p-table>
+    </p-table>
+  </section>
+  <section *ngIf="loading" class="flex w-full justify-content-between align-content-center">
+    <p class="font-bold text-6xl">Loading...</p>
+  </section>
 </section>

@@ -40,7 +40,7 @@ export class MenuBarComponent implements OnInit {
         ]
       },
       { label: 'Configurações', icon: 'bi bi-sliders', command: () => { this.navigate('configs') } },
-      // { label: 'Perfil', icon: 'bi bi-person-circle' },
+      { label: 'Perfil', icon: 'bi bi-person-circle', command: () => { this.navigate('users') } },
       { label: 'Sair', icon: 'bi bi-box-arrow-left', command: () => { this.auth.logout() } }
     ]
   }
