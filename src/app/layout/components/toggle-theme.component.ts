@@ -30,11 +30,11 @@ export class ToggleThemeComponent implements OnInit {
   ngOnInit(): void {
     this.load();
   }
+  
   toggleDarkMode(): void {
     this.isDarkMode = !this.isDarkMode;
     this.isAnimated = true;
     const newTheme = this.isDarkMode ? 'dark' : 'light';
-    this.service.setTheme(newTheme);
     this.service.setTheme(newTheme);
 
     setTimeout(() => {

@@ -4,7 +4,6 @@ import { Course, getCourseCols, getSubCourseCols, SubCourse } from '@models/Cour
 import { GenericResponse } from '@models/GenericResponse';
 import { Column } from '@models/primeng';
 import { ButtonModule } from 'primeng/button';
-import { DialogModule } from 'primeng/dialog';
 import { DialogService, DynamicDialogModule, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { TableModule } from 'primeng/table';
 import { ModalCourseComponent } from './components/modal-course.component';
@@ -16,7 +15,7 @@ import { CourseService } from './course.service';
   imports: [
     TableModule, NgClass,
     ButtonModule, NgIf,
-    DialogModule, DynamicDialogModule
+    DynamicDialogModule
   ],
   providers: [DialogService],
   templateUrl: './course.component.html',
@@ -41,7 +40,6 @@ export class CourseComponent implements OnInit {
       subscribe((obj: GenericResponse) => {
         const data = obj.data as Course[];
         this.courses = data.sort((a, b) => a.id - b.id);
-        console.log(this.courses);
         setTimeout(() => {
           this.loading = false;
         }, 500)

@@ -6,25 +6,8 @@ import { TableModule } from "primeng/table";
   standalone: true,
   imports: [TableModule],
   template: `
-  <div class="card">
-      <p-table [value]="products" [tableStyle]="{ 'min-width': '50rem' }">
-        <ng-template pTemplate="header">
-          <tr>
-            <th>Code</th>
-            <th>Name</th>
-            <th>Category</th>
-            <th>Quantity</th>
-          </tr>
-        </ng-template>
-        <ng-template pTemplate="body" let-product>
-          <tr>
-            <td>{{ product.code }}</td>
-            <td>{{ product.name }}</td>
-            <td>{{ product.category }}</td>
-            <td>{{ product.quantity }}</td>
-          </tr>
-        </ng-template>
-      </p-table>
+  <div class="flex h-full h-full align-items-center">
+    <p class="font-bold text-6xl">Em construção</p>
     </div>
   `,
   styles: [``]

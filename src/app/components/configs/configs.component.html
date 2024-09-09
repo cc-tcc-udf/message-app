@@ -1,5 +1,7 @@
 <p-tabView>
   <p-tabPanel *ngFor="let tab of tabs" [header]="tab.header">
-    <ng-container [ngComponentOutlet]="tab.component" />
+    <section class="default_bg default-radius py-2 px-3">
+      <ng-container [ngComponentOutlet]="tab.component" />
+    </section>
   </p-tabPanel>
 </p-tabView>

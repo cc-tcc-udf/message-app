@@ -1,0 +1,121 @@
+@import "@variables";
+
+@mixin theme($primary, $secondary, $tertiary,
+  $btn, $background, $yellow,
+  $border-radius, $txt, $shadow) {
+
+
+  background-color: $background;
+  color: $txt;
+  transition: background-color 0.3s ease, color 0.3s ease;
+
+  .default-transition {
+    transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .default_bg {
+    background-color: $background;
+    box-shadow: $shadow;
+    @extend .default-transition;
+  }
+
+  .default-radius {
+    border-radius: $border-radius;
+  }
+
+  i.default {
+    color: $txt;
+  }
+
+  // Buttons
+  button.theme {
+    all: unset;
+    @extend .default-transition;
+  }
+
+  button.default {
+    all: unset;
+    cursor: pointer;
+    background: $secondary;
+    color: $primary;
+    @extend .default-transition;
+  }
+
+  button.add {
+    border-radius: $border-radius;
+    box-shadow: $default_shadow;
+    padding: .5rem 1rem;
+    display: flex;
+    align-items: center;
+    background-color: $primary;
+    color: $txt;
+    @extend .default-transition;
+
+    &:hover {
+      background: $secondary;
+    }
+  }
+
+  span.tag {
+    background-color: $primary;
+    padding: .25rem .75rem;
+    box-shadow: $default_shadow;
+    border-radius: $border_radius;
+    color: $txt;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  // PrimeNG
+  .p-menubar .p-menuitem>.p-menuitem-content .p-menuitem-link .p-menuitem-icon,
+  .p-menubar .p-menubar-root-list>.p-menuitem>.p-menuitem-content .p-menuitem-link .p-menuitem-text,
+  .p-menubar .p-menubar-root-list>.p-menuitem>.p-menuitem-content .p-menuitem-link .p-submenu-icon,
+  .p-breadcrumb .p-breadcrumb-list li .p-menuitem-link .p-menuitem-icon,
+  .p-breadcrumb .p-breadcrumb-list li.p-menuitem-separator,
+  .p-breadcrumb .p-breadcrumb-list li .p-menuitem-link .p-menuitem-text,
+  .p-datatable .p-datatable-tbody>tr,
+  .p-datatable .p-datatable-thead>tr>th,
+  .p-tabview .p-tabview-nav,
+  .p-tabview .p-tabview-panels,
+  .p-tabview .p-tabview-nav li .p-tabview-nav-link,
+  .p-menubar .p-menuitem>.p-menuitem-content .p-menuitem-link .p-menuitem-text {
+    color: $txt;
+    @extend .default-transition;
+  }
+
+  .p-datatable .p-datatable-tbody>tr {
+    background: $background;
+
+    td {
+      border: none;
+    }
+  }
+
+  .p-tabview .p-tabview-nav {
+    border-color: $background;
+    @extend .default-transition;
+  }
+
+  .p-tabview .p-tabview-nav li.p-highlight .p-tabview-nav-link {
+    background: $background;
+    border-color: $txt;
+  }
+
+  .p-tabview .p-tabview-nav li .p-tabview-nav-link {
+    border: solid $background;
+    border-width: 0 0 2px 0;
+    border-color: transparent transparent $background transparent;
+  }
+
+  .p-menubar .p-menubar-root-list>.p-menuitem:not(.p-highlight):not(.p-disabled)>.p-menuitem-content:hover,
+  .p-menubar .p-menuitem.p-highlight>.p-menuitem-content,
+  .p-menubar .p-menuitem:not(.p-highlight):not(.p-disabled)>.p-menuitem-content:hover,
+  .p-menubar .p-menuitem:not(.p-highlight):not(.p-disabled).p-focus>.p-menuitem-content {
+    background: $primary;
+    color: $txt;
+  }
+
+  .p-menubar .p-submenu-list,
+  .p-menu.p-menu-overlay {
+    background: $secondary;
+  }
+}

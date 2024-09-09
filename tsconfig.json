@@ -28,7 +28,8 @@
       "@models/*": ["./src/app/interfaces/*"],
       "@layout/*": ["./src/app/layout/*"],
       "@utils/*": ["./src/app/utils/*"],
-      "@variables": ["./src/assets/styles/_variables.scss"]
+      "@variables": ["./src/assets/styles/_variables.scss"],
+      "@theme": ["./src/assets/styles/_theme.scss"]
     }
   },
   "angularCompilerOptions": {

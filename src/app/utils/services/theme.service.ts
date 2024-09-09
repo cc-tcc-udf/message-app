@@ -16,7 +16,7 @@ export class ThemeService {
       }
       return this.setThemeNavegador();
     }
-    return 'dark';
+    return 'light';
   }
 
   getLocalValue() {

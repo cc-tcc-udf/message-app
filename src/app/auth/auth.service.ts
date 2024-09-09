@@ -4,8 +4,7 @@ import { Router } from '@angular/router';
 import { environment } from '@env/env';
 import { UserResponse } from '@models/UserResponse';
 import { Usuario } from '@models/Usuario';
-import { BehaviorSubject, catchError, Observable, tap, throwError } from 'rxjs';
-
+import { BehaviorSubject, catchError, Observable, of, tap, throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -19,6 +18,13 @@ export class AuthService {
     private router: Router
   ) { }
 
+  // private handleError(error:T): Observable<never> {
+  //   if (error.status === 401 || error.status === 403) {
+  //     this.logout();
+  //   }
+  //   const errorMessage = error.error?.message || 'An unexpected error occurred';
+  //   return throwError(() => new Error(errorMessage));
+  // }
   private handleError(error: unknown): Observable<never> {
     return throwError(() => error);
   }
@@ -29,8 +35,7 @@ export class AuthService {
   }
 
   private clearSessionStorage(): void {
-    sessionStorage.removeItem('access_token');
-    sessionStorage.removeItem('user_email');
+    sessionStorage.clear();
   }
 
   initUser(): void {
@@ -39,7 +44,9 @@ export class AuthService {
 
     if (userEmail && token) {
       this.getUser({ email: userEmail, token })
-        .pipe(catchError(this.handleError))
+        .pipe(
+          catchError(() => of(null)) // Caso ocorra erro, inicializa o usuário como null
+        )
         .subscribe(user => this.userSubject.next(user));
     } else {
       this.userSubject.next(null);
@@ -51,6 +58,7 @@ export class AuthService {
     return this.http.post<UserResponse>(`${environment.API_URL}/public/auth/login`, usr, { headers })
       .pipe(
         tap(response => this.setSessionStorage(response)),
+        tap(() => this.initUser()), // Inicializa o usuário após login
         catchError(this.handleError)
       );
   }
@@ -62,11 +70,10 @@ export class AuthService {
   }
 
   getUser(dados: UserResponse): Observable<Usuario> {
-    if (!dados.token) {
-      return throwError(() => new Error('Missing token'));
-    }
     const url = `${environment.API_URL}/private/auth/getUser?email=${encodeURIComponent(dados.email)}`;
-    return this.http.get<Usuario>(url).pipe(catchError(error => { this.logout(); return this.handleError(error); }));
+    return this.http.get<Usuario>(url).pipe(
+      catchError(this.handleError)
+    );
   }
 
   isAuthenticated(): boolean {
@@ -74,11 +81,11 @@ export class AuthService {
   }
 
   getAccessToken(): string | null {
-    return typeof window !== 'undefined' ? sessionStorage.getItem('access_token') : null;
+    return sessionStorage.getItem('access_token');
   }
 
   getUserEmail(): string | null {
-    return typeof window !== 'undefined' ? sessionStorage.getItem('user_email') : null;
+    return sessionStorage.getItem('user_email');
   }
 
   register(usr: Usuario): Observable<UserResponse> {
