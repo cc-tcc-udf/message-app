@@ -7,7 +7,29 @@ export class Usuario {
   name!: string;
   email!: string;
   password!: string;
-  foto_perfil!: File;
-  foto_capa!: File;
+  profilePhoto!: File;
+  coverPhoto!: File;
   roles!: Roles_user[];
+}
+
+export class CustomUsuario {
+  id!: number;
+  uid!: string;
+  name!: string;
+  email!: string;
+  profilePhoto!: string;
+  coverPhoto!: string;
+  roles!: Roles_user[];
+
+  constructor(user: Usuario) {
+    this.id = user.id;
+    this.uid = user.uid;
+    this.name = user.name;
+    this.email = user.email;
+    this.profilePhoto = getLink(user?.profilePhoto);
+  }
+}
+
+function getLink(file: File): string {
+  return file?.url;
 }

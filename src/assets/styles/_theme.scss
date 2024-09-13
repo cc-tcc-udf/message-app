@@ -3,8 +3,6 @@
 @mixin theme($primary, $secondary, $tertiary,
   $btn, $background, $yellow,
   $border-radius, $txt, $shadow) {
-
-
   background-color: $background;
   color: $txt;
   transition: background-color 0.3s ease, color 0.3s ease;
@@ -17,6 +15,14 @@
     background-color: $background;
     box-shadow: $shadow;
     @extend .default-transition;
+  }
+
+  .card_default {
+    background: $primary;
+    border-radius: $border-radius;
+    padding: .5rem;
+    color: $txt;
+    box-shadow: $shadow;
   }
 
   .default-radius {
@@ -117,5 +123,13 @@
   .p-menubar .p-submenu-list,
   .p-menu.p-menu-overlay {
     background: $secondary;
+  }
+
+  .p-progressbar {
+    background: $background;
+
+    .p-progressbar-value {
+      background: $secondary;
+    }
   }
 }

@@ -1,12 +1,14 @@
-import { Component, inject, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '@auth/auth.service';
 import { ModalUserComponent } from '@components/users/components/modal-user.component';
+import { CustomUsuario } from '@models/Usuario';
 import { MenuItem } from 'primeng/api';
 import { AvatarModule } from 'primeng/avatar';
 import { DialogService, DynamicDialogModule, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { MenuModule } from 'primeng/menu';
 import { MenubarModule } from 'primeng/menubar';
+import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-menu-bar',
   standalone: true,
@@ -26,9 +28,10 @@ import { MenubarModule } from 'primeng/menubar';
             tabindex="0" 
             role="button" 
             aria-label="Menu de perfil">
-          <p-avatar image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png" shape="circle" />
+          <p-avatar [image]="user$?.profilePhoto? user$?.profilePhoto: 'https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png'" shape="circle" />
           <i class="default bi bi-chevron-down"></i>
-          </div>
+ 
+        </div>
         </ng-template>
       </p-menubar>
     </section>
@@ -49,7 +52,7 @@ import { MenubarModule } from 'primeng/menubar';
   providers: [AuthService, DialogService],
   encapsulation: ViewEncapsulation.None
 })
-export class MenuBarComponent implements OnInit {
+export class MenuBarComponent implements OnInit, OnDestroy {
   private router = inject(Router);
   private auth = inject(AuthService);
   private dialogService = inject(DialogService);
@@ -57,9 +60,14 @@ export class MenuBarComponent implements OnInit {
   items: MenuItem[] | undefined;
   itemsPopup: MenuItem[] | undefined;
 
+  user$!: CustomUsuario | null;
+  private userSubscription: Subscription | undefined;
+
   ngOnInit(): void {
+    this.auth.initUser()
     this.setItems();
     this.setItemsPopup();
+    this.getData();
   }
   setItems() {
     this.items = [
@@ -73,11 +81,18 @@ export class MenuBarComponent implements OnInit {
       { label: 'Configurações', icon: 'bi bi-sliders', command: () => { this.navigate('configs') } },
     ]
   }
+
   setItemsPopup() {
     this.itemsPopup = [
       { label: 'Meu perfil', icon: 'bi bi-person-circle', command: () => { this.openModal() } },
       { label: 'Sair', icon: 'bi bi-box-arrow-left', command: () => { this.auth.logout() } }
     ]
+  }
+  getData() {
+    this.userSubscription = this.auth.user$.subscribe(user => {
+      if (user)
+        this.user$ = new CustomUsuario(user);
+    });
   }
 
   openModal() {
@@ -85,7 +100,13 @@ export class MenuBarComponent implements OnInit {
       ModalUserComponent, {
       position: 'bottom',
       width: '40vw',
+      header: this.user$?.name,
+      modal: true,
       contentStyle: { overflow: 'auto' },
+      data: {
+        user: this.user$
+      }
+
     }
     )
   }
@@ -94,4 +115,9 @@ export class MenuBarComponent implements OnInit {
     this.router.navigate([rota]);
   }
 
+  ngOnDestroy() {
+    if (this.userSubscription) {
+      this.userSubscription.unsubscribe();
+    }
+  }
 }

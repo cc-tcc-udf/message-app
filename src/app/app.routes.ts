@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { AuthComponent } from '@auth/auth.component';
 import { LoginComponent } from '@auth/login/login.component';
+import { RegisterComponent } from '@auth/register/register.component';
 import { ConfigsComponent } from '@components/configs/configs.component';
 import { HomeComponent } from '@components/home/home.component';
 import { MensageComponent } from '@components/mensage/mensage.component';
@@ -12,7 +13,8 @@ export const routes: Routes = [
   // !Authenticated
   {
     path: 'auth', component: AuthComponent, children: [
-      { path: 'login', component: LoginComponent }
+      { path: 'login', component: LoginComponent },
+      { path: 'register', component: RegisterComponent }
     ]
   },
   // // Authenticated

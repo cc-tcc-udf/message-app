@@ -20,6 +20,9 @@ $light_box_shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
 
 
 $border_radius: 5px;
-$default_shadow: 0px 3px 5px rgba(0, 0, 0, 0.02),
-  0px 0px 2px rgba(0, 0, 0, 0.05),
-  0px 1px 4px rgba(0, 0, 0, 0.08);
+$default_shadow: 0px 1px 10px rgba(0, 0, 0, 0.12),
+  0px 4px 5px rgba(0, 0, 0, 0.14),
+  0px 2px 4px -1px rgba(0, 0, 0, 0.2);
+// $default_shadow: 0px 3px 5px rgba(0, 0, 0, 0.02),
+//   0px 0px 2px rgba(0, 0, 0, 0.05),
+//   0px 1px 4px rgba(0, 0, 0, 0.08);

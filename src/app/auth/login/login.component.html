@@ -1,33 +1,24 @@
-<section class="login h-full">
-  <section class="content h-full">
-    <section class="img">
-      <!-- <img src="assets/img/svg/login.svg" alt=""> -->
-      <img [src]="'assets/img/svg/login_' + theme.getLogos() + '.svg'" alt="">
-    </section>
-    <section class="form">
-      <section class="content">
-        <section class="top">
-          <p class="title">Login</p>
-          <img [src]="'assets/img/logo/' + theme.getLogos() + '.svg'" alt="">
+<section class="login flex-column justify-content-start xl:justify-content-center xl:flex-row h-full">
+  <img class="w-9 xl:w-6" [src]="'assets/img/svg/login_' + theme.getLogos() + '.svg'" alt="">
+  <section class="form align-items-start xl:align-items-center w-full h-full xl:w-6">
+    <section class="w-full xl:w-6 cards">
+      <section class="flex justify-content-between">
+        <p class="text-xl text-center">Login</p>
+        <img [src]="'assets/img/logo/' + theme.getLogos() + '.svg'" alt="">
+      </section>
+      <form [formGroup]="form">
+        <section class="inputs">
+          <app-input label="Email" formControlName="email"></app-input>
+          <app-input type="password" label="Senha" formControlName="password"></app-input>
         </section>
-        <section class="w-full">
-          <form [formGroup]="form">
-            <section class="forms">
-              <div class="flex flex-column gap-2">
-                <label for="username">Email</label>
-                <input pInputText id="username" aria-describedby="username-help" formControlName="email" />
-              </div>
-              <div class="flex flex-column w-full gap-2">
-                <label for="pass">Senha</label>
-                <p-password formControlName="password" [feedback]="false" />
-              </div>
-            </section>
-          </form>
-          <p class="no_user font-light">Ainda não possui contato? <a class="font-bold">Solicitar acesso!</a></p>
-          <section class="btn">
-            <button class="default" (click)="send()">Acessar</button>
-          </section>
-        </section>
+      </form>
+      <p class="text-sm font-light">
+        Ainda não possui cadastro?
+        <a class="font-bold cursor-pointer" (click)="navigate('auth/register')" tabindex="0"
+          (keydown.enter)="navigate('auth/register')">Cadastre-se!</a>
+      </p>
+      <section class="btn">
+        <button class="add cursor-pointer theme" (click)="send()" tabindex="0" (keydown.enter)="send()">Acessar</button>
       </section>
     </section>
   </section>

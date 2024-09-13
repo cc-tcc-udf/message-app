@@ -1,9 +1,13 @@
 import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ThemeService {
+  private _loading = new Subject<boolean>();
+
+  loading$ = this._loading.asObservable();
 
   constructor() { }
 
@@ -49,5 +53,14 @@ export class ThemeService {
       return true;
     }
     return false;
+  }
+
+  show(): void {
+    this._loading.next(true);
+  }
+
+  hide(): void {
+    console.log("sakldmkl")
+    this._loading.next(false);
   }
 }

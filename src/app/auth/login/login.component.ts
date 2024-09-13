@@ -9,6 +9,7 @@ import { AlertService } from '@utils/services/alert.service';
 import { ThemeService } from '@utils/services/theme.service';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
+import { InputComponent } from "../../shared/input.component";
 
 @Component({
   selector: 'app-login',
@@ -17,7 +18,8 @@ import { PasswordModule } from 'primeng/password';
     ReactiveFormsModule,
     InputTextModule,
     PasswordModule,
-    ToggleThemeComponent
+    ToggleThemeComponent,
+    InputComponent
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
@@ -46,6 +48,7 @@ export class LoginComponent implements OnInit {
   }
 
   send() {
+    this.theme.show();
     const usr = this.form.getRawValue();
     this.auth.login(usr as Usuario)
       .subscribe({
@@ -62,6 +65,7 @@ export class LoginComponent implements OnInit {
             severity = 'warn';
           }
           this.alert.showMsg(severity, summary, error.error?.message);
+          this.theme.hide();
         }
       })
   }
@@ -71,6 +75,7 @@ export class LoginComponent implements OnInit {
       .subscribe({
         next: (user: Usuario) => {
           this.alert.showMsg('success', 'Bem vindo', user.name);
+          this.theme.hide();
           this.router.navigate(['']);
         },
         error: (error) => {
@@ -79,13 +84,18 @@ export class LoginComponent implements OnInit {
             "Erro ao recuperar usuário",
             error.error?.message
           );
+          this.theme.hide();
         }
       });
   }
 
   private verify() {
     if (this.auth.isAuthenticated()) {
-      this.router.navigate(['']);
+      this.navigate('');
     }
+  }
+
+  navigate(rota: string) {
+    this.router.navigate([rota]);
   }
 }

@@ -18,13 +18,6 @@ export class AuthService {
     private router: Router
   ) { }
 
-  // private handleError(error:T): Observable<never> {
-  //   if (error.status === 401 || error.status === 403) {
-  //     this.logout();
-  //   }
-  //   const errorMessage = error.error?.message || 'An unexpected error occurred';
-  //   return throwError(() => new Error(errorMessage));
-  // }
   private handleError(error: unknown): Observable<never> {
     return throwError(() => error);
   }
@@ -45,7 +38,7 @@ export class AuthService {
     if (userEmail && token) {
       this.getUser({ email: userEmail, token })
         .pipe(
-          catchError(() => of(null)) // Caso ocorra erro, inicializa o usuário como null
+          catchError(() => of(null))
         )
         .subscribe(user => this.userSubject.next(user));
     } else {
@@ -81,11 +74,11 @@ export class AuthService {
   }
 
   getAccessToken(): string | null {
-    return sessionStorage.getItem('access_token');
+    return typeof window !== 'undefined' ? sessionStorage.getItem('access_token') : null;
   }
 
   getUserEmail(): string | null {
-    return sessionStorage.getItem('user_email');
+    return typeof window !== 'undefined' ? sessionStorage.getItem('user_email') : null;
   }
 
   register(usr: Usuario): Observable<UserResponse> {

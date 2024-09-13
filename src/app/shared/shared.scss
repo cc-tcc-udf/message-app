@@ -1,0 +1,80 @@
+@import "@variables";
+
+@mixin shared($primary, $secondary, $tertiary,
+  $btn, $background, $yellow,
+  $border-radius, $txt, $shadow) {
+  .default-transition {
+    transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .input_ {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+    color: $txt;
+
+    .content {
+      width: 100%;
+      background-color: $primary;
+      border-color: $primary;
+      border-width: 1px;
+      border-style: solid;
+      border-radius: $border-radius;
+      overflow: hidden;
+      box-shadow: $shadow;
+      display: flex;
+
+      button {
+        all: unset;
+        padding: 0 .5rem;
+        cursor: pointer;
+        background: none;
+      }
+    }
+
+    input {
+
+      width: 100%;
+      height: auto;
+      padding: .75rem .35rem;
+      box-sizing: border-box;
+
+      background: none;
+      border: none;
+      font-family: Arial, sans-serif;
+      font-weight: normal;
+      text-align: left;
+      color: $txt;
+
+      &:focus {
+        outline: none;
+        border: none;
+      }
+
+      &:hover {
+        border: none;
+      }
+
+      &::placeholder {
+        color: $secondary;
+        opacity: 0.6;
+      }
+
+      cursor: text;
+
+      @extend .default-transition;
+    }
+
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover,
+    input:-webkit-autofill:focus {
+      -webkit-text-fill-color: $txt !important;
+      color: $txt;
+      border: none !important;
+      -webkit-box-shadow: 0 0 0px 1000px $primary inset;
+      transition: background-color 5000s ease-in-out 0s;
+
+    }
+  }
+
+}

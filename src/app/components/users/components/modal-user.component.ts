@@ -1,8 +1,7 @@
 import { NgIf } from '@angular/common';
-import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from '@auth/auth.service';
-import { Usuario } from '@models/Usuario';
 import { AlertService } from '@utils/services/alert.service';
 import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
@@ -10,7 +9,6 @@ import { DropdownModule } from 'primeng/dropdown';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputTextareaModule } from 'primeng/inputtextarea';
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-modal-course',
@@ -26,9 +24,8 @@ import { Subscription } from 'rxjs';
   styleUrl: './../users.component.scss',
   encapsulation: ViewEncapsulation.None
 })
-export class ModalUserComponent implements OnInit, OnDestroy {
-  user$!: Usuario | null;
-  private userSubscription: Subscription | undefined;
+export class ModalUserComponent implements OnInit {
+
 
   form: FormGroup = new FormGroup({
     abbreviation: new FormControl<string | null>(null),
@@ -46,23 +43,10 @@ export class ModalUserComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    this.auth.initUser();
-    this.getData();
-    console.log(this.user$)
+    console.log(this.ref.data.user)
     this.getGroups();
   }
-  getData() {
-    this.userSubscription = this.auth.user$.subscribe(user => {
-      console.log(user)
-      this.user$ = user;
-    });
-  }
 
-  ngOnDestroy() {
-    if (this.userSubscription) {
-      this.userSubscription.unsubscribe();
-    }
-  }
 
   save() {
 
