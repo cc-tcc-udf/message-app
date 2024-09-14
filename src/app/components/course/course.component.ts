@@ -29,20 +29,21 @@ export class CourseComponent implements OnInit {
   private service = inject(CourseService);
   private dialogService = inject(DialogService);
   ref: DynamicDialogRef | undefined;
-  loading: boolean = true;
+  loading: boolean = false;
 
   ngOnInit(): void {
     this.getData();
   }
 
   private getData() {
+    this.loading = true;
     this.service.getAllCourses(true).
       subscribe((obj: GenericResponse) => {
         const data = obj.data as Course[];
         this.courses = data.sort((a, b) => a.id - b.id);
-        setTimeout(() => {
-          this.loading = false;
-        }, 500)
+        console.log(this.courses);
+        this.loading = false;
+        console.log(this.loading);
       });
   }
 

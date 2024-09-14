@@ -1,20 +1,25 @@
 import { Component, inject, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '@auth/auth.service';
-import { ModalUserComponent } from '@components/users/components/modal-user.component';
 import { CustomUsuario } from '@models/Usuario';
 import { MenuItem } from 'primeng/api';
 import { AvatarModule } from 'primeng/avatar';
+import { DialogModule } from 'primeng/dialog';
 import { DialogService, DynamicDialogModule, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { MenuModule } from 'primeng/menu';
 import { MenubarModule } from 'primeng/menubar';
 import { Subscription } from 'rxjs';
+import { InputComponent } from "../../shared/input.component";
+
+
 @Component({
   selector: 'app-menu-bar',
   standalone: true,
   imports: [
     MenubarModule, AvatarModule,
-    DynamicDialogModule, MenuModule
+    DynamicDialogModule, MenuModule, DialogModule,
+    InputComponent, ReactiveFormsModule
   ],
   template: `
     <section class="w-full h-full flex-column justify-content-center align-items-center flex">
@@ -28,12 +33,33 @@ import { Subscription } from 'rxjs';
             tabindex="0" 
             role="button" 
             aria-label="Menu de perfil">
-          <p-avatar [image]="user$?.profilePhoto? user$?.profilePhoto: 'https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png'" shape="circle" />
-          <i class="default bi bi-chevron-down"></i>
- 
-        </div>
+            <p-avatar [image]="user$?.profilePhoto? user$?.profilePhoto: 'https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png'" shape="circle" />
+            <i class="default bi bi-chevron-down"></i>
+          </div>
         </ng-template>
       </p-menubar>
+      <p-dialog [modal]="true" header="Edit Profile" [(visible)]="visible" [style]="{ width: '25rem' }">
+        <ng-template pTemplate="header">
+          <div class="inline-flex align-items-center justify-content-center gap-2">
+              <p-avatar [image]="user$?.profilePhoto? user$?.profilePhoto: 'https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png'" shape="circle" />
+                <span class="font-bold white-space-nowrap">
+                    {{user$?.name}}
+                </span>
+            </div>
+        </ng-template>
+        <form [formGroup]="form" >
+            <section class="w-full h-full flex flex-column gap-3">                      
+            <app-input label="Nome" formControlName="name" type="text"/>
+            <app-input label="Email" formControlName="email" type="email"/>       
+            <app-input label="Telefone" formControlName="phone" type="text"/>       
+          </section>
+          </form>
+        <ng-template pTemplate="footer">
+          <section class="flex justify-content-end">
+            <button class="add default">Salvar</button>
+          </section>
+        </ng-template>
+      </p-dialog>
     </section>
   `,
   styles: [`
@@ -59,9 +85,15 @@ export class MenuBarComponent implements OnInit, OnDestroy {
   ref: DynamicDialogRef | undefined;
   items: MenuItem[] | undefined;
   itemsPopup: MenuItem[] | undefined;
-
+  visible: boolean = false;
   user$!: CustomUsuario | null;
   private userSubscription: Subscription | undefined;
+
+  form: FormGroup = new FormGroup({
+    email: new FormControl<string | null>(null),
+    name: new FormControl<string | null>(null),
+    phone: new FormControl<string | null>(null)
+  })
 
   ngOnInit(): void {
     this.auth.initUser()
@@ -96,19 +128,20 @@ export class MenuBarComponent implements OnInit, OnDestroy {
   }
 
   openModal() {
-    this.ref = this.dialogService.open(
-      ModalUserComponent, {
-      position: 'bottom',
-      width: '40vw',
-      header: this.user$?.name,
-      modal: true,
-      contentStyle: { overflow: 'auto' },
-      data: {
-        user: this.user$
-      }
+    // this.ref = this.dialogService.open(
+    //   ModalUserComponent, {
+    //   position: 'bottom',
+    //   width: '40vw',
+    //   header: this.user$?.name,
+    //   modal: true,
+    //   contentStyle: { overflow: 'auto' },
+    //   data: {
+    //     user: this.user$
+    //   }
 
-    }
-    )
+    // }
+    // )
+    this.visible = true;
   }
 
   private navigate(rota: string) {
@@ -120,4 +153,5 @@ export class MenuBarComponent implements OnInit, OnDestroy {
       this.userSubscription.unsubscribe();
     }
   }
+
 }
