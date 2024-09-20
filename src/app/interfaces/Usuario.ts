@@ -1,4 +1,4 @@
-import { File } from "./File";
+import { FileApp } from "./File";
 import { Roles_user } from "./Roles";
 
 export class Usuario {
@@ -7,9 +7,20 @@ export class Usuario {
   name!: string;
   email!: string;
   password!: string;
-  profilePhoto!: File;
-  coverPhoto!: File;
+  profilePhoto!: FileApp;
+  coverPhoto!: FileApp;
   roles!: Roles_user[];
+
+  constructor(usr: Usuario) {
+    this.id = usr.id;
+    this.uid = usr.uid;
+    this.name = usr.name;
+    this.email = usr.email;
+    this.password = usr.password;
+    this.profilePhoto = usr.profilePhoto;
+    this.coverPhoto = usr.coverPhoto;
+    this.roles = usr.roles;
+  }
 }
 
 export class CustomUsuario {
@@ -30,6 +41,6 @@ export class CustomUsuario {
   }
 }
 
-function getLink(file: File): string {
+function getLink(file: FileApp): string {
   return file?.url;
 }

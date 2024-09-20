@@ -3,7 +3,8 @@ import { Component, ElementRef, inject, OnInit, signal, ViewChild, ViewEncapsula
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '@auth/auth.service';
-import { CustomUsuario } from '@models/Usuario';
+import { FileApp } from '@models/File';
+import { CustomUsuario, Usuario } from '@models/Usuario';
 import { AlertService } from '@utils/services/alert.service';
 import { FileService } from '@utils/services/file.service';
 import { MenuItem } from 'primeng/api';
@@ -112,7 +113,7 @@ import { InputComponent } from "../../shared/input.component";
       width: max-content;
     }
   `],
-  providers: [AuthService, DialogService],
+  providers: [AuthService, DialogService, FileService],
   encapsulation: ViewEncapsulation.None
 })
 export class MenuBarComponent implements OnInit {
@@ -141,6 +142,9 @@ export class MenuBarComponent implements OnInit {
   ngOnInit(): void {
     this.setItems();
     this.setItemsPopup();
+    this.loadUser();
+  }
+  private loadUser() {
     const usr = this.auth.getUserFromSessionStorage();
     if (usr) {
       this.user = new CustomUsuario(usr);
@@ -152,7 +156,6 @@ export class MenuBarComponent implements OnInit {
       }
     }
   }
-
   saveProfile() {
 
   }
@@ -167,17 +170,35 @@ export class MenuBarComponent implements OnInit {
   uploadFile(file: File | null): void {
     this.value = 50;
     if (file && file.type.startsWith('image/')) {
-      this.selectedFile = file;
-      const reader = new FileReader();
       this.value = 70;
-      setTimeout(() => {
-        this.value = 100;
-        reader.onload = () => {
-          this.imagePreview.set(reader.result as string);
-        }
-        reader.readAsDataURL(file);
-        this.value = 0;
-      }, 1000)
+      this.fileService.createFile(this.user!.id, file)
+        .subscribe((p: FileApp) => {
+          this.value = 80;
+          if (p) {
+            this.value = 90;
+            const usr = this.auth.getUserFromSessionStorage();
+            if (usr) {
+              const usrN = new Usuario(usr);
+              usrN.profilePhoto = p;
+              this.auth.setUserInSessionStorage(usrN);
+              this.value = 100;
+            }
+            this.loadUser();
+            this.alert.showMsg('success', 'Foto de perfil', 'atualizada com sucesso');
+            this.value = 0;
+          }
+        })
+      // this.selectedFile = file;
+      // const reader = new FileReader();
+      // this.value = 70;
+      // setTimeout(() => {
+      //   this.value = 100;
+      //   reader.onload = () => {
+      //     this.imagePreview.set(reader.result as string);
+      //   }
+      //   reader.readAsDataURL(file);
+      //   this.value = 0;
+      // }, 1000)
     }
   }
 

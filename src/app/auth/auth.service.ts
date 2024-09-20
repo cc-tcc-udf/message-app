@@ -12,7 +12,7 @@ import { BehaviorSubject, catchError, Observable, of, tap, throwError } from 'rx
 export class AuthService {
   private userSubject = new BehaviorSubject<Usuario | null>(null);
   user$: Observable<Usuario | null> = this.userSubject.asObservable();
-  private isUserInitialized = false; // Flag to check if user is already loaded
+  private isUserInitialized = false;
 
   constructor(
     private http: HttpClient,
@@ -28,12 +28,12 @@ export class AuthService {
     sessionStorage.setItem('user_email', response.email);
   }
 
-  private setUserInSessionStorage(user: Usuario): void {
+  setUserInSessionStorage(user: Usuario): void {
     sessionStorage.setItem('user', JSON.stringify(user));
   }
 
   getUserFromSessionStorage(): Usuario | null {
-    const user = sessionStorage.getItem('user');
+    const user = typeof window !== 'undefined' ? sessionStorage.getItem('user') : null;
     return user ? JSON.parse(user) as Usuario : null;
   }
 
@@ -42,12 +42,11 @@ export class AuthService {
   }
 
   initUser(): void {
-    if (this.isUserInitialized) return; // Prevent unnecessary calls
-
+    if (this.isUserInitialized) return;
     const user = this.getUserFromSessionStorage();
     if (user) {
       this.userSubject.next(user);
-      this.isUserInitialized = true; // Mark user as initialized
+      this.isUserInitialized = true;
     } else {
       const userEmail = this.getUserEmail();
       const token = this.getAccessToken();
@@ -63,10 +62,10 @@ export class AuthService {
           )
           .subscribe();
 
-        this.isUserInitialized = true; // Mark user as initialized
+        this.isUserInitialized = true;
       } else {
         this.userSubject.next(null);
-        this.isUserInitialized = true; // Mark user as initialized
+        this.isUserInitialized = true;
       }
     }
   }
@@ -96,7 +95,7 @@ export class AuthService {
     this.clearSessionStorage();
     this.router.navigate(['/auth/login']);
     this.userSubject.next(null);
-    this.isUserInitialized = false; // Reset flag on logout
+    this.isUserInitialized = false;
   }
 
   getUser(dados: UserResponse): Observable<Usuario> {

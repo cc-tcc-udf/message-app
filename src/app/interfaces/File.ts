@@ -1,4 +1,4 @@
-export class File {
+export class FileApp {
   id!: number;
   name!: string;
   type!: string;
@@ -8,7 +8,7 @@ export class File {
   uid!: string;
   id_ext!: number;
 
-  constructor(file: File) {
+  constructor(file: FileApp) {
     this.id = file.id;
     this.name = file.name;
     this.type = file.type;

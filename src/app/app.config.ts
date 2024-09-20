@@ -7,9 +7,9 @@ import localePt from '@angular/common/locales/pt';
 import { provideClientHydration } from '@angular/platform-browser';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { HttpInterceptor } from '@utils/http.interceptor';
+import { ThemeService } from '@utils/services/theme.service';
 import { MessageService } from 'primeng/api';
 import { routes } from './app.routes';
-import { ThemeService } from '@utils/services/theme.service';
 
 registerLocaleData(localePt, 'pt');
 
