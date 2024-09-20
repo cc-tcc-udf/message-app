@@ -114,8 +114,9 @@ export class ModalCourseComponent implements OnInit {
     this.service.getGroups().subscribe((p: GenericResponse) => {
       if (p.success) {
         const data = p.data as SubCourse[];
-        console.log(data)
-        this.groups = [{ id: null, name: 'Nenhum' }, ...data];
+        const filteredData = data.filter(c => c.id);
+        console.log(filteredData);
+        this.groups = [{ id: null, name: 'Nenhum' }, ...filteredData];
       }
     });
   }

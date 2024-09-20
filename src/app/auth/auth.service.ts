@@ -12,6 +12,7 @@ import { BehaviorSubject, catchError, Observable, of, tap, throwError } from 'rx
 export class AuthService {
   private userSubject = new BehaviorSubject<Usuario | null>(null);
   user$: Observable<Usuario | null> = this.userSubject.asObservable();
+  private isUserInitialized = false; // Flag to check if user is already loaded
 
   constructor(
     private http: HttpClient,
@@ -27,31 +28,66 @@ export class AuthService {
     sessionStorage.setItem('user_email', response.email);
   }
 
+  private setUserInSessionStorage(user: Usuario): void {
+    sessionStorage.setItem('user', JSON.stringify(user));
+  }
+
+  getUserFromSessionStorage(): Usuario | null {
+    const user = sessionStorage.getItem('user');
+    return user ? JSON.parse(user) as Usuario : null;
+  }
+
   private clearSessionStorage(): void {
     sessionStorage.clear();
   }
 
   initUser(): void {
-    const userEmail = this.getUserEmail();
-    const token = this.getAccessToken();
+    if (this.isUserInitialized) return; // Prevent unnecessary calls
 
-    if (userEmail && token) {
-      this.getUser({ email: userEmail, token })
-        .pipe(
-          catchError(() => of(null))
-        )
-        .subscribe(user => this.userSubject.next(user));
+    const user = this.getUserFromSessionStorage();
+    if (user) {
+      this.userSubject.next(user);
+      this.isUserInitialized = true; // Mark user as initialized
     } else {
-      this.userSubject.next(null);
+      const userEmail = this.getUserEmail();
+      const token = this.getAccessToken();
+
+      if (userEmail && token) {
+        this.getUser({ email: userEmail, token })
+          .pipe(
+            tap(user => {
+              this.userSubject.next(user);
+              this.setUserInSessionStorage(user);
+            }),
+            catchError(() => of(null))
+          )
+          .subscribe();
+
+        this.isUserInitialized = true; // Mark user as initialized
+      } else {
+        this.userSubject.next(null);
+        this.isUserInitialized = true; // Mark user as initialized
+      }
     }
   }
+
 
   login(usr: Usuario): Observable<UserResponse> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     return this.http.post<UserResponse>(`${environment.API_URL}/public/auth/login`, usr, { headers })
       .pipe(
-        tap(response => this.setSessionStorage(response)),
-        tap(() => this.initUser()), // Inicializa o usuário após login
+        tap(response => {
+          this.setSessionStorage(response);
+          this.getUser({ email: response.email, token: response.token })
+            .pipe(
+              tap(user => {
+                this.setUserInSessionStorage(user);
+                this.userSubject.next(user);
+              }),
+              catchError(() => of(null))
+            )
+            .subscribe();
+        }),
         catchError(this.handleError)
       );
   }
@@ -60,6 +96,7 @@ export class AuthService {
     this.clearSessionStorage();
     this.router.navigate(['/auth/login']);
     this.userSubject.next(null);
+    this.isUserInitialized = false; // Reset flag on logout
   }
 
   getUser(dados: UserResponse): Observable<Usuario> {
