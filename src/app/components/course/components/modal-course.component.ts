@@ -145,14 +145,14 @@ export class ModalCourseComponent implements OnInit {
       form.courseGroupId = null;
     }
     console.log(form)
-    // this.service.create(form).subscribe((p) => {
-    //   if (p.success) {
-    //     this.alert.showMsg("success", 'Curso', p.message);
-    //     this.dialog.close();
-    //   } else {
-    //     this.alert.showMsg("error", 'Curso', p.message);
-    //   }
-    // })
+    this.service.create(form).subscribe((p) => {
+      if (p.success) {
+        this.alert.showMsg("success", 'Curso', p.message);
+        this.dialog.close();
+      } else {
+        this.alert.showMsg("error", 'Curso', p.message);
+      }
+    })
   }
 
   getGroups() {
