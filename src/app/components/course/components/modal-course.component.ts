@@ -123,6 +123,9 @@ export class ModalCourseComponent implements OnInit {
     const data = this.ref.data.data;
     console.log(data)
     if (data) {
+      if (data.resp && data.resp.id) {
+        data.resp = data.resp.id;
+      }
       this.form.patchValue(data);
     }
     this.getGroups();
