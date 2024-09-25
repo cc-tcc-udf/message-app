@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { environment } from '@env/env';
+import { GenericResponse } from '@models/GenericResponse';
 import { UserResponse } from '@models/UserResponse';
 import { Usuario } from '@models/Usuario';
 import { BehaviorSubject, catchError, Observable, of, tap, throwError } from 'rxjs';
@@ -125,5 +126,10 @@ export class AuthService {
   updateUser(usr: Usuario): Observable<Usuario> {
     return this.http.put<Usuario>(`${environment.API_URL}/private/auth/update`, usr)
       .pipe(catchError(this.handleError));
+  }
+
+  getProf() {
+    return this.http.get<GenericResponse>(`${environment.API_URL}/public/auth/adm/listResp`)
+    .pipe(catchError(this.handleError));
   }
 }

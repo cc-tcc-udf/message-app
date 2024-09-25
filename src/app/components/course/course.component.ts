@@ -1,6 +1,6 @@
 import { NgClass, NgIf } from '@angular/common';
 import { Component, inject, OnInit, ViewEncapsulation } from '@angular/core';
-import { Course, getCourseCols, getSubCourseCols, SubCourse } from '@models/Course';
+import { Course, CourseCustom, getCourseCols, getSubCourseCols, SubCourse } from '@models/Course';
 import { GenericResponse } from '@models/GenericResponse';
 import { Column } from '@models/primeng';
 import { ButtonModule } from 'primeng/button';
@@ -23,27 +23,25 @@ import { CourseService } from './course.service';
   encapsulation: ViewEncapsulation.None
 })
 export class CourseComponent implements OnInit {
-  courses: Course[] = [];
+  courses: CourseCustom[] = [];
   cols: Column[] = getCourseCols();
   colsSub: Column[] = getSubCourseCols();
   private service = inject(CourseService);
   private dialogService = inject(DialogService);
   ref: DynamicDialogRef | undefined;
-  loading: boolean = false;
+  loading: boolean = true;
 
   ngOnInit(): void {
     this.getData();
   }
 
   private getData() {
-    this.loading = true;
     this.service.getAllCourses(true).
       subscribe((obj: GenericResponse) => {
-        const data = obj.data as Course[];
-        this.courses = data.sort((a, b) => a.id - b.id);
+        this.courses = (obj.data as Course[])
+          .map(course => new CourseCustom(course));
         console.log(this.courses);
         this.loading = false;
-        console.log(this.loading);
       });
   }
 
@@ -51,7 +49,6 @@ export class CourseComponent implements OnInit {
     this.ref = this.dialogService.open(
       ModalCourseComponent, {
       header: 'Cadastrar novo curso',
-      position: 'bottom',
       contentStyle: { overflow: 'auto' },
       data: {
         data: obj

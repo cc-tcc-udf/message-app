@@ -10,6 +10,7 @@ export class Usuario {
   profilePhoto!: FileApp;
   coverPhoto!: FileApp;
   roles!: Roles_user[];
+  phone!: string;
 
   constructor(usr: Usuario) {
     this.id = usr.id;
@@ -19,6 +20,7 @@ export class Usuario {
     this.password = usr.password;
     this.profilePhoto = usr.profilePhoto;
     this.coverPhoto = usr.coverPhoto;
+    this.phone = usr.phone;
     this.roles = usr.roles;
   }
 }
@@ -29,6 +31,7 @@ export class CustomUsuario {
   name!: string;
   email!: string;
   profilePhoto!: string;
+  phone!: string;
   coverPhoto!: string;
   roles!: Roles_user[];
 
@@ -37,6 +40,7 @@ export class CustomUsuario {
     this.uid = user.uid;
     this.name = user.name;
     this.email = user.email;
+    this.phone = user.phone;
     this.profilePhoto = getLink(user?.profilePhoto);
   }
 }
