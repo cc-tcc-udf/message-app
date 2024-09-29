@@ -46,7 +46,6 @@ export class ModalUserComponent implements OnInit {
     profilePhoto: new FormControl<number | null>(null),
     id_curso: new FormControl<number | null>(null)
   })
-  user: any;
 
   constructor(
     private ref: DynamicDialogConfig,
