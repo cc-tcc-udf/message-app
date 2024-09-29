@@ -1,5 +1,5 @@
 import { NgClass, NgIf } from '@angular/common';
-import { Component, inject, OnInit, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnInit, ViewEncapsulation } from '@angular/core';
 import { Course, CourseCustom, getCourseCols, getSubCourseCols, SubCourse } from '@models/Course';
 import { GenericResponse } from '@models/GenericResponse';
 import { Column } from '@models/primeng';
@@ -26,10 +26,16 @@ export class CourseComponent implements OnInit {
   courses: CourseCustom[] = [];
   cols: Column[] = getCourseCols();
   colsSub: Column[] = getSubCourseCols();
+
   private service = inject(CourseService);
   private dialogService = inject(DialogService);
+  private cr = inject(ChangeDetectorRef);
+
+
   ref: DynamicDialogRef | undefined;
   loading: boolean = true;
+
+
 
   ngOnInit(): void {
     this.getData();
@@ -42,6 +48,7 @@ export class CourseComponent implements OnInit {
           .map(course => new CourseCustom(course));
         console.log(this.courses);
         this.loading = false;
+        this.cr.detectChanges();
       });
   }
 

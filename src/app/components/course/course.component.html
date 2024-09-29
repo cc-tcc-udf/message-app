@@ -1,6 +1,6 @@
 <section class="w-full h-full config-courses flex flex-column gap-2">
   <section class="w-full flex p-1 justify-content-end align-content-center">
-    <button class="add default" (click)="newCourse()">
+    <button aria-label="adicionar curso" class="add default" (click)="newCourse()">
       <i class="text-xl font-semibold bi bi-plus"></i>
       Novo
     </button>
@@ -20,7 +20,8 @@
       <ng-template pTemplate="body" let-list let-expanded="expanded">
         <tr>
           <td>
-            <button class="cursor-pointer theme" [disabled]="list.isGroup && list.courses?.length <= 0">
+            <button aria-label="expandir lista de subcursos" class="cursor-pointer theme"
+              [disabled]="list.isGroup && list.courses?.length <= 0">
               <i [hidden]="list.courses?.length <= 0" class="bi" [pRowToggler]="list"
                 [ngClass]="expanded ? 'bi-chevron-down' : 'bi-chevron-right'"></i>
             </button>
@@ -45,10 +46,10 @@
           }
           <td class="w-1">
             <section class="flex gap-1">
-              <button class="add edit default" (click)="newCourse(list)">
+              <button aria-label="alterar curso" class="add edit default" (click)="newCourse(list)">
                 <i class="text-base font-semibold bi bi-pencil"></i>
               </button>
-              <button class="add del default" (click)="newCourse()">
+              <button aria-label="excluir curso" class="add del default" (click)="newCourse()">
                 <i class="text-base font-semibold bi bi-trash"></i>
               </button>
             </section>
@@ -80,10 +81,10 @@
           }
           <td class="w-1">
             <section class="flex gap-1">
-              <button class="add edit default" (click)="newCourse(list)">
+              <button aria-label="editar curso" class="add edit default" (click)="newCourse(list)">
                 <i class="text-base font-semibold bi bi-pencil"></i>
               </button>
-              <button class="add del default" (click)="newCourse()">
+              <button aria-label="excluir curso" class="add del default" (click)="newCourse()">
                 <i class="text-base font-semibold bi bi-trash"></i>
               </button>
             </section>

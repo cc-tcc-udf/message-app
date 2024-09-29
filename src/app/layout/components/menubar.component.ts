@@ -78,30 +78,13 @@ import { InputComponent } from "../../shared/input.component";
         </form>
         <ng-template pTemplate="footer">
           <section class="flex justify-content-end">
-            <button class="add default">Salvar</button>
+            <button aria-label="salvar dados do usuario" class="add default">Salvar</button>
           </section>
         </ng-template>
       </p-dialog>
     </section>
   `,
   styles: [`
-    .modal_usr .edit_photo,
-    .modal_usr .loading {
-      background-color: rgba(0, 0, 0, 0.5);
-      backdrop-filter: grayscale(.8);
-      -webkit-backdrop-filter: grayscale(.8);
-      cursor: pointer;    
-    }
-    .modal_usr .img{
-      border-radius: 50%;
-      overflow: hidden;
-    }
-    .modal_usr .img:hover .edit_photo{
-      display: flex !important;
-    }
-    .modal_usr .img:hover{
-      border: 2px dashed var(--orange-500);
-    }
     .p-menubar {
       padding: 0.5rem;
       background: none;
@@ -188,17 +171,6 @@ export class MenuBarComponent implements OnInit {
             this.value = 0;
           }
         })
-      // this.selectedFile = file;
-      // const reader = new FileReader();
-      // this.value = 70;
-      // setTimeout(() => {
-      //   this.value = 100;
-      //   reader.onload = () => {
-      //     this.imagePreview.set(reader.result as string);
-      //   }
-      //   reader.readAsDataURL(file);
-      //   this.value = 0;
-      // }, 1000)
     }
   }
 
@@ -215,7 +187,13 @@ export class MenuBarComponent implements OnInit {
           { label: 'Mensagens', icon: 'bi bi-card-list', command: () => { this.navigate('msg') } },
         ]
       },
-      { label: 'Configurações', icon: 'bi bi-sliders', command: () => { this.navigate('configs') } },
+      {
+        label: 'Configurações', icon: 'bi bi-sliders',
+        items: [
+          { label: 'Cursos', icon: 'bi bi-collection', command: () => { this.navigate('cursos') } },
+          { label: 'Usuarios', icon: 'bi bi-people-fill', command: () => { this.navigate('users') } }
+        ]
+      },
     ]
   }
 

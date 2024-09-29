@@ -1,1 +1,38 @@
-<p>users works!</p>
+<p-scrollPanel [style]="{ width: '100%', height: 'calc(100dvh - 4rem)' }">
+  <section class="flex py-2 justify-content-end">
+    <button aria-label="adicionar usuario" class="add default" (click)="openModal('sad')">
+      <i class="text-xl font-semibold bi bi-person-fill-add pr-1"></i>
+      Novo
+    </button>
+  </section>
+  <div class="flex list_adm_usrs flex-wrap gap-2">
+    @for (usr of users; track $index) {
+    <section class="flex flex-column calc card_default">
+      <div class="px-2">
+        <div class="flex py-2 align-items-center justify-content-center w-full">
+          <div class="h-7rem bg-cover bg-center bg-no-repeat w-7rem shadow_default border-circle"
+            [ngStyle]="{'background-image': 'url(' + usr.profilePhoto + ')'}">
+          </div>
+        </div>
+        <div class="flex flex-column gap-3">
+          <p class="m-0"><strong>Nome: </strong>{{usr.name}}</p>
+          <p class="m-0"><strong>Email: </strong>{{usr.email}}</p>
+          <p class="m-0"><strong>Telefone: </strong>{{usr.phone}}</p>
+          <div class="flex flex-wrap gap-2">
+            <p class="m-0 font-bold">Permissões:</p>
+            <span class="default-tag" *ngFor="let roler of usr.roles" [ngClass]="roler">{{roler}}</span>
+          </div>
+        </div>
+        <div class="flex justify-content-end gap-2 pt-4 pb-2">
+          <button aria-label="editar usuario" class="icon">
+            <i class="bi bi-pencil"></i>
+          </button>
+          <button aria-label="visualizar usuario" class=" icon">
+            <i class="bi bi-eye"></i>
+          </button>
+        </div>
+      </div>
+    </section>
+    }
+  </div>
+</p-scrollPanel>

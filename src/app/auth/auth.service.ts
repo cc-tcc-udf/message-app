@@ -1,8 +1,9 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { environment } from '@env/env';
 import { GenericResponse } from '@models/GenericResponse';
+import { Roles_user } from '@models/Roles';
 import { UserResponse } from '@models/UserResponse';
 import { Usuario } from '@models/Usuario';
 import { BehaviorSubject, catchError, Observable, of, tap, throwError } from 'rxjs';
@@ -14,6 +15,7 @@ export class AuthService {
   private userSubject = new BehaviorSubject<Usuario | null>(null);
   user$: Observable<Usuario | null> = this.userSubject.asObservable();
   private isUserInitialized = false;
+  private attToken = false;
 
   constructor(
     private http: HttpClient,
@@ -25,10 +27,13 @@ export class AuthService {
   }
 
   private setSessionStorage(response: UserResponse): void {
-    sessionStorage.setItem('access_token', response.token);
+    this.setToken(response.token);
     sessionStorage.setItem('user_email', response.email);
   }
 
+  setToken(token: string) {
+    sessionStorage.setItem('access_token', token);
+  }
   setUserInSessionStorage(user: Usuario): void {
     sessionStorage.setItem('user', JSON.stringify(user));
   }
@@ -73,8 +78,7 @@ export class AuthService {
 
 
   login(usr: Usuario): Observable<UserResponse> {
-    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    return this.http.post<UserResponse>(`${environment.API_URL}/public/auth/login`, usr, { headers })
+    return this.http.post<UserResponse>(`${environment.API_URL}/public/auth/login`, usr)
       .pipe(
         tap(response => {
           this.setSessionStorage(response);
@@ -106,6 +110,49 @@ export class AuthService {
     );
   }
 
+  isTokenExpired(): boolean {
+    const token = sessionStorage.getItem('access_token');
+    if (!token) return true;
+
+    const payload = this.decodeToken(token);
+    const expirationDate = new Date(payload.exp * 1000);
+    return new Date() > expirationDate;
+  }
+
+  private decodeToken(token: string) {
+    const payload = token.split('.')[1];
+    return JSON.parse(atob(payload));
+  }
+
+  refreshToken(): Observable<string | null> {
+    if (!this.attToken) {
+      this.attToken = true;
+      const email = this.getUserEmail();
+      if (!email) {
+        this.logout();
+        return of(null);
+      }
+      const url = `${environment.API_URL}/public/refreshToken?email=${encodeURIComponent(email)}`;
+      return this.http.get<string>(url).pipe(
+        tap((token: string) => {
+          if (token) {
+            console.log(token)
+            this.setToken(token);
+          }
+          this.attToken = false;
+        }),
+        catchError((error) => {
+          this.attToken = false;
+          this.logout();
+          return throwError(() => error);
+        })
+      );
+    } else {
+      return of(null);
+    }
+  }
+
+
   isAuthenticated(): boolean {
     return !!this.getAccessToken();
   }
@@ -130,6 +177,33 @@ export class AuthService {
 
   getProf() {
     return this.http.get<GenericResponse>(`${environment.API_URL}/public/auth/adm/listResp`)
-    .pipe(catchError(this.handleError));
+      .pipe(catchError(this.handleError));
   }
+
+  // Verifica se o usuário possui a role ADMIN
+  isAdmin(): boolean {
+    return this.hasRole(Roles_user.ADMIN);
+  }
+
+  // Verifica se o usuário possui a role PROF
+  isProf(): boolean {
+    return this.hasRole(Roles_user.PROF);
+  }
+
+  // Verifica se o usuário possui a role AUDIT
+  isAudit(): boolean {
+    return this.hasRole(Roles_user.AUDIT);
+  }
+
+  // Verifica se o usuário possui a role USER
+  isUser(): boolean {
+    return this.hasRole(Roles_user.USER);
+  }
+
+  private hasRole(role: Roles_user): boolean {
+    const user = this.getUserFromSessionStorage();
+    return user?.roles.includes(role) ?? false;
+  }
+
+
 }

@@ -2,7 +2,7 @@ import { HttpErrorResponse, HttpEvent, HttpHandlerFn, HttpInterceptorFn, HttpReq
 import { inject } from "@angular/core";
 import { Router } from "@angular/router";
 import { AuthService } from "@auth/auth.service";
-import { Observable, catchError, throwError } from "rxjs";
+import { Observable, catchError, switchMap, throwError } from "rxjs";
 
 export const HttpInterceptor: HttpInterceptorFn =
   (req: HttpRequest<unknown>, next: HttpHandlerFn):
@@ -26,18 +26,35 @@ export const HttpInterceptor: HttpInterceptorFn =
     };
 
     if (auth.isAuthenticated()) {
-      const clonedReq = req.clone({
-        setHeaders: {
-          authorization: `Bearer ${auth.getAccessToken()}`,
-        },
-      });
-
-      return next(clonedReq).pipe(
-        catchError(handleError)
-      );
+      if (auth.isTokenExpired()) {
+        return auth.refreshToken().pipe(
+          switchMap((newToken) => {
+            if (newToken) {
+              const clonedReq = req.clone({
+                setHeaders: {
+                  authorization: `Bearer ${newToken}`,
+                },
+              });
+              return next(clonedReq);
+            } else {
+              return next(req);
+            }
+          }),
+          catchError(handleError)
+        );
+      } else {
+        const clonedReq = req.clone({
+          setHeaders: {
+            authorization: `Bearer ${auth.getAccessToken()}`,
+          },
+        });
+        return next(clonedReq).pipe(
+          catchError(handleError)
+        );
+      }
     } else {
       return next(req).pipe(
         catchError(handleError)
       );
     }
-  }
+  };

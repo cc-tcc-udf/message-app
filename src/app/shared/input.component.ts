@@ -19,7 +19,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
     <label [for]="inputId">{{ label }}</label>
     <div class="content">
       <input [id]="inputId" [type]="showPassword ? 'text' : type" [value]="value" (input)="onInputChange($event)" [disabled]="disabled" />
-      <button *ngIf="type === 'password'" type="button" (click)="togglePasswordVisibility()" class="toggle-password-btn">
+      <button aria-label="mostrar ou esconder senha" *ngIf="type === 'password'" type="button" (click)="togglePasswordVisibility()" class="toggle-password-btn">
         <i [class]="showPassword ? 'bi bi-eye-slash-fill' : 'bi bi-eye-fill'"></i> <!-- Ícone de olho -->
       </button>
     </div>

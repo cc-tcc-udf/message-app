@@ -7,7 +7,7 @@ import { ThemeService } from '@utils/services/theme.service';
   standalone: true,
   imports: [NgClass],
   template: `
-  <button class="theme" (click)="toggleDarkMode()">
+  <button class="theme_toogle" (click)="toggleDarkMode()" aria-label="Alternar tema">
     <div class="btn" [ngClass]="{'isDark': isDarkMode}">
       <div class="btn__indicator">
         <div class="btn__icon-container">
@@ -30,7 +30,7 @@ export class ToggleThemeComponent implements OnInit {
   ngOnInit(): void {
     this.load();
   }
-  
+
   toggleDarkMode(): void {
     this.isDarkMode = !this.isDarkMode;
     this.isAnimated = true;
@@ -45,6 +45,5 @@ export class ToggleThemeComponent implements OnInit {
   private load(): void {
     const currentTheme = this.service.getTheme();
     this.isDarkMode = currentTheme === 'dark';
-    this.service.setTheme(currentTheme);
   }
 }

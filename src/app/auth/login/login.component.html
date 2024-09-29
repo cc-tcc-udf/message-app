@@ -8,8 +8,8 @@
       </section>
       <form [formGroup]="form">
         <section class="inputs">
-          <app-input label="Email" formControlName="email"></app-input>
-          <app-input type="password" label="Senha" formControlName="password"></app-input>
+          <app-input label="Email" formControlName="email" type="email" />
+          <app-input type="password" label="Senha" formControlName="password" />
         </section>
       </form>
       <p class="text-sm font-light">
@@ -18,7 +18,10 @@
           (keydown.enter)="navigate('auth/register')">Cadastre-se!</a>
       </p>
       <section class="btn">
-        <button class="add cursor-pointer theme" (click)="send()" tabindex="0" (keydown.enter)="send()">Acessar</button>
+        <button class="add cursor-pointer theme" (click)="send()" tabindex="0" (keydown.enter)="send()"
+          aria-label="realizar o login">
+          Acessar
+        </button>
       </section>
     </section>
   </section>

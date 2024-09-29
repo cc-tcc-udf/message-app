@@ -7,8 +7,33 @@
   color: $txt;
   transition: background-color 0.3s ease, color 0.3s ease;
 
+  .modal_usr {
+
+    .edit_photo,
+    .loading {
+      background-color: rgba(0, 0, 0, 0.5);
+      backdrop-filter: grayscale(.8);
+      -webkit-backdrop-filter: grayscale(.8);
+      cursor: pointer;
+    }
+
+    .img {
+      border-radius: 50%;
+      overflow: hidden;
+      border: 2px dashed $txt;
+
+      &:hover {
+        border: 2px dashed var(--orange-500);
+
+        .edit_photo {
+          display: flex !important;
+        }
+      }
+    }
+  }
+
   .default-transition {
-    transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+    transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
   }
 
   .default_bg {
@@ -17,11 +42,23 @@
     @extend .default-transition;
   }
 
+  .default-tag {
+    background: $tertiary;
+    border-radius: $border-radius;
+    padding: 0 .5rem;
+    color: $txt;
+    @extend .default-transition;
+  }
+
   .card_default {
     background: $primary;
     border-radius: $border-radius;
     padding: .5rem;
     color: $txt;
+    box-shadow: $shadow;
+  }
+
+  .shadow_default {
     box-shadow: $shadow;
   }
 
@@ -43,7 +80,7 @@
     all: unset;
     cursor: pointer;
     background: $secondary;
-    color: $primary;
+    // color: $primary;
     @extend .default-transition;
   }
 
@@ -60,6 +97,26 @@
     &:hover {
       background: $secondary;
     }
+  }
+
+  button.icon {
+    all: unset;
+    border-radius: $border-radius;
+    padding: .2rem .75rem;
+    background: $secondary;
+    box-shadow: $shadow;
+    cursor: pointer;
+
+    i {
+      font-size: 1.25rem;
+      color: $txt
+    }
+
+    &:hover {
+      background: $primary;
+    }
+
+    @extend .default-transition;
   }
 
   span.tag {
@@ -102,6 +159,10 @@
     @extend .default-transition;
   }
 
+  .dynamicDialog {
+    background: red;
+  }
+
   .p-tabview .p-tabview-nav li.p-highlight .p-tabview-nav-link {
     background: $background;
     border-color: $txt;
@@ -118,9 +179,59 @@
   .p-menubar .p-menuitem:not(.p-highlight):not(.p-disabled)>.p-menuitem-content:hover,
   .p-menubar .p-menuitem:not(.p-highlight):not(.p-disabled).p-focus>.p-menuitem-content,
   .p-dialog .p-dialog-header,
-  p-dialog .p-dialog-content,
-  .p-dialog .p-dialog-footer {
+  .p-dialog .p-dialog-content,
+  .p-dialog .p-dialog-footer,
+  .p-multiselect-panel,
+  .p-multiselect-panel .p-multiselect-header,
+  .p-checkbox .p-checkbox-box {
     background: $primary;
+    color: $txt;
+  }
+
+  .p-checkbox:not(.p-checkbox-disabled) .p-checkbox-box.p-focus {
+    box-shadow: $shadow;
+  }
+
+  .p-multiselect-panel .p-multiselect-header,
+  .p-dropdown:not(.p-disabled):hover {
+    border: none;
+  }
+
+  .p-checkbox .p-checkbox-box.p-highlight,
+  .p-checkbox:not(.p-checkbox-disabled) .p-checkbox-box:hover,
+  .p-checkbox:not(.p-checkbox-disabled) .p-checkbox-box.p-focus {
+    border-color: $tertiary;
+  }
+
+  .p-multiselect-panel .p-multiselect-items .p-multiselect-item:not(.p-highlight):not(.p-disabled).p-focus,
+  .p-multiselect-panel .p-multiselect-items .p-multiselect-item:not(.p-highlight):not(.p-disabled):hover {
+    background: $secondary;
+    color: $txt;
+  }
+
+  .p-multiselect-panel .p-multiselect-items .p-multiselect-item,
+  .p-multiselect-panel .p-multiselect-header .p-multiselect-filter-container .p-multiselect-filter-icon,
+  .p-checkbox .p-checkbox-box .p-checkbox-icon {
+    color: $txt;
+  }
+
+  .p-multiselect,
+  .p-inputtext,
+  .p-inputtext:enabled:focus,
+  .p-dropdown {
+    background-color: $primary;
+    border-color: $primary;
+    color: $txt;
+    box-shadow: $shadow;
+    border: none;
+  }
+
+  .p-dropdown .p-dropdown-trigger {
+    background-color: $primary;
+  }
+
+  .p-multiselect .p-multiselect-label.p-placeholder,
+  .p-multiselect .p-multiselect-trigger {
     color: $txt;
   }
 
@@ -135,5 +246,17 @@
     .p-progressbar-value {
       background: $secondary;
     }
+  }
+
+  .p-multiselect,
+  .p-dropdown {
+    width: 100%;
+  }
+
+  .p-dialog .p-dialog-header .p-dialog-header-icon:enabled:hover,
+  .p-multiselect-panel .p-multiselect-header .p-multiselect-close:enabled:hover {
+    background: $primary;
+    color: $txt;
+    box-shadow: $shadow;
   }
 }

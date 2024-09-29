@@ -7,9 +7,11 @@
 }
 
 
-button.theme {
+button.theme_toogle {
+  all: unset;
   height: 1.75rem;
   display: flex;
+
 
   .btn {
     background-color: #fff;

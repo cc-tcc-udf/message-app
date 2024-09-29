@@ -42,9 +42,11 @@ export class ThemeService {
     return value;
   }
 
+
   setTheme(theme: string) {
     if (this.verify()) {
       localStorage.setItem('theme', theme);
+      document.body.className = theme; // Adiciona a classe ao body
     }
   }
 

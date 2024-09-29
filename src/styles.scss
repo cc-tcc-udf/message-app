@@ -4,54 +4,54 @@
 @import '@sharedStyle';
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
 
-.light {
-  @include theme($light_primary,
-    $light_secondary,
-    $light_tertiary,
-    $light_btn,
-    $light_background,
-    $light_yellow,
-    $border_radius,
-    $light_txt_color,
-    $light_box_shadow );
-  @include shared($light_primary,
-    $light_secondary,
-    $light_tertiary,
-    $light_btn,
-    $light_background,
-    $light_yellow,
-    $border_radius,
-    $light_txt_color,
-    $light_box_shadow );
-}
-
-
-.dark {
-  @include theme($dark_primary,
-    $dark_secondary,
-    $dark_tertiary,
-    $dark_btn,
-    $dark_background,
-    $dark_yellow,
-    $border_radius,
-    $dark_txt_color,
-    $dark_box_shadow );
-  @include shared($dark_primary,
-    $dark_secondary,
-    $dark_tertiary,
-    $dark_btn,
-    $dark_background,
-    $dark_yellow,
-    $border_radius,
-    $dark_txt_color,
-    $dark_box_shadow );
-}
-
-
 body {
   margin: 0;
   font-family: "Inter", sans-serif;
   font-optical-sizing: auto;
+
+  &.light {
+    @include theme($light_primary,
+      $light_secondary,
+      $light_tertiary,
+      $light_btn,
+      $light_background,
+      $light_yellow,
+      $border_radius,
+      $light_txt_color,
+      $light_box_shadow);
+
+    @include shared($light_primary,
+      $light_secondary,
+      $light_tertiary,
+      $light_btn,
+      $light_background,
+      $light_yellow,
+      $border_radius,
+      $light_txt_color,
+      $light_box_shadow);
+  }
+
+  &.dark {
+    @include theme($dark_primary,
+      $dark_secondary,
+      $dark_tertiary,
+      $dark_btn,
+      $dark_background,
+      $dark_yellow,
+      $border_radius,
+      $dark_txt_color,
+      $dark_box_shadow);
+
+    @include shared($dark_primary,
+      $dark_secondary,
+      $dark_tertiary,
+      $dark_btn,
+      $dark_background,
+      $dark_yellow,
+      $border_radius,
+      $dark_txt_color,
+      $dark_box_shadow);
+  }
 }
 
 ::-webkit-scrollbar {
