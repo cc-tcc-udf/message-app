@@ -62,7 +62,6 @@ export class ThemeService {
   }
 
   hide(): void {
-    console.log("sakldmkl")
     this._loading.next(false);
   }
 }

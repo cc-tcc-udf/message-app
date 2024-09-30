@@ -27,9 +27,9 @@ import { InputComponent } from "../../shared/input.component";
   ],
   template: `
     <section class="w-full h-full flex-column justify-content-center align-items-center flex">
-      <p-menubar [model]="items">
+      <p-menubar appendTo="body" [model]="items">
         <ng-template pTemplate="end">
-          <p-menu #menu [model]="itemsPopup" [popup]="true" />
+          <p-menu appendTo="body" #menu [model]="itemsPopup" [popup]="true" />
           <div (click)="menu.toggle($event)" (keydown.enter)="menu.toggle($event)"
             class="flex cursor-pointer align-items-center ml-2 gap-2" tabindex="0" role="button"
             aria-label="Menu de perfil">
@@ -185,6 +185,7 @@ export class MenuBarComponent implements OnInit {
         label: 'Mensagem', icon: 'bi bi-chat-square-text-fill',
         items: [
           { label: 'Mensagens', icon: 'bi bi-card-list', command: () => { this.navigate('msg') } },
+          { label: 'Criar ', icon: 'bi bi-card-list', command: () => { this.navigate('msg-manage') } },
         ]
       },
       {

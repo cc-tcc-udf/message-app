@@ -32,6 +32,11 @@
     }
   }
 
+  .error-message {
+    color: red;
+    font-size: 0.875rem;
+  }
+
   .default-transition {
     transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
   }
@@ -59,11 +64,11 @@
   }
 
   .shadow_default {
-    box-shadow: $shadow;
+    box-shadow: $shadow !important;
   }
 
   .default-radius {
-    border-radius: $border-radius;
+    border-radius: $border-radius !important;
   }
 
   i.default {
@@ -82,6 +87,40 @@
     background: $secondary;
     // color: $primary;
     @extend .default-transition;
+  }
+
+  button.success {
+    color: white;
+    font-weight: 500;
+    background: var(--green-500);
+    box-shadow: $shadow;
+    border-radius: $border-radius;
+    padding: .5rem .75rem;
+    font-size: large;
+    cursor: pointer;
+
+    i {
+      font-size: medium;
+    }
+
+    @extend .default-transition
+  }
+
+  button.basic {
+    color: $txt;
+    font-weight: 500;
+    box-shadow: $shadow;
+    border-radius: $border-radius;
+    padding: .5rem .75rem;
+    font-size: large;
+    border: 1px solid $tertiary;
+    cursor: pointer;
+
+    i {
+      font-size: medium;
+    }
+
+    @extend .default-transition
   }
 
   button.add {
@@ -157,10 +196,6 @@
   .p-tabview .p-tabview-nav {
     border-color: $background;
     @extend .default-transition;
-  }
-
-  .dynamicDialog {
-    background: red;
   }
 
   .p-tabview .p-tabview-nav li.p-highlight .p-tabview-nav-link {
@@ -258,5 +293,9 @@
     background: $primary;
     color: $txt;
     box-shadow: $shadow;
+  }
+
+  p-multiselect.ng-dirty.ng-invalid>.p-multiselect {
+    border: 1px solid var(--red-500) !important;
   }
 }

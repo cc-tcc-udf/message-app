@@ -36,9 +36,16 @@ export class BreadcrumbService {
         url += `/${routeURL}`;
       }
 
-      const label = child.snapshot.data['breadcrumb'];
-      if (label) {
-        breadcrumbs.push({ label, url });
+      const breadcrumbLabels = child.snapshot.data['breadcrumb'];
+
+      if (breadcrumbLabels) {
+        if (Array.isArray(breadcrumbLabels)) {
+          breadcrumbLabels.forEach((label: string) => {
+            breadcrumbs.push({ label, url });
+          });
+        } else {
+          breadcrumbs.push({ label: breadcrumbLabels, url });
+        }
       }
 
       return this.createBreadcrumbs(child, url, breadcrumbs);
@@ -46,4 +53,5 @@ export class BreadcrumbService {
 
     return breadcrumbs;
   }
+
 }

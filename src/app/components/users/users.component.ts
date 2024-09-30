@@ -33,24 +33,25 @@ export class UsersComponent implements OnInit {
         if (usrs.success) {
           this.users = (usrs.data as Usuario[])
             .map(user => new CustomUsuario(user));
-          console.log(this.users);
           this.cr.detectChanges();
         }
       });
   }
 
-  openModal(id?: string) {
+  openModal(user?: CustomUsuario) {
     this.ref = this.dialog.open(ModalUserComponent, {
       header: 'User',
-      width: '50dvh',
+      width: '30vw',
       height: 'auto',
       modal: true,
       breakpoints: {
-        '960px': '75vw',
+        '1366px': '40vw',
+        '992px': '50vw',
+        '768px': '70vw',
         '640px': '90vw'
       },
       data: {
-        user: id
+        user: user
       },
       draggable: true
     })

@@ -3,9 +3,11 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { environment } from '@env/env';
 import { GenericResponse } from '@models/GenericResponse';
+import { RefreshToken } from '@models/RefreshToken';
 import { Roles_user } from '@models/Roles';
 import { UserResponse } from '@models/UserResponse';
 import { Usuario } from '@models/Usuario';
+import { AlertService } from '@utils/services/alert.service';
 import { BehaviorSubject, catchError, Observable, of, tap, throwError } from 'rxjs';
 
 @Injectable({
@@ -16,10 +18,10 @@ export class AuthService {
   user$: Observable<Usuario | null> = this.userSubject.asObservable();
   private isUserInitialized = false;
   private attToken = false;
-
   constructor(
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    private alert: AlertService
   ) { }
 
   private handleError(error: unknown): Observable<never> {
@@ -124,7 +126,7 @@ export class AuthService {
     return JSON.parse(atob(payload));
   }
 
-  refreshToken(): Observable<string | null> {
+  refreshToken(): Observable<RefreshToken | null> {
     if (!this.attToken) {
       this.attToken = true;
       const email = this.getUserEmail();
@@ -133,11 +135,11 @@ export class AuthService {
         return of(null);
       }
       const url = `${environment.API_URL}/public/refreshToken?email=${encodeURIComponent(email)}`;
-      return this.http.get<string>(url).pipe(
-        tap((token: string) => {
+      return this.http.get<RefreshToken>(url).pipe(
+        tap((token: RefreshToken) => {
           if (token) {
-            console.log(token)
-            this.setToken(token);
+            this.setToken(token.token);
+            this.alert.showMsg('success', 'Token', 'token atualizado com sucesso');
           }
           this.attToken = false;
         }),

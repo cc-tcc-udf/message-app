@@ -46,7 +46,6 @@ export class CourseComponent implements OnInit {
       subscribe((obj: GenericResponse) => {
         this.courses = (obj.data as Course[])
           .map(course => new CourseCustom(course));
-        console.log(this.courses);
         this.loading = false;
         this.cr.detectChanges();
       });

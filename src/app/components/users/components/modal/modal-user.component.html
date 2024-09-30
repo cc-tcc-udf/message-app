@@ -20,24 +20,27 @@
   </section>
   <form [formGroup]="form">
     <section class="flex flex-column gap-3">
-      <app-input label="Nome" formControlName="name" type="text" />
-      <app-input label="Email" formControlName="email" type="email" />
+      <app-input [control]="getControl('name')" label="Nome" formControlName="name" type="text" />
+      <app-input [control]="getControl('email')" label="Email" formControlName="email" type="email" />
       <section class="w-full flex flex-column gap-2">
         <label for="select">Permissões</label>
-        <p-multiSelect id="select" appendTo="body" [options]="roles" formControlName="roles"
-          placeholder="Selecione a permissão" optionLabel="label" display="chip" [showClear]="true"
-          optionValue="value" />
+        <p-multiSelect [ngClass]="{'ng-dirty ng-invalid': showError('roles')}" id="select" appendTo="body"
+          [options]="roles" formControlName="roles" placeholder="Selecione a permissão" optionLabel="label"
+          display="chip" [showClear]="true" optionValue="value" />
+        <div *ngIf="showError('roles')" class="error-message">
+          {{ getErrorMessage('roles') }}
+        </div>
       </section>
-      <app-input label="Telefone" formControlName="phone" type="text" />
+      <app-input [control]="getControl('phone')" label="Telefone" formControlName="phone" type="text" />
       <div *ngIf="isProfSelected()" class="flex flex-column gap-2">
         <label for="group">Grupo</label>
         <p-dropdown appendTo="body" id="group" [options]="groups" formControlName="id_curso"
           placeholder="Selecione um grupo" [editable]="true" optionLabel="name" optionValue="id" />
       </div>
-      <app-input type="password" label="Senha" formControlName="password" />
+      <app-input autocomplete="current-password" type="password" label="Senha" formControlName="password" />
     </section>
   </form>
-  <section class="flex justify-content-end align-items-center py-3">
+  <section class="flex justify-content-end align-items-center pt-5">
     <button class="default add" (click)="save()">Salvar</button>
   </section>
 </section>

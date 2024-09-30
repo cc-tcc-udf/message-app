@@ -33,18 +33,17 @@
     }
 
     input {
-
       width: 100%;
       height: auto;
       padding: .75rem .35rem;
       box-sizing: border-box;
-
       background: none;
       border: none;
       font-family: Arial, sans-serif;
       font-weight: normal;
       text-align: left;
       color: $txt;
+      cursor: text;
 
       &:focus {
         outline: none;
@@ -56,13 +55,21 @@
       }
 
       &::placeholder {
-        color: $secondary;
+        color: $txt;
         opacity: 0.6;
       }
 
-      cursor: text;
+      &.is-invalid {
+        border: 1px solid var(--red-500);
+        border-radius: $border-radius;
+      }
 
       @extend .default-transition;
+    }
+
+    .error-message {
+      color: red;
+      font-size: 0.875rem;
     }
 
     input:-webkit-autofill,
@@ -73,7 +80,6 @@
       border: none !important;
       -webkit-box-shadow: 0 0 0px 1000px $primary inset;
       transition: background-color 5000s ease-in-out 0s;
-
     }
   }
 

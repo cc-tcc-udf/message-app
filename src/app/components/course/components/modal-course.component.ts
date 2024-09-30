@@ -121,7 +121,6 @@ export class ModalCourseComponent implements OnInit {
 
   ngOnInit(): void {
     const data = this.ref.data.data;
-    console.log(data)
     if (data) {
       if (data.resp && data.resp.id) {
         data.resp = data.resp.id;
@@ -130,21 +129,12 @@ export class ModalCourseComponent implements OnInit {
     }
     this.getGroups();
     this.getProf();
-    this.changes();
-  }
-  private changes() {
-    this.form.controls['courseGroupId'].valueChanges
-      .subscribe((p) => {
-        console.log((p))
-      })
-
   }
   save() {
     const form = this.form.getRawValue();
     if (form.isGroup) {
       form.courseGroupId = null;
     }
-    console.log(form)
     this.service.create(form).subscribe((p) => {
       if (p.success) {
         this.alert.showMsg("success", 'Curso', p.message);

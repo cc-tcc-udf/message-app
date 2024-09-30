@@ -2,6 +2,7 @@ import { HttpErrorResponse, HttpEvent, HttpHandlerFn, HttpInterceptorFn, HttpReq
 import { inject } from "@angular/core";
 import { Router } from "@angular/router";
 import { AuthService } from "@auth/auth.service";
+import { RefreshToken } from "@models/RefreshToken";
 import { Observable, catchError, switchMap, throwError } from "rxjs";
 
 export const HttpInterceptor: HttpInterceptorFn =
@@ -28,11 +29,11 @@ export const HttpInterceptor: HttpInterceptorFn =
     if (auth.isAuthenticated()) {
       if (auth.isTokenExpired()) {
         return auth.refreshToken().pipe(
-          switchMap((newToken) => {
-            if (newToken) {
+          switchMap((newToken: RefreshToken | null) => {
+            if (newToken && newToken.token) { 
               const clonedReq = req.clone({
                 setHeaders: {
-                  authorization: `Bearer ${newToken}`,
+                  authorization: `Bearer ${newToken.token}`,
                 },
               });
               return next(clonedReq);
@@ -42,6 +43,7 @@ export const HttpInterceptor: HttpInterceptorFn =
           }),
           catchError(handleError)
         );
+
       } else {
         const clonedReq = req.clone({
           setHeaders: {

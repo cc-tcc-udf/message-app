@@ -1,18 +1,18 @@
-import { NgIf, NgStyle } from '@angular/common';
+import { NgClass, NgIf, NgStyle } from '@angular/common';
 import { Component, ElementRef, OnInit, signal, ViewChild, ViewEncapsulation } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CourseService } from '@components/course/course.service';
 import { UsersService } from '@components/users/users.service';
 import { SubCourse } from '@models/Course';
 import { FileApp } from '@models/File';
 import { GenericResponse } from '@models/GenericResponse';
+import { CustomUsuario, Usuario } from '@models/Usuario';
 import { AlertService } from '@utils/services/alert.service';
 import { FileService } from '@utils/services/file.service';
 import { DropdownModule } from 'primeng/dropdown';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { ProgressBarModule } from 'primeng/progressbar';
-import { Observable, tap } from 'rxjs';
 import { InputComponent } from "../../../../shared/input.component";
 
 @Component({
@@ -21,7 +21,8 @@ import { InputComponent } from "../../../../shared/input.component";
   imports: [
     ReactiveFormsModule, MultiSelectModule,
     NgIf, InputComponent, NgStyle,
-    ProgressBarModule, DropdownModule
+    ProgressBarModule, DropdownModule,
+    NgClass
   ],
   providers: [FileService],
   templateUrl: './modal-user.component.html',
@@ -35,14 +36,15 @@ export class ModalUserComponent implements OnInit {
   imagePreview = signal('');
   selectedFile: File | null = null;
   groups: SubCourse[] = [];
+  user: Usuario | undefined;
 
   form: FormGroup = new FormGroup({
     id: new FormControl<number | null>(null),
-    email: new FormControl<string | null>(null),
-    name: new FormControl<string | null>(null),
-    phone: new FormControl<string | null>(null),
+    email: new FormControl<string | null>(null, [Validators.required]),
+    name: new FormControl<string | null>(null, [Validators.required]),
+    phone: new FormControl<string | null>(null, [Validators.required]),
     password: new FormControl<string | null>(null),
-    roles: new FormControl<string[] | null>(null),
+    roles: new FormControl<string[] | null>(null, [Validators.required]),
     profilePhoto: new FormControl<number | null>(null),
     id_curso: new FormControl<number | null>(null)
   })
@@ -57,20 +59,32 @@ export class ModalUserComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    console.log(this.roles)
+    const usr: CustomUsuario = this.ref.data.user;
+    if (usr) {
+      this.form.patchValue(usr);
+      if (usr.profilePhoto) {
+        this.imagePreview.set(usr.profilePhoto);
+      }
+    }
     this.getGroups();
   }
 
 
   save() {
+    this.form.markAllAsTouched();
+    if (!this.form.valid) {
+      this.alert.showMsg('error', 'Error', 'Por favor, preencha os campos obrigatorios');
+      return;
+    }
     const form = this.form.getRawValue();
-    console.log(form)
     this.service.createAdm(form)
-      .subscribe((async p => {
+      .subscribe((p => {
+        this.user = p;
         if (p.id && this.selectedFile) {
-          await this.saveApi(this.selectedFile, p.id);
+          this.saveApi(this.selectedFile, p.id);
+        } else {
+          this.dialog.close(p);
         }
-        this.dialog.close();
       }))
   }
 
@@ -80,7 +94,6 @@ export class ModalUserComponent implements OnInit {
         if (response.success) {
           const data = response.data as SubCourse[];
           this.groups = [{ id: null, name: 'Nenhum' }, ...data.filter(c => c.id)];
-          console.log(this.groups)
         }
       });
   }
@@ -124,17 +137,31 @@ export class ModalUserComponent implements OnInit {
     return selectedRoles.includes('PROF');
   }
 
-  saveApi(file: File, id: number): Observable<FileApp> {
-    return this.fileService.createFile(id, file).pipe(
-      tap((p: FileApp) => {
-        this.value = 80;
-        if (p) {
-          this.value = 100;
-          this.alert.showMsg('success', 'Foto de perfil', 'atualizada com sucesso');
-          this.value = 0;
+  saveApi(file: File, id: number) {
+    this.fileService.createFile(id, file)
+      .subscribe((file: FileApp) => {
+        if (this.user) {
+          this.user.profilePhoto = file;
         }
-      })
-    );
+        this.value = 100;
+        this.alert.showMsg('success', 'Foto de perfil', 'atualizada com sucesso');
+        this.value = 0;
+        this.dialog.close(this.user);
+      });
   }
 
+  getControl(control: string) {
+    return this.form.get(control) as FormControl;
+  }
+
+  showError(control: string): boolean {
+    return !!(this.getControl(control) && this.getControl(control).invalid && this.getControl(control).touched);
+  }
+
+  getErrorMessage(control: string): string {
+    if (this.getControl(control)?.errors?.['required']) {
+      return 'Campo obrigatório';
+    }
+    return 'Erro no campo';
+  }
 }
