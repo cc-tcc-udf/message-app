@@ -114,10 +114,10 @@ export class AuthService {
 
   isTokenExpired(): boolean {
     const token = sessionStorage.getItem('access_token');
-    if (!token) return true;
+    if (!token) { return true };
 
     const payload = this.decodeToken(token);
-    const expirationDate = new Date(payload.exp * 1000);
+    const expirationDate = new Date(payload?.exp * 1000);
     return new Date() > expirationDate;
   }
 
@@ -138,7 +138,7 @@ export class AuthService {
       return this.http.get<RefreshToken>(url).pipe(
         tap((token: RefreshToken) => {
           if (token) {
-            this.setToken(token.token);
+            this.setToken(token.refreshToken);
             this.alert.showMsg('success', 'Token', 'token atualizado com sucesso');
           }
           this.attToken = false;

@@ -1,12 +1,12 @@
 <p-scrollPanel [style]="{ width: '100%', height: 'calc(100dvh - 4rem)' }">
-  <section class="w-full h-auto">
-    <section class="w-full py-2 flex justify-content-between">
+  <section class="w-full flex flex-column gap-3 h-auto px-4">
+    <section class="w-full py-3 flex justify-content-between">
       <span class="font-light cursor-pointer">
         <i class=" bi pr-1 bi-arrow-left"></i>
         voltar
       </span>
       <section class="flex gap-4">
-        <button class="basic theme">
+        <button (click)="save()" class="basic theme">
           <i class="bi pr-1 bi-floppy"></i>
           salvar
         </button>
@@ -25,10 +25,37 @@
           formControlName="summary"></app-input>
         <div class="flex flex-column gap-2">
           <label for="description">Descrição</label>
-          <p-editor id="description" formControlName="message" [style]="{ height: '320px' }"
+          <p-editor #editor id="description" formControlName="message" [style]="{ height: '320px' }"
             [modules]="editorModules" />
         </div>
       </section>
     </form>
+    <section class="w-full">
+      <span class="text-base">Links <i class="bi pl-1 bi-link-45deg"></i></span>
+      <section class="flex pt-2 gap-3">
+        <section *ngFor="let link of getControl('links').value"
+          class="card_default addLink flex flex-column justify-content-between">
+          <p class="m-0">{{link.title}}</p>
+          <section class="actions flex align-items-center justify-content-center gap-2">
+
+          </section>
+        </section>
+        <section class="card_default addLink flex justify-content-center align-items-center">
+          <button (click)="addLinks()" class="theme text-center p-0 h-3rem w-3rem border-circle success">
+            <i class="bi text-2xl bi-plus"></i>
+          </button>
+        </section>
+      </section>
+    </section>
+    <section class="w-full pb-3">
+      <span class="text-base">Anexos <i class="bi pl-1 bi-link-45deg"></i></span>
+      <section class="flex pt-2 gap-3">
+        <section class="card_default addLink flex justify-content-center align-items-center">
+          <button class="theme border-circle success">
+            <i class="bi text-2xl bi-plus"></i>
+          </button>
+        </section>
+      </section>
+    </section>
   </section>
 </p-scrollPanel>

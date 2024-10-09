@@ -1,9 +1,9 @@
 export class RefreshToken {
   email: string;
-  token: string
+  refreshToken: string
 
   constructor(obj: RefreshToken) {
     this.email = obj.email
-    this.token = obj.token
+    this.refreshToken = obj.refreshToken
   }
 }

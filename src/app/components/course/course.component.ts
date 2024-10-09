@@ -31,11 +31,8 @@ export class CourseComponent implements OnInit {
   private dialogService = inject(DialogService);
   private cr = inject(ChangeDetectorRef);
 
-
   ref: DynamicDialogRef | undefined;
   loading: boolean = true;
-
-
 
   ngOnInit(): void {
     this.getData();
@@ -59,8 +56,8 @@ export class CourseComponent implements OnInit {
       data: {
         data: obj
       }
-    }
-    )
+    })
+
     this.ref.onClose.subscribe((p) => {
       if (p) {
         this.getData();

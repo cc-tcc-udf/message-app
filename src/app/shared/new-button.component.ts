@@ -23,13 +23,13 @@ import { DialogService, DynamicDialogRef } from "primeng/dynamicdialog";
   `
 })
 export class NewButtonComponent {
-  @Input() buttonText: string = 'Novo'; // Texto do botão
-  @Input() icon?: string; // Ícone do botão (classe CSS do ícone)
-  @Input() navigateTo?: string; // Rota para navegação
-  @Input() modalComponent?: Type<unknown>; // Componente do modal a ser aberto
-  @Input() modalTitle?: string; // Componente do modal a ser aberto
-  @Input() modalData?: unknown; // Dados a serem passados para o modal
-  @Input() onModalClose?: (result: unknown) => void; // Função de callback para quando o modal fechar
+  @Input() buttonText: string = 'Novo';
+  @Input() icon?: string;
+  @Input() navigateTo?: string; 
+  @Input() modalComponent?: Type<unknown>;
+  @Input() modalTitle?: string; 
+  @Input() modalData?: unknown; 
+  @Input() onModalClose?: (result: unknown) => void;
   private dialog = inject(DialogService);
   private router = inject(Router);
 

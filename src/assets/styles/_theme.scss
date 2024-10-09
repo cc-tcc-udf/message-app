@@ -107,13 +107,13 @@
   }
 
   button.basic {
-    color: $txt;
+    color: white;
+    background: $btn;
     font-weight: 500;
     box-shadow: $shadow;
     border-radius: $border-radius;
     padding: .5rem .75rem;
     font-size: large;
-    border: 1px solid $tertiary;
     cursor: pointer;
 
     i {
@@ -246,7 +246,9 @@
 
   .p-multiselect-panel .p-multiselect-items .p-multiselect-item,
   .p-multiselect-panel .p-multiselect-header .p-multiselect-filter-container .p-multiselect-filter-icon,
-  .p-checkbox .p-checkbox-box .p-checkbox-icon {
+  .p-checkbox .p-checkbox-box .p-checkbox-icon,
+  .p-multiselect .p-multiselect-label.p-placeholder,
+  .p-multiselect .p-multiselect-trigger {
     color: $txt;
   }
 
@@ -263,11 +265,6 @@
 
   .p-dropdown .p-dropdown-trigger {
     background-color: $primary;
-  }
-
-  .p-multiselect .p-multiselect-label.p-placeholder,
-  .p-multiselect .p-multiselect-trigger {
-    color: $txt;
   }
 
   .p-menubar .p-submenu-list,
@@ -289,7 +286,8 @@
   }
 
   .p-dialog .p-dialog-header .p-dialog-header-icon:enabled:hover,
-  .p-multiselect-panel .p-multiselect-header .p-multiselect-close:enabled:hover {
+  .p-multiselect-panel .p-multiselect-header .p-multiselect-close:enabled:hover,
+  .p-editor-container .p-editor-content .ql-editor {
     background: $primary;
     color: $txt;
     box-shadow: $shadow;
@@ -297,5 +295,41 @@
 
   p-multiselect.ng-dirty.ng-invalid>.p-multiselect {
     border: 1px solid var(--red-500) !important;
+  }
+
+
+  // Quill
+  .ql-toolbar.ql-snow,
+  .p-editor-container .p-editor-content.ql-snow,
+  .ql-toolbar.ql-snow .ql-picker.ql-expanded .ql-picker-options {
+    border: none;
+  }
+
+  .ql-toolbar.ql-snow {
+    box-shadow: $shadow;
+  }
+
+  .p-editor-container {
+    box-shadow: $shadow;
+    border-radius: $border-radius;
+    overflow: hidden;
+  }
+
+  .ql-snow .ql-picker-options {
+    background: $secondary;
+    box-shadow: $shadow;
+    border-radius: $border-radius;
+    color: $txt;
+  }
+
+  .ql-toolbar.ql-snow .ql-picker.ql-expanded .ql-picker-label {
+    border-color: $primary;
+    background: $secondary;
+    color: $txt;
+    border-radius: $border-radius;
+  }
+
+  .p-scrollpanel .p-scrollpanel-bar {
+    background: $secondary;
   }
 }

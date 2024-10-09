@@ -1,8 +1,8 @@
 // dark-theme.scss
-$dark_primary: #1A1A1D;
+$dark_primary: #18181b;
 $dark_secondary: #2C2E33;
 $dark_tertiary: #45474C;
-$dark_btn: #0073E6;
+$dark_btn: rgba(96, 165, 250, 0.16);
 // $dark_background: #1F2833;
 $dark_background: #0f0f11;
 $dark_yellow: #E5C100;
@@ -10,15 +10,22 @@ $dark_txt_color: #FFF;
 $dark_box_shadow: 0 4px 6px rgba(0, 0, 0, 0.4), 0 1px 3px rgba(0, 0, 0, 0.3);
 
 // light-theme.scss
-$light_primary: #F7FBFC;
-$light_secondary: #D6E6F2;
-$light_tertiary: #B9D7EA;
-$light_btn: #214177;
-$light_background: #fafafa;
-$light_yellow: #FFC700;
-$light_txt_color: #000;
-$light_box_shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
-
+// $light_primary: #F7FBFC;
+// $light_secondary: #D6E6F2;
+// $light_tertiary: #B9D7EA;
+// $light_btn: #214177;
+// $light_background: #fafafa;
+// $light_yellow: #FFC700;
+// $light_txt_color: #000;
+// $light_box_shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+$light_primary: #EFF6FF; // Um tom neutro, suave e mais claro que o original
+$light_secondary: #DEE8F3; // Azul claro pastel, suave e agradável
+$light_tertiary: #C5D6E8; // Um tom de azul intermediário, ainda suave
+$light_btn: #3A5986; // Um tom azul mais intenso para manter contraste no botão
+$light_background: #F8F9FA; // Mais claro que o anterior, para um fundo limpo e leve
+$light_yellow: #FFE082; // Amarelo pastel, mantendo a suavidade sem perder o destaque
+$light_txt_color: #333333; // Um tom mais suave que preto, para um texto mais confortável
+$light_box_shadow: 0 4px 6px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.05); // Sombra ainda mais leve
 
 $border_radius: 5px;
 $default_shadow: 0px 1px 10px rgba(0, 0, 0, 0.12),

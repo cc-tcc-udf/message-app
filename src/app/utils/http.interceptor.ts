@@ -30,10 +30,10 @@ export const HttpInterceptor: HttpInterceptorFn =
       if (auth.isTokenExpired()) {
         return auth.refreshToken().pipe(
           switchMap((newToken: RefreshToken | null) => {
-            if (newToken && newToken.token) { 
+            if (newToken && newToken.refreshToken) { 
               const clonedReq = req.clone({
                 setHeaders: {
-                  authorization: `Bearer ${newToken.token}`,
+                  authorization: `Bearer ${newToken.refreshToken}`,
                 },
               });
               return next(clonedReq);
