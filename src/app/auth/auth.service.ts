@@ -172,8 +172,8 @@ export class AuthService {
       .pipe(catchError(this.handleError));
   }
 
-  updateUser(usr: Usuario): Observable<Usuario> {
-    return this.http.put<Usuario>(`${environment.API_URL}/private/auth/update`, usr)
+  updateUser(usr: Usuario): Observable<GenericResponse> {
+    return this.http.put<GenericResponse>(`${environment.API_URL}/private/auth/update`, usr)
       .pipe(catchError(this.handleError));
   }
 
@@ -182,6 +182,11 @@ export class AuthService {
       .pipe(catchError(this.handleError));
   }
 
+  hasAnyRole(roles: Roles_user[]): boolean {
+    const user = this.getUserFromSessionStorage();
+    return roles.some(role => user?.roles.includes(role));
+  }
+  
   // Verifica se o usuário possui a role ADMIN
   isAdmin(): boolean {
     return this.hasRole(Roles_user.ADMIN);

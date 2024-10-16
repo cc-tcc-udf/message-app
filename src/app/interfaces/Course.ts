@@ -92,19 +92,16 @@ export class SubCourseCustom {
 
 export function getCourseCols() {
   return [
-    { field: 'id', header: 'id' },
     { field: 'name', header: 'Nome' },
     { field: 'description', header: 'Descrição' },
     { field: 'resp', header: 'Responsavel', isImg: true },
     { field: 'abbreviation', header: 'Sigla', isTag: true },
     { field: 'isGroup', header: 'Grupo', isBoolean: true },
     { field: 'qtdCursos', header: 'Qtd Cursos' },
-    // { field: 'action', header: 'Ações', isAction: true },
   ]
 }
 export function getSubCourseCols() {
   return [
-    { field: 'id', header: 'id' },
     { field: 'name', header: 'Nome' },
     { field: 'description', header: 'Descrição' },
     { field: 'abbreviation', header: 'Sigla', isTag: true },

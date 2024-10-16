@@ -5,7 +5,7 @@ import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR } from "@angular/f
 @Component({
   selector: 'app-input',
   standalone: true,
-  styleUrl: './shared.scss',
+  styleUrls: ['./shared.scss'],
   imports: [NgIf, NgClass],
   providers: [
     {
@@ -15,9 +15,16 @@ import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR } from "@angular/f
     }
   ],
   template: `
-  <div class="input_">
-  <label [for]="inputId">{{ label }}</label>
-  <div class="content">
+  <div class="input_" [ngClass]="{'gap-2': label}">
+    <label [for]="inputId">{{ label }}</label>
+    <div class="content" [ngClass]="{'icon-left': iconPosition === 'left', 'icon-right': iconPosition === 'right'}">
+      <!-- Ícone à esquerda -->
+      <ng-container *ngIf="icon && iconPosition === 'left'">
+        <section class="flex align-items-center px-2">
+          <i class="font-bold" [class]="icon"></i>
+        </section>
+      </ng-container>
+      
       <input 
         [id]="inputId"
         [autocomplete]="autocomplete"
@@ -30,6 +37,14 @@ import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR } from "@angular/f
         [required]="required"
         [placeholder]="placeholder"/>
       
+      <!-- Ícone à direita -->
+      <ng-container *ngIf="icon && iconPosition === 'right'">
+        <section class="vertical-align-middle text-center">
+          <i [class]="icon"></i>
+        </section>
+      </ng-container>
+
+      <!-- Botão para alternar a visibilidade da senha -->
       <button 
         aria-label="mostrar ou esconder senha"
         *ngIf="type === 'password'"
@@ -39,12 +54,12 @@ import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR } from "@angular/f
         <i [class]="showPassword ? 'bi bi-eye-slash-fill' : 'bi bi-eye-fill'"></i>
       </button>
     </div>
+    
     <!-- Exibição de erros -->
     <div *ngIf="showError()" class="error-message">
-        {{ getErrorMessage() }}
+      {{ getErrorMessage() }}
     </div>
   </div>
-
   `,
 })
 export class InputComponent implements ControlValueAccessor {
@@ -54,6 +69,10 @@ export class InputComponent implements ControlValueAccessor {
   @Input() control?: FormControl | null;
   @Optional() @Input() required: boolean = false;
   @Optional() @Input() placeholder: string = '';
+
+  @Input() icon: string = '';  // Classe do ícone, por exemplo, 'bi bi-person'
+  @Input() iconPosition: 'left' | 'right' = 'left';  // Posição do ícone
+
   value: string = '';
   disabled: boolean = false;
   showPassword: boolean = false;

@@ -10,7 +10,7 @@ import { BreadcrumbService } from '../services/breadcrumb.service';
   standalone: true,
   imports: [BreadcrumbModule, NgClass, NgIf, RouterLink],
   template: `
-  <section class="w-full flex">
+  <section class="w-full align-items-center flex">
     <p-breadcrumb class="max-w-full" [model]="items" [home]="home" />
   </section>
   `,

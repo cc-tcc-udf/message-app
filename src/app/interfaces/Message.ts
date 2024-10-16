@@ -5,10 +5,10 @@ export class Message {
   id: number;
   title: string;
   summary: string;
-  sendDate: Date;
+  sendDate: string;
   status: string;
   message: string;
-  response: string;
+  responsible: string;
   attachments: FileApp[];
   links: Links[];
 
@@ -16,11 +16,21 @@ export class Message {
     this.id = msg.id;
     this.title = msg.title;
     this.summary = msg.summary;
-    this.sendDate = new Date(msg.sendDate);
+    this.sendDate = msg.sendDate;
     this.status = msg.status;
     this.message = msg.message;
-    this.response = msg.response;
+    this.responsible = msg.responsible;
     this.attachments = msg.attachments;
     this.links = msg.links;
   }
+}
+
+export function getMessageColuns() {
+  return [
+    { field: 'title', header: 'Titulo' },
+    { field: 'sendDate', header: 'DataEnvio', isTag: true, isDate: true },
+    { field: 'status', header: 'Status', isTag: true },
+    { field: 'group', header: 'Curso/Grupo' },
+    { field: 'views', header: 'Visualizações' },
+  ]
 }

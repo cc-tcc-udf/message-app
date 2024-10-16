@@ -3,6 +3,7 @@ export interface Column {
   header: string;
   isTag?: boolean;
   isImg?: boolean;
+  isDate?: boolean;
   isBoolean?: boolean;
   isAction?: boolean;
 }

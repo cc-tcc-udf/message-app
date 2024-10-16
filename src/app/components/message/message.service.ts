@@ -12,12 +12,12 @@ export class MessageService {
 
   constructor(private http: HttpClient) { }
 
-  getAllMessages(isGroup: boolean) {
-    return this.http.get<GenericResponse>(`${this.api}/public/course/list?isGroup=${encodeURIComponent(isGroup)}`);
+  getAllMessages() {
+    return this.http.get<GenericResponse>(`${this.api}/public/msg/list`);
   }
 
-  getGroups() {
-    return this.http.get<GenericResponse>(`${this.api}/public/course/groups`);
+  getMsg(id: number | string) {
+    return this.http.get<GenericResponse>(`${this.api}/public/msg/${id}`);
   }
 
   create(obj: Message) {

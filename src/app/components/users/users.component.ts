@@ -39,8 +39,9 @@ export class UsersComponent implements OnInit {
   }
 
   openModal(user?: CustomUsuario) {
+    const name = user ? user.name : 'Criar usuário';
     this.ref = this.dialog.open(ModalUserComponent, {
-      header: 'User',
+      header: name,
       width: '30vw',
       height: 'auto',
       modal: true,
@@ -55,6 +56,7 @@ export class UsersComponent implements OnInit {
       },
       draggable: true
     })
+
     this.ref.onClose.subscribe(result => {
       if (result) {
         this.users.push(new CustomUsuario(result));

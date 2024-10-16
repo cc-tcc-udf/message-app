@@ -10,7 +10,6 @@
   .input_ {
     display: flex;
     flex-direction: column;
-    gap: .5rem;
     color: $txt;
 
     .content {
@@ -23,6 +22,10 @@
       overflow: hidden;
       box-shadow: $shadow;
       display: flex;
+
+      i {
+        color: $txt;
+      }
 
       button {
         all: unset;
@@ -78,7 +81,7 @@
       -webkit-text-fill-color: $txt !important;
       color: $txt;
       border: none !important;
-      -webkit-box-shadow: 0 0 0px 1000px $primary inset;
+      -webkit-box-shadow: 0 0 0px 1000px $secondary inset;
       transition: background-color 5000s ease-in-out 0s;
     }
   }

@@ -41,17 +41,20 @@ export class CourseComponent implements OnInit {
   private getData() {
     this.service.getAllCourses(true).
       subscribe((obj: GenericResponse) => {
+        console.log("saçkdmslkm", obj.data)
         this.courses = (obj.data as Course[])
           .map(course => new CourseCustom(course));
+        console.log(this.courses);
         this.loading = false;
         this.cr.detectChanges();
       });
   }
 
   newCourse(obj?: Course | SubCourse) {
+    console.log(obj)
     this.ref = this.dialogService.open(
       ModalCourseComponent, {
-      header: 'Cadastrar novo curso',
+      header: 'Cadastrar',
       contentStyle: { overflow: 'auto' },
       data: {
         data: obj

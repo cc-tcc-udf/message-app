@@ -20,36 +20,4 @@
     background: var(--red-100);
     color: var(--red-700);
   }
-
-  button.edit {
-    background: var(--orange-100) !important;
-    color: var(--orange-700) !important;
-
-    &:hover {
-      background: var(--orange-200) !important;
-    }
-  }
-
-  button.del {
-    background: var(--red-100) !important;
-    color: var(--red-700) !important;
-
-    &:hover {
-      background: var(--red-200) !important;
-    }
-  }
-}
-
-.p-datatable .p-datatable-thead>tr>th {
-  background: none;
-  border: none;
-}
-
-.p-datatable .p-datatable-tbody>tr>td {
-  border-bottom: none;
-  border-top: 1px solid #e5e7eb;
-}
-
-.p-dropdown {
-  width: 100%;
 }

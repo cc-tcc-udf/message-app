@@ -6,7 +6,6 @@ import { Subject } from 'rxjs';
 })
 export class ThemeService {
   private _loading = new Subject<boolean>();
-
   loading$ = this._loading.asObservable();
 
   constructor() { }

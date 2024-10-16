@@ -1,0 +1,44 @@
+<p-table #tbMsg [paginator]="true" [rows]="8" [columns]="cols" [value]="data" [tableStyle]="{ 'min-width': '50rem' }"
+  [globalFilterFields]="getFields()">
+
+  <ng-template pTemplate="caption">
+    <section class="flex gap-2 justify-content-end">
+      <app-new-button icon="bi-plus" navigateTo="msg/msg-manage"></app-new-button>
+      <app-input icon="bi bi-search" iconPosition="left" #in type="text" placeholder="Buscar mensagem"
+        (input)="tbMsg?.filterGlobal(in.value, 'contains')" />
+    </section>
+  </ng-template>
+
+  <ng-template pTemplate="header" let-columns>
+    <tr>
+      <th [pSortableColumn]="col.field" *ngFor="let col of columns">
+        {{ col.header }} <p-sortIcon [field]="col.field"></p-sortIcon>
+      </th>
+    </tr>
+  </ng-template>
+
+  <ng-template pTemplate="body" let-msg let-columns="columns">
+    <tr>
+      <td *ngFor="let td of columns">
+        <p *ngIf="!td.isTag && !td.isDate; else tag" class="m-0 font-semibold">
+          {{ msg[td.field] }}
+        </p>
+        <ng-template #tag>
+          <span [ngClass]="getClassTag(msg, td.isDate)">
+            {{ getTxt(msg, td.isDate) }}
+          </span>
+        </ng-template>
+      </td>
+      <td class="w-1">
+        <section class="flex gap-2">
+          <div *ngFor="let action of actions">
+            <button [attr.aria-label]="action.label" class="add {{ action.class }} default"
+              (click)="action.method(msg)">
+              <i class="text-base font-semibold" [ngClass]="action.icon"></i>
+            </button>
+          </div>
+        </section>
+      </td>
+    </tr>
+  </ng-template>
+</p-table>

@@ -10,7 +10,7 @@ import { DialogService, DynamicDialogRef } from "primeng/dynamicdialog";
   imports: [NgIf, NgClass],
   providers: [DialogService],
   template: `
-    <section class="flex py-2 justify-content-end">
+    <section class="flex justify-content-end">
         <button
           aria-label="button-action"
           class="add default"
@@ -25,10 +25,10 @@ import { DialogService, DynamicDialogRef } from "primeng/dynamicdialog";
 export class NewButtonComponent {
   @Input() buttonText: string = 'Novo';
   @Input() icon?: string;
-  @Input() navigateTo?: string; 
+  @Input() navigateTo?: string;
   @Input() modalComponent?: Type<unknown>;
-  @Input() modalTitle?: string; 
-  @Input() modalData?: unknown; 
+  @Input() modalTitle?: string;
+  @Input() modalData?: unknown;
   @Input() onModalClose?: (result: unknown) => void;
   private dialog = inject(DialogService);
   private router = inject(Router);

@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { AuthService } from '@auth/auth.service';
 import { FileApp } from '@models/File';
 import { CustomUsuario, Usuario } from '@models/Usuario';
+import { InputComponent } from '@shared/input.component';
 import { AlertService } from '@utils/services/alert.service';
 import { FileService } from '@utils/services/file.service';
 import { MenuItem } from 'primeng/api';
@@ -14,7 +15,6 @@ import { DialogService, DynamicDialogModule, DynamicDialogRef } from 'primeng/dy
 import { MenuModule } from 'primeng/menu';
 import { MenubarModule } from 'primeng/menubar';
 import { ProgressBarModule } from 'primeng/progressbar';
-import { InputComponent } from "../../shared/input.component";
 
 @Component({
   selector: 'app-menu-bar',
@@ -33,14 +33,17 @@ import { InputComponent } from "../../shared/input.component";
           <div (click)="menu.toggle($event)" (keydown.enter)="menu.toggle($event)"
             class="flex cursor-pointer align-items-center ml-2 gap-2" tabindex="0" role="button"
             aria-label="Menu de perfil">
-            <p-avatar
+            <!-- <p-avatar
               [image]="user?.profilePhoto? user?.profilePhoto: 'https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png'"
-              shape="circle" />
+              shape="circle" /> -->
+              <div class="shadow-1 bg-cover bg-center bg-no-repeat border-circle"
+                [style.background-image]="'url(' + user?.profilePhoto + ')'" style="width: 2.5rem; height:2.5rem">
+              </div>
             <i class="default bi bi-chevron-down"></i>
           </div>
         </ng-template>
       </p-menubar>
-      <p-dialog [modal]="true" header="Edit Profile" [(visible)]="visible" [style]="{ width: '25rem' }">
+      <p-dialog [modal]="true" [(visible)]="visible" [style]="{ width: '25rem' }">
         <ng-template pTemplate="header">
           <div class="inline-flex align-items-center justify-content-center gap-2">
             <span class="font-bold white-space-nowrap">
@@ -78,7 +81,7 @@ import { InputComponent } from "../../shared/input.component";
         </form>
         <ng-template pTemplate="footer">
           <section class="flex justify-content-end">
-            <button aria-label="salvar dados do usuario" class="add default">Salvar</button>
+            <button (click)="saveProfile()" aria-label="salvar dados do usuario" class="add default">Salvar</button>
           </section>
         </ng-template>
       </p-dialog>
@@ -119,7 +122,8 @@ export class MenuBarComponent implements OnInit {
   form: FormGroup = new FormGroup({
     email: new FormControl<string | null>(null),
     name: new FormControl<string | null>(null),
-    phone: new FormControl<string | null>(null)
+    phone: new FormControl<string | null>(null),
+    profilePhoto: new FormControl<FileApp | null>(null)
   })
 
   ngOnInit(): void {
@@ -130,48 +134,71 @@ export class MenuBarComponent implements OnInit {
   private loadUser() {
     const usr = this.auth.getUserFromSessionStorage();
     if (usr) {
+      this.form.patchValue(usr);
       this.user = new CustomUsuario(usr);
-    }
-    if (this.user) {
-      this.form.patchValue(this.user);
       if (this.user.profilePhoto) {
         this.imagePreview.set(this.user.profilePhoto);
       }
     }
   }
-  saveProfile() {
 
+  async saveProfile() {
+    const form = this.form.getRawValue();
+    if (this.form.valid) {
+      if (this.selectedFile) {
+        this.value = 30;
+        await this.uploadFile(this.selectedFile, form);
+      }
+
+      this.auth.updateUser(form).subscribe((u) => {
+        if (u.success) {
+          const usr = this.auth.getUserFromSessionStorage();
+          if (usr) {
+            const usrN = new Usuario(u.data as Usuario);
+            this.auth.setUserInSessionStorage(usrN);
+            this.value = 100;
+          }
+          this.loadUser();
+          this.value = 0;
+          this.visible = false;
+          this.alert.showMsg('success', 'Perfil', 'dados atualizada com sucesso');
+        }
+      });
+    }
   }
 
   onFileChange(event: Event): void {
-    this.value = 30;
     const inputElement = event.target as HTMLInputElement;
     const file = inputElement?.files?.[0] || null;
-    this.uploadFile(file);
+    if (file) {
+      this.imagePreview.set(URL.createObjectURL(file));
+      this.selectedFile = file;
+    }
   }
 
-  uploadFile(file: File | null): void {
+  async uploadFile(file: File | null, form: Usuario): Promise<void> {
     this.value = 50;
-    if (file && file.type.startsWith('image/')) {
-      this.value = 70;
-      this.fileService.createFile(this.user!.id, file)
-        .subscribe((p: FileApp) => {
-          this.value = 80;
-          if (p) {
-            this.value = 90;
-            const usr = this.auth.getUserFromSessionStorage();
-            if (usr) {
-              const usrN = new Usuario(usr);
-              usrN.profilePhoto = p;
-              this.auth.setUserInSessionStorage(usrN);
-              this.value = 100;
+    return new Promise<void>((resolve, reject) => {
+      if (file && file.type.startsWith('image/')) {
+        this.value = 70;
+        this.fileService.createFile(file)
+          .subscribe({
+            next: (p: FileApp) => {
+              if (p) {
+                form.profilePhoto = p;
+                this.value = 80;
+                resolve();
+              }
+            },
+            error: (err) => {
+              this.alert.showMsg('error', 'Erro no upload', 'Ocorreu um erro ao enviar a imagem');
+              reject(err);
             }
-            this.loadUser();
-            this.alert.showMsg('success', 'Foto de perfil', 'atualizada com sucesso');
-            this.value = 0;
-          }
-        })
-    }
+          });
+      } else {
+        resolve();
+      }
+    });
   }
 
   private navigate(rota: string) {
@@ -181,13 +208,7 @@ export class MenuBarComponent implements OnInit {
   setItems() {
     this.items = [
       { label: 'Home', icon: 'bi bi-house', command: () => { this.navigate('home') } },
-      {
-        label: 'Mensagem', icon: 'bi bi-chat-square-text-fill',
-        items: [
-          { label: 'Mensagens', icon: 'bi bi-card-list', command: () => { this.navigate('msg') } },
-          { label: 'Criar ', icon: 'bi bi-card-list', command: () => { this.navigate('msg-manage') } },
-        ]
-      },
+      { label: 'Mensagens', icon: 'bi bi-chat-square-text-fill', command: () => { this.navigate('msg') } },
       {
         label: 'Configurações', icon: 'bi bi-sliders',
         items: [

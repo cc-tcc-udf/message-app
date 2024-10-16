@@ -26,9 +26,15 @@ export const routes: Routes = [
     children: [
       { path: '', redirectTo: 'home', pathMatch: 'full' },
       { path: 'home', component: HomeComponent, data: { breadcrumb: ['Home'] } },
-      { path: 'msg', component: MessageComponent, data: { breadcrumb: ['Mensagem'] } },
-      { path: 'msg-view', component: ViewMsgComponent, data: { breadcrumb: ['Mensagem', 'Visualizar'] } },
-      { path: 'msg-manage', component: ManageMsgComponent, data: { breadcrumb: ['Mensagem', 'Gerenciar'] } },
+
+      {
+        path: 'msg', data: { breadcrumb: ['Mensagem'], roles: ['PROF'] },
+        children: [
+          { path: '', component: MessageComponent, data: { breadcrumb: ['Todas as mensagens'] } },
+          { path: 'msg-view', component: ViewMsgComponent, data: { breadcrumb: ['Visualizar'] } },
+          { path: 'msg-manage', component: ManageMsgComponent, data: { breadcrumb: ['Gerenciar'] } },
+        ]
+      },
       { path: 'configs', component: ConfigsComponent, data: { breadcrumb: ['Configurações'] } },
       { path: 'users', component: UsersComponent, data: { breadcrumb: ['Configurações', 'Usuarios'] } },
       { path: 'cursos', component: CourseComponent, data: { breadcrumb: ['Configurações', 'Cursos'] } }

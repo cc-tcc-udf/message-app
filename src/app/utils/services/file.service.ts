@@ -9,10 +9,10 @@ export class FileService {
 
   private api = `${environment.API_URL}/public/file`
 
-  createFile(id: number, file: File) {
+  createFile(file: File) {
     const formData = new FormData();
     formData.append('file', file);
-    return this._http.post<FileApp>(`${this.api}/create/${id}`, formData);
+    return this._http.post<FileApp>(`${this.api}/create`, formData);
   }
 
   updateFile(id: number, file: File) {

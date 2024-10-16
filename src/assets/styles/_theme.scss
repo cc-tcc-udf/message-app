@@ -81,12 +81,62 @@
     @extend .default-transition;
   }
 
+  button.link {
+    all: unset;
+    background: #769FCD;
+    width: max-content;
+    color: white;
+    border-radius: $border-radius;
+    padding: .25rem .5rem;
+    cursor: pointer;
+
+    i {
+      font-size: 1.25rem
+    }
+  }
+
   button.default {
     all: unset;
     cursor: pointer;
     background: $secondary;
     // color: $primary;
     @extend .default-transition;
+  }
+
+  button.view {
+    background: var(--blue-100) !important;
+    color: var(--blue-700) !important;
+
+    &:hover {
+      background: var(--blue-200) !important;
+    }
+  }
+
+  button.send {
+    background: var(--green-100) !important;
+    color: var(--green-700) !important;
+
+    &:hover {
+      background: var(--green-200) !important;
+    }
+  }
+
+  button.edit {
+    background: var(--orange-100) !important;
+    color: var(--orange-700) !important;
+
+    &:hover {
+      background: var(--orange-200) !important;
+    }
+  }
+
+  button.del {
+    background: var(--red-100) !important;
+    color: var(--red-700) !important;
+
+    &:hover {
+      background: var(--red-200) !important;
+    }
   }
 
   button.success {
@@ -125,7 +175,7 @@
 
   button.add {
     border-radius: $border-radius;
-    box-shadow: $default_shadow;
+    box-shadow: $shadow;
     padding: .5rem 1rem;
     display: flex;
     align-items: center;
@@ -185,6 +235,12 @@
     @extend .default-transition;
   }
 
+  .p-tabview .p-tabview-nav,
+  .p-tabview .p-tabview-panels,
+  .p-tabview .p-tabview-nav li .p-tabview-nav-link {
+    background: none;
+  }
+
   .p-datatable .p-datatable-tbody>tr {
     background: $background;
 
@@ -218,7 +274,12 @@
   .p-dialog .p-dialog-footer,
   .p-multiselect-panel,
   .p-multiselect-panel .p-multiselect-header,
-  .p-checkbox .p-checkbox-box {
+  .p-checkbox .p-checkbox-box,
+  .p-paginator .p-paginator-pages .p-paginator-page:not(.p-highlight):hover,
+  .p-paginator .p-paginator-first:not(.p-disabled):not(.p-highlight):hover,
+  .p-paginator .p-paginator-prev:not(.p-disabled):not(.p-highlight):hover,
+  .p-paginator .p-paginator-next:not(.p-disabled):not(.p-highlight):hover,
+  .p-paginator .p-paginator-last:not(.p-disabled):not(.p-highlight):hover {
     background: $primary;
     color: $txt;
   }
@@ -239,7 +300,8 @@
   }
 
   .p-multiselect-panel .p-multiselect-items .p-multiselect-item:not(.p-highlight):not(.p-disabled).p-focus,
-  .p-multiselect-panel .p-multiselect-items .p-multiselect-item:not(.p-highlight):not(.p-disabled):hover {
+  .p-multiselect-panel .p-multiselect-items .p-multiselect-item:not(.p-highlight):not(.p-disabled):hover,
+  .p-paginator .p-paginator-pages .p-paginator-page.p-highlight {
     background: $secondary;
     color: $txt;
   }
@@ -248,8 +310,13 @@
   .p-multiselect-panel .p-multiselect-header .p-multiselect-filter-container .p-multiselect-filter-icon,
   .p-checkbox .p-checkbox-box .p-checkbox-icon,
   .p-multiselect .p-multiselect-label.p-placeholder,
-  .p-multiselect .p-multiselect-trigger {
+  .p-multiselect .p-multiselect-trigger,
+  .p-paginator .p-paginator-first,
+  .p-paginator .p-paginator-prev,
+  .p-paginator .p-paginator-next,
+  .p-paginator .p-paginator-last {
     color: $txt;
+    @extend .default-transition;
   }
 
   .p-multiselect,
@@ -332,4 +399,63 @@
   .p-scrollpanel .p-scrollpanel-bar {
     background: $secondary;
   }
+
+  .msg_list .p-datatable-wrapper {
+    height: calc(100% - 4.25rem);
+  }
+
+  .p-tabview-panel,
+  .p-datatable {
+    height: 100%;
+  }
+
+  .p-tabview-panels {
+    height: 80dvh;
+  }
+
+  .p-datatable .p-datatable-thead>tr>th,
+  .p-datatable .p-datatable-header {
+    background: none;
+    border: none;
+    padding: .5rem 0;
+  }
+
+  .p-dropdown {
+    width: 100%;
+  }
+
+  .p-paginator {
+    height: 3rem;
+    padding: 0;
+    margin: 0;
+    border: none;
+    background: none;
+  }
+
+  .NAO_ENVIADO {
+    background-color: var(--red-100) !important;
+    color: var(--red-700) !important;
+  }
+
+  .RECEBIDO {
+    background-color: var(--green-100) !important;
+    color: var(--green-700) !important;
+  }
+
+  .ENVIADO {
+    background-color: var(--blue-100) !important;
+    color: var(--blue-700) !important;
+  }
+
+  .VISUALIZADO {
+    background-color: var(--yellow-100) !important;
+    color: var(--yellow-700) !important;
+  }
+
+  .REMOVIDA {
+    background-color: var(--orange-100) !important;
+    color: var(--orange-700) !important;
+  }
+
+
 }

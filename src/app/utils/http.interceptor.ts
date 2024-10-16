@@ -12,6 +12,7 @@ export const HttpInterceptor: HttpInterceptorFn =
     const auth = inject(AuthService);
 
     const handleError = (error: HttpErrorResponse): Observable<never> => {
+      console.log(error)
       const status = error.status;
       const message = status === 401
         ? 'Você não tem permissão para realizar essa requisição'

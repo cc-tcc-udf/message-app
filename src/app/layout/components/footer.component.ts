@@ -6,8 +6,8 @@ import { ThemeService } from '@utils/services/theme.service';
   standalone: true,
   imports: [],
   template: `
-    <section class="w-full h-full flex-column justify-content-center align-items-center flex">
-      <img height="35px" [src]="'assets/img/logo/' + theme.getLogos() + '.svg'" alt="">
+    <section class="w-full py-1 h-full flex-column justify-content-center align-items-center flex">
+      <img class="h-3rem" [src]="'assets/img/logo/' + theme.getLogos() + '.svg'" alt="">
     </section>
   `,
   styles: [``]

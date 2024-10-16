@@ -45,7 +45,7 @@ export class ModalUserComponent implements OnInit {
     phone: new FormControl<string | null>(null, [Validators.required]),
     password: new FormControl<string | null>(null),
     roles: new FormControl<string[] | null>(null, [Validators.required]),
-    profilePhoto: new FormControl<number | null>(null),
+    profilePhoto: new FormControl<FileApp | null>(null),
     id_curso: new FormControl<number | null>(null)
   })
 
@@ -70,22 +70,47 @@ export class ModalUserComponent implements OnInit {
   }
 
 
-  save() {
+  async save() {
     this.form.markAllAsTouched();
     if (!this.form.valid) {
       this.alert.showMsg('error', 'Error', 'Por favor, preencha os campos obrigatorios');
       return;
     }
     const form = this.form.getRawValue();
+    if (this.selectedFile) {
+      this.value = 30;
+      await this.saveApi(this.selectedFile, form);
+    }
+
     this.service.createAdm(form)
       .subscribe((p => {
+        this.value = 100;
         this.user = p;
-        if (p.id && this.selectedFile) {
-          this.saveApi(this.selectedFile, p.id);
-        } else {
-          this.dialog.close(p);
-        }
+        this.value = 0;
+        this.alert.showMsg('success', 'Usuário', 'usuário criado com sucesso');
+        this.dialog.close(p);
       }))
+  }
+
+  async saveApi(file: File, form: Usuario): Promise<void> {
+    this.value = 50;
+    return new Promise<void>((resolve, reject) => {
+      this.value = 70;
+      this.fileService.createFile(file)
+        .subscribe({
+          next: (p: FileApp) => {
+            if (p) {
+              form.profilePhoto = p;
+              this.value = 80;
+              resolve();
+            }
+          },
+          error: (err) => {
+            this.alert.showMsg('error', 'Erro no upload', 'Ocorreu um erro ao enviar a imagem');
+            reject(err);
+          }
+        });
+    });
   }
 
   getGroups() {
@@ -108,26 +133,20 @@ export class ModalUserComponent implements OnInit {
   }
 
   onFileChange(event: Event): void {
-    this.value = 30;
     const inputElement = event.target as HTMLInputElement;
     const file = inputElement?.files?.[0] || null;
     this.uploadFile(file);
   }
 
   uploadFile(file: File | null): void {
-    this.value = 50;
     if (file && file.type.startsWith('image/')) {
-      this.value = 70;
       this.selectedFile = file;
       const reader = new FileReader();
-      this.value = 70;
       setTimeout(() => {
-        this.value = 100;
         reader.onload = () => {
           this.imagePreview.set(reader.result as string);
         }
         reader.readAsDataURL(file);
-        this.value = 0;
       }, 1000)
     }
   }
@@ -136,20 +155,6 @@ export class ModalUserComponent implements OnInit {
     const selectedRoles = this.form.get('roles')?.value || [];
     return selectedRoles.includes('PROF');
   }
-
-  saveApi(file: File, id: number) {
-    this.fileService.createFile(id, file)
-      .subscribe((file: FileApp) => {
-        if (this.user) {
-          this.user.profilePhoto = file;
-        }
-        this.value = 100;
-        this.alert.showMsg('success', 'Foto de perfil', 'atualizada com sucesso');
-        this.value = 0;
-        this.dialog.close(this.user);
-      });
-  }
-
   getControl(control: string) {
     return this.form.get(control) as FormControl;
   }

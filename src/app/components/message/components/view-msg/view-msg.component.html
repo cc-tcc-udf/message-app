@@ -1,1 +1,46 @@
-<p>view-msg works!</p>
+@if (msg) {
+<p-tabView>
+  <p-tabPanel header="Mensagem">
+    <section class="flex flex-column gap-3">
+      <p class="m-0"><strong>Titulo:</strong> {{msg.title}}</p>
+      <p class="m-0"><strong>Resumo:</strong> {{msg.summary}}</p>
+      <section><strong>Mensagem:</strong>
+        <div [innerHTML]="msg.message"></div>
+      </section>
+
+      <section class="flex gap-3 ">
+        @if (msg.links.length > 0) {
+        <section class="w-full md:w-6">
+          <p class="m-0 font-bold ">Links</p>
+          <section class="w-full flex flex-wrap gap-3">
+            @for (link of msg.links; track $index) {
+            <section class="flex gap-3 justify-content-between w-10rem h-7rem card_default flex-column">
+              <p class="m-0 font-bold">{{link.title}}</p>
+              <section class="w-full text-center">
+                <button class="link">
+                  <i class="bi bi-link-45deg"></i>
+                </button>
+              </section>
+            </section>
+            }
+          </section>
+        </section>
+        }
+        @if (msg.attachments.length > 0) {
+        <section class="w-full md:w-6">
+          <p class="m-0 font-bold">Anexos</p>
+        </section>
+        }
+      </section>
+
+    </section>
+  </p-tabPanel>
+  <p-tabPanel header="Visualizações">
+    your content
+  </p-tabPanel>
+</p-tabView>
+}@else {
+<section class="w-full">
+  <p>Erro ao carregar a mensagem</p>
+</section>
+}
