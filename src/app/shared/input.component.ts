@@ -35,7 +35,8 @@ import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR } from "@angular/f
         [ngClass]="{'is-invalid': showError()}" 
         [attr.aria-invalid]="showError()"
         [required]="required"
-        [placeholder]="placeholder"/>
+        [placeholder]="placeholder"
+        [attr.maxlength]="maxlength"/>
       
       <!-- Ícone à direita -->
       <ng-container *ngIf="icon && iconPosition === 'right'">
@@ -69,9 +70,11 @@ export class InputComponent implements ControlValueAccessor {
   @Input() control?: FormControl | null;
   @Optional() @Input() required: boolean = false;
   @Optional() @Input() placeholder: string = '';
+  @Optional() @Input() maxlength?: string;
 
   @Input() icon: string = '';  // Classe do ícone, por exemplo, 'bi bi-person'
   @Input() iconPosition: 'left' | 'right' = 'left';  // Posição do ícone
+  @Input() mask: string | null = null;
 
   value: string = '';
   disabled: boolean = false;
@@ -99,10 +102,33 @@ export class InputComponent implements ControlValueAccessor {
 
   onInputChange(event: Event): void {
     const input = event.target as HTMLInputElement;
-    this.value = input.value;
-    this.onChange(this.value);
-    this.onTouched();
+    if (this.mask) {
+      this.value = this.setMask(input.value.replace(/\D/g, ''));
+      console.log(this.value)
+      this.onChange(this.value);
+      this.onTouched();
+    } else {
+      this.value = input.value;;
+      this.onChange(this.value);
+      this.onTouched();
+    }
   }
+
+  setMask(value: string) {
+    if (this.mask === 'phone') {
+      if (value.length <= 2) {
+        return value = `(${value}`;
+      } else if (value.length <= 7) {
+        return value = `(${value.slice(0, 2)}) ${value.slice(2)}`;
+      } else if (value.length <= 11) {
+        return value = `(${value.slice(0, 2)}) ${value.slice(2, 7)}-${value.slice(7)}`;
+      } else {
+        return value = `(${value.slice(0, 2)}) ${value.slice(2, 7)}-${value.slice(7, 11)}`;
+      }
+    }
+    return value
+  }
+
 
   togglePasswordVisibility(): void {
     this.showPassword = !this.showPassword;

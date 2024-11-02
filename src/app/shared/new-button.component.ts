@@ -1,6 +1,6 @@
 import { NgClass, NgIf } from "@angular/common";
 import { Component, inject, Input, Type } from "@angular/core";
-import { Router } from "@angular/router";
+import { Params, Router } from "@angular/router";
 import { DialogService, DynamicDialogRef } from "primeng/dynamicdialog";
 
 @Component({
@@ -26,6 +26,7 @@ export class NewButtonComponent {
   @Input() buttonText: string = 'Novo';
   @Input() icon?: string;
   @Input() navigateTo?: string;
+  @Input() paramsRota?: Params;
   @Input() modalComponent?: Type<unknown>;
   @Input() modalTitle?: string;
   @Input() modalData?: unknown;
@@ -60,6 +61,6 @@ export class NewButtonComponent {
   }
 
   navigate() {
-    this.router.navigate([this.navigateTo]);
+    this.router.navigate([this.navigateTo], { queryParams: this.paramsRota });
   }
 }

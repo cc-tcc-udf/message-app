@@ -37,7 +37,10 @@ export class ModalUserComponent implements OnInit {
   selectedFile: File | null = null;
   groups: SubCourse[] = [];
   user: Usuario | undefined;
-
+  tipoOptions = [
+    { label: 'Ativo', value: true },
+    { label: 'Inativo', value: false }
+  ];
   form: FormGroup = new FormGroup({
     id: new FormControl<number | null>(null),
     email: new FormControl<string | null>(null, [Validators.required]),
@@ -46,6 +49,7 @@ export class ModalUserComponent implements OnInit {
     password: new FormControl<string | null>(null),
     roles: new FormControl<string[] | null>(null, [Validators.required]),
     profilePhoto: new FormControl<FileApp | null>(null),
+    active: new FormControl<boolean | null>(false),
     id_curso: new FormControl<number | null>(null)
   })
 

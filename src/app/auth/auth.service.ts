@@ -167,8 +167,9 @@ export class AuthService {
     return typeof window !== 'undefined' ? sessionStorage.getItem('user_email') : null;
   }
 
-  register(usr: Usuario): Observable<UserResponse> {
-    return this.http.post<UserResponse>(`${environment.API_URL}/public/auth/register`, usr)
+  register(usr: Usuario): Observable<GenericResponse> {
+    const params = { isMobile: false.toString() };
+    return this.http.post<GenericResponse>(`${environment.API_URL}/public/auth/register`, usr, { params })
       .pipe(catchError(this.handleError));
   }
 
@@ -186,7 +187,7 @@ export class AuthService {
     const user = this.getUserFromSessionStorage();
     return roles.some(role => user?.roles.includes(role));
   }
-  
+
   // Verifica se o usuário possui a role ADMIN
   isAdmin(): boolean {
     return this.hasRole(Roles_user.ADMIN);

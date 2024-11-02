@@ -84,11 +84,9 @@ export class ModalCourseComponent implements OnInit {
     if (form.isGroup) {
       form.courseGroupId = null;
     }
-    console.log(form);
     this.service.create(form).subscribe((p) => {
       if (p.success) {
-        console.log(p.data)
-        this.alert.showMsg("success", 'Curso', p.message);
+        this.alert.showMsg("success", form.isGroup ? 'Grupo' : 'Curso', p.message);
         this.dialog.close();
       } else {
         this.alert.showMsg("error", 'Curso', p.message);

@@ -33,9 +33,6 @@ import { ProgressBarModule } from 'primeng/progressbar';
           <div (click)="menu.toggle($event)" (keydown.enter)="menu.toggle($event)"
             class="flex cursor-pointer align-items-center ml-2 gap-2" tabindex="0" role="button"
             aria-label="Menu de perfil">
-            <!-- <p-avatar
-              [image]="user?.profilePhoto? user?.profilePhoto: 'https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png'"
-              shape="circle" /> -->
               <div class="shadow-1 bg-cover bg-center bg-no-repeat border-circle"
                 [style.background-image]="'url(' + user?.profilePhoto + ')'" style="width: 2.5rem; height:2.5rem">
               </div>
@@ -76,7 +73,7 @@ import { ProgressBarModule } from 'primeng/progressbar';
           <section class="w-full h-full flex flex-column gap-3">
             <app-input label="Nome" formControlName="name" type="text" />
             <app-input label="Email" formControlName="email" type="email" />
-            <app-input label="Telefone" formControlName="phone" type="text" />
+            <app-input maxlength="15" mask="phone" label="Telefone" formControlName="phone" type="text" />
           </section>
         </form>
         <ng-template pTemplate="footer">

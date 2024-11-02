@@ -26,7 +26,7 @@ export class MessageComponent implements OnInit {
   ];
   loadind: boolean = true;
   constructor(
-    private service: MessageService,
+    private service: MessageService, 
     private cr: ChangeDetectorRef
   ) { }
 

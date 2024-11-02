@@ -20,6 +20,10 @@
             <p class="m-0"><strong>Email: </strong>{{usr.email}}</p>
             <p class="m-0"><strong>Telefone: </strong>{{usr.phone}}</p>
             <div class="flex flex-wrap gap-2">
+              <p class="m-0 font-bold">Atvo:</p>
+              <span class="default-tag" [ngClass]="usr.ativo">{{usr.ativo}}</span>
+            </div>
+            <div class="flex flex-wrap gap-2">
               <p class="m-0 font-bold">Permissões:</p>
               <span class="default-tag" *ngFor="let roler of usr.roles" [ngClass]="roler">{{roler}}</span>
             </div>

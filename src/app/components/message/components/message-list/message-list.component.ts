@@ -49,7 +49,9 @@ export class MessageListComponent implements OnInit {
     this.router.navigate(['msg', 'msg-view'], { queryParams: { id: msg.id, rota: 'msg' } });
   }
 
-
+  navigate(msg: Message, rota: string) {
+    this.router.navigate(['msg', rota], { queryParams: { id: msg.id, rota: 'msg' } });
+  }
   getClassTag(msg: Message, isDate?: boolean): string {
     if (isDate && msg.status !== 'NAO_ENVIADO') {
       return '';

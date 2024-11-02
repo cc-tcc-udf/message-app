@@ -1,4 +1,31 @@
-<section class="w-full h-full flex justify-content-center align-items-center">
-
-  <p class="text-6xl text-center font-bold">Em construção!</p>
+<section class="register flex-column justify-content-start xl:justify-content-center xl:flex-row h-full">
+  <section class="form align-items-start xl:align-items-center w-full h-full xl:w-6">
+    <section class="w-full xl:w-6 cards">
+      <section class="flex justify-content-between">
+        <p class="text-xl text-center">Cadastre-se</p>
+        <img [src]="'assets/img/logo/' + theme.getLogos() + '.svg'" alt="">
+      </section>
+      <form [formGroup]="form">
+        <section class="inputs">
+          <app-input [control]="getControl('email')" label="Email" formControlName="email" type="email" />
+          <app-input [control]="getControl('name')" label="Nome completo" formControlName="name" type="text" />
+          <app-input maxlength="15" mask="phone" [control]="getControl('phone')" label="Telefone"
+            formControlName="phone" type="text" />
+          <app-input [control]="getControl('password')" type="password" label="Senha" formControlName="password" />
+        </section>
+      </form>
+      <p class="text-sm font-light">
+        Já possui cadastro?
+        <a class="font-bold cursor-pointer" (click)="navigate('auth/login')" tabindex="0"
+          (keydown.enter)="navigate('auth/login')">Entre aqui!</a>
+      </p>
+      <section class="btn">
+        <button class="add cursor-pointer theme" style="background: #1c2837;" (click)="send()" tabindex="0"
+          (keydown.enter)="send()" aria-label="realizar o login">
+          Criar conta
+        </button>
+      </section>
+    </section>
+  </section>
+  <img class="w-5 md:w-5 xl:w-4" [src]="'assets/img/svg/register_' + theme.getLogos() + '.svg'" alt="">
 </section>

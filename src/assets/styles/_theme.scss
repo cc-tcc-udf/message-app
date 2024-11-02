@@ -157,7 +157,7 @@
   }
 
   button.basic {
-    color: white;
+    color: $txt;
     background: $btn;
     font-weight: 500;
     box-shadow: $shadow;
@@ -279,7 +279,12 @@
   .p-paginator .p-paginator-first:not(.p-disabled):not(.p-highlight):hover,
   .p-paginator .p-paginator-prev:not(.p-disabled):not(.p-highlight):hover,
   .p-paginator .p-paginator-next:not(.p-disabled):not(.p-highlight):hover,
-  .p-paginator .p-paginator-last:not(.p-disabled):not(.p-highlight):hover {
+  .p-paginator .p-paginator-last:not(.p-disabled):not(.p-highlight):hover,
+  .p-dropdown-panel .p-dropdown-items .p-dropdown-item:not(.p-highlight):not(.p-disabled):hover,
+  .p-dropdown-panel .p-dropdown-items .p-dropdown-item:not(.p-highlight):not(.p-disabled).p-focus,
+  .p-dropdown-panel .p-dropdown-items .p-dropdown-item.p-highlight.p-focus,
+  .p-dropdown-panel .p-dropdown-header,
+  .p-menu .p-menuitem:not(.p-highlight):not(.p-disabled)>.p-menuitem-content:hover {
     background: $primary;
     color: $txt;
   }
@@ -289,7 +294,8 @@
   }
 
   .p-multiselect-panel .p-multiselect-header,
-  .p-dropdown:not(.p-disabled):hover {
+  .p-dropdown:not(.p-disabled):hover,
+  .p-dropdown-panel .p-dropdown-header {
     border: none;
   }
 
@@ -314,7 +320,11 @@
   .p-paginator .p-paginator-first,
   .p-paginator .p-paginator-prev,
   .p-paginator .p-paginator-next,
-  .p-paginator .p-paginator-last {
+  .p-paginator .p-paginator-last,
+  .p-dropdown-panel .p-dropdown-items .p-dropdown-item,
+  .p-dropdown-panel .p-dropdown-items .p-dropdown-empty-message,
+  .p-menu .p-menuitem>.p-menuitem-content .p-menuitem-link .p-menuitem-text,
+  .p-menu .p-menuitem>.p-menuitem-content .p-menuitem-link .p-menuitem-icon {
     color: $txt;
     @extend .default-transition;
   }
@@ -335,7 +345,8 @@
   }
 
   .p-menubar .p-submenu-list,
-  .p-menu.p-menu-overlay {
+  .p-menu.p-menu-overlay,
+  .p-dropdown-panel {
     background: $secondary;
   }
 
@@ -432,12 +443,14 @@
     background: none;
   }
 
-  .NAO_ENVIADO {
+  .NAO_ENVIADO,
+  .Inativo {
     background-color: var(--red-100) !important;
     color: var(--red-700) !important;
   }
 
-  .RECEBIDO {
+  .RECEBIDO,
+  .Ativo {
     background-color: var(--green-100) !important;
     color: var(--green-700) !important;
   }

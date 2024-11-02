@@ -12,6 +12,7 @@ export class Usuario {
   roles!: Roles_user[];
   phone!: string;
   id_curso: number;
+  active: boolean;
 
   constructor(usr: Usuario) {
     this.id = usr.id;
@@ -23,6 +24,7 @@ export class Usuario {
     this.coverPhoto = usr.coverPhoto;
     this.phone = usr.phone;
     this.roles = usr.roles;
+    this.active = usr.active;
     this.id_curso = usr.id_curso;
   }
 }
@@ -34,6 +36,8 @@ export class CustomUsuario {
   email!: string;
   profilePhoto!: string;
   phone!: string;
+  active: boolean;
+  ativo: string;
   coverPhoto!: string;
   roles!: Roles_user[];
   id_curso: number;
@@ -47,6 +51,8 @@ export class CustomUsuario {
     this.profilePhoto = getLink(user?.profilePhoto);
     this.roles = user.roles;
     this.id_curso = user.id_curso;
+    this.active = user.active;
+    this.ativo = user.active ? 'Ativo' : 'Inativo';
   }
 }
 

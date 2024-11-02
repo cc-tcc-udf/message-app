@@ -1,5 +1,5 @@
 import { NgFor } from '@angular/common';
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '@auth/auth.service';
@@ -30,6 +30,7 @@ export class ManageMsgComponent implements AfterViewInit, OnInit {
   user = this.auth.getUserFromSessionStorage()
   form: FormGroup = new FormGroup({
     id: new FormControl<number | null>(null),
+    course_id: new FormControl<number | null>(null),
     responsible: new FormControl<string | null>(this.user?.uid ? this.user.uid : null),
     title: new FormControl<string | null>(null, [Validators.required]),
     status: new FormControl<string | null>('NAO_ENVIADO'),
@@ -57,8 +58,10 @@ export class ManageMsgComponent implements AfterViewInit, OnInit {
     private dialogService: DialogService,
     private route: ActivatedRoute,
     private router: Router,
-    private auth: AuthService
-  ) { }
+    private auth: AuthService,
+    private cr: ChangeDetectorRef
+  ) {
+  }
 
   ngOnInit(): void {
     this.route.queryParams
@@ -87,6 +90,7 @@ export class ManageMsgComponent implements AfterViewInit, OnInit {
   }
 
   save() {
+    this.form.markAllAsTouched();
     console.log(this.form.getRawValue());
     if (this.form.valid) {
       this.service.create(this.form.getRawValue())
@@ -122,6 +126,7 @@ export class ManageMsgComponent implements AfterViewInit, OnInit {
       if (p) {
         const links = this.getControl('links').value || [];
         this.getControl('links').setValue([...links, p]);
+        this.cr.detectChanges();
       }
     });
 

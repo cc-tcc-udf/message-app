@@ -31,13 +31,20 @@
           {{ getErrorMessage('roles') }}
         </div>
       </section>
-      <app-input [control]="getControl('phone')" label="Telefone" formControlName="phone" type="text" />
-      <div *ngIf="isProfSelected()" class="flex flex-column gap-2">
+      <app-input [control]="getControl('phone')" label="Telefone" formControlName="phone" type="text" mask="phone"
+        maxlength="15" />
+      <div *ngIf="isProfSelected() && groups.length > 1" class="flex flex-column gap-2">
         <label for="group">Grupo</label>
         <p-dropdown appendTo="body" id="group" [options]="groups" formControlName="id_curso"
           placeholder="Selecione um grupo" [editable]="true" optionLabel="name" optionValue="id" />
       </div>
       <app-input autocomplete="current-password" type="password" label="Senha" formControlName="password" />
+      <div class="flex flex-column gap-2">
+        <label for="tipo">Ativo</label>
+        <p-dropdown id="tipo" [options]="tipoOptions" formControlName="active" placeholder="Selecione o tipo"
+          optionLabel="label" optionValue="value">
+        </p-dropdown>
+      </div>
     </section>
   </form>
   <section class="flex justify-content-end align-items-center pt-5">

@@ -1,22 +1,22 @@
-<section class="w-full flex flex-column gap-3 h-auto px-4">
-  <section class="w-full py-3 flex justify-content-between">
-    <span tabindex="0" (keydown.enter)="back()" (keydown.space)="back()" (click)="back()"
-      class="font-light cursor-pointer">
-      <i class=" bi pr-1 bi-arrow-left"></i>
-      voltar
-    </span>
-    <section class="flex gap-4">
-      <button (click)="save()" class="basic theme">
-        <i class="bi pr-1 bi-floppy"></i>
-        salvar
-      </button>
-      <button class="success theme">
-        enviar
-        <i class="bi pl-1 bi-send"></i>
-      </button>
+<form [formGroup]="form">
+  <section class="w-full flex flex-column gap-3 h-auto px-4">
+    <section class="w-full py-3 flex justify-content-between">
+      <span tabindex="0" (keydown.enter)="back()" (keydown.space)="back()" (click)="back()"
+        class="font-light cursor-pointer">
+        <i class=" bi pr-1 bi-arrow-left"></i>
+        voltar
+      </span>
+      <section class="flex gap-4">
+        <button (click)="save()" class="basic theme">
+          <i class="bi pr-1 bi-floppy"></i>
+          salvar
+        </button>
+        <button class="success theme">
+          enviar
+          <i class="bi pl-1 bi-send"></i>
+        </button>
+      </section>
     </section>
-  </section>
-  <form [formGroup]="form">
     <section class="w-full flex flex-column gap-3">
       <app-input [control]="getControl('title')" type="text" label="Titulo" placeholder="Digite o titulo..."
         formControlName="title"></app-input>
@@ -29,34 +29,34 @@
           [modules]="editorModules" />
       </div>
     </section>
-  </form>
-  <section class="flex gap-3">
-    <section class="w-6">
-      <span class="text-base">Links <i class="bi pl-1 bi-link-45deg"></i></span>
-      <section class="flex flex-wrap pt-2 gap-3">
-        <section *ngFor="let link of getControl('links').value"
-          class="card_default addLink flex flex-column justify-content-between">
-          <p class="m-0">{{link.title}}</p>
-          <section class="actions flex align-items-center justify-content-center gap-2">
+    <section class="flex gap-3">
+      <section class="w-6">
+        <span class="text-base">Links <i class="bi pl-1 bi-link-45deg"></i></span>
+        <section class="flex flex-wrap pt-2 gap-3">
+          <section *ngFor="let link of getControl('links').value"
+            class="card_default addLink flex flex-column justify-content-between">
+            <p class="m-0">{{link.title}}</p>
+            <section class="actions flex align-items-center justify-content-center gap-2">
 
+            </section>
+          </section>
+          <section class="card_default addLink flex justify-content-center align-items-center">
+            <button (click)="addLinks()" class="theme text-center p-0 h-3rem w-3rem border-circle success">
+              <i class="bi text-2xl bi-plus"></i>
+            </button>
           </section>
         </section>
-        <section class="card_default addLink flex justify-content-center align-items-center">
-          <button (click)="addLinks()" class="theme text-center p-0 h-3rem w-3rem border-circle success">
-            <i class="bi text-2xl bi-plus"></i>
-          </button>
-        </section>
       </section>
-    </section>
-    <section class="w-6">
-      <span class="text-base">Anexos <i class="bi pl-1 bi-files"></i></span>
-      <section class="flex flex-wrap pt-2 gap-3">
-        <section class="card_default addLink flex justify-content-center align-items-center">
-          <button class="theme border-circle success">
-            <i class="bi text-2xl bi-plus"></i>
-          </button>
+      <section class="w-6">
+        <span class="text-base">Anexos <i class="bi pl-1 bi-files"></i></span>
+        <section class="flex flex-wrap pt-2 gap-3">
+          <section class="card_default addLink flex justify-content-center align-items-center">
+            <button class="theme border-circle success">
+              <i class="bi text-2xl bi-plus"></i>
+            </button>
+          </section>
         </section>
       </section>
     </section>
   </section>
-</section>
+</form>

@@ -51,7 +51,6 @@ export class CourseComponent implements OnInit {
   }
 
   newCourse(obj?: Course | SubCourse) {
-    console.log(obj)
     this.ref = this.dialogService.open(
       ModalCourseComponent, {
       header: 'Cadastrar',
