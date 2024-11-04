@@ -220,7 +220,7 @@ export class MenuBarComponent implements OnInit {
   }
 
   private setItems() {
-    let items: MenuItem[] = [
+    const items: MenuItem[] = [
       { label: 'Home', icon: 'bi bi-house', command: () => { this.navigate('home') } },
     ];
 
