@@ -38,7 +38,8 @@
         <p-dropdown appendTo="body" id="group" [options]="groups" formControlName="id_curso"
           placeholder="Selecione um grupo" [editable]="true" optionLabel="name" optionValue="id" />
       </div>
-      <app-input autocomplete="current-password" type="password" label="Senha" formControlName="password" />
+      <app-input *ngIf="!form.controls['id'].value" autocomplete="current-password" type="password" label="Senha"
+        formControlName="password" />
       <div class="flex flex-column gap-2">
         <label for="tipo">Ativo</label>
         <p-dropdown id="tipo" [options]="tipoOptions" formControlName="active" placeholder="Selecione o tipo"

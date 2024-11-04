@@ -185,9 +185,14 @@ export class AuthService {
 
   hasAnyRole(roles: Roles_user[]): boolean {
     const user = this.getUserFromSessionStorage();
-    return roles.some(role => user?.roles.includes(role));
+    const userRoles = Array.isArray(user?.roles) ? user.roles : [];
+    return roles.some(role => userRoles.includes(role));
   }
-
+  getUserRoles() {
+    const user = this.getUserFromSessionStorage();
+    const userRoles = Array.isArray(user?.roles) ? user.roles : [];
+    return userRoles as Roles_user[];
+  }
   // Verifica se o usuário possui a role ADMIN
   isAdmin(): boolean {
     return this.hasRole(Roles_user.ADMIN);

@@ -18,6 +18,9 @@ export class UsersService {
   }
 
   createAdm(form: Usuario) {
-    return this._http.post<Usuario>(`${this.api}/create`, form);
+    return this._http.post<Usuario>(`${this.api}/adm/create`, form);
+  }
+  updateAdm(form: Usuario) {
+    return this._http.post<Usuario>(`${this.api}/adm/update`, form);
   }
 }

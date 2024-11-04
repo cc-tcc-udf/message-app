@@ -7,13 +7,13 @@ import { SubCourse } from '@models/Course';
 import { FileApp } from '@models/File';
 import { GenericResponse } from '@models/GenericResponse';
 import { CustomUsuario, Usuario } from '@models/Usuario';
+import { InputComponent } from '@shared/input.component';
 import { AlertService } from '@utils/services/alert.service';
 import { FileService } from '@utils/services/file.service';
 import { DropdownModule } from 'primeng/dropdown';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { ProgressBarModule } from 'primeng/progressbar';
-import { InputComponent } from "../../../../shared/input.component";
 
 @Component({
   selector: 'app-modal-user-adm',
@@ -85,8 +85,8 @@ export class ModalUserComponent implements OnInit {
       this.value = 30;
       await this.saveApi(this.selectedFile, form);
     }
-
-    this.service.createAdm(form)
+    const service = form.id ? this.service.updateAdm(form) : this.service.createAdm(form);
+    service
       .subscribe((p => {
         this.value = 100;
         this.user = p;

@@ -1,5 +1,5 @@
 import { NgIf, NgStyle } from '@angular/common';
-import { Component, ElementRef, inject, OnInit, signal, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, inject, OnInit, signal, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '@auth/auth.service';
@@ -15,7 +15,7 @@ import { DialogService, DynamicDialogModule, DynamicDialogRef } from 'primeng/dy
 import { MenuModule } from 'primeng/menu';
 import { MenubarModule } from 'primeng/menubar';
 import { ProgressBarModule } from 'primeng/progressbar';
-
+import { SkeletonModule } from 'primeng/skeleton';
 @Component({
   selector: 'app-menu-bar',
   standalone: true,
@@ -23,19 +23,27 @@ import { ProgressBarModule } from 'primeng/progressbar';
     MenubarModule, AvatarModule,
     DynamicDialogModule, MenuModule, DialogModule,
     InputComponent, ReactiveFormsModule, NgStyle,
-    ProgressBarModule, NgIf
+    ProgressBarModule, NgIf, SkeletonModule
   ],
   template: `
+    @if(skeleton){
+      <div class="flex align-items-center gap-3">        
+        <p-skeleton width="6rem" height="1.75rem"/>
+        <p-skeleton width="6rem" height="1.75rem"/>
+        <p-skeleton width="6rem" height="1.75rem"/>
+        <p-skeleton shape="circle" size="2.5rem"/>        
+      </div>
+    } @else {
     <section class="w-full h-full flex-column justify-content-center align-items-center flex">
       <p-menubar appendTo="body" [model]="items">
-        <ng-template pTemplate="end">
-          <p-menu appendTo="body" #menu [model]="itemsPopup" [popup]="true" />
-          <div (click)="menu.toggle($event)" (keydown.enter)="menu.toggle($event)"
+          <ng-template pTemplate="end">
+            <p-menu appendTo="body" #menu [model]="itemsPopup" [popup]="true" />
+            <div (click)="menu.toggle($event)" (keydown.enter)="menu.toggle($event)"
             class="flex cursor-pointer align-items-center ml-2 gap-2" tabindex="0" role="button"
             aria-label="Menu de perfil">
               <div class="shadow-1 bg-cover bg-center bg-no-repeat border-circle"
-                [style.background-image]="'url(' + user?.profilePhoto + ')'" style="width: 2.5rem; height:2.5rem">
-              </div>
+              [style.background-image]="'url(' + user?.profilePhoto + ')'" style="width: 2.5rem; height:2.5rem">
+            </div>
             <i class="default bi bi-chevron-down"></i>
           </div>
         </ng-template>
@@ -83,6 +91,8 @@ import { ProgressBarModule } from 'primeng/progressbar';
         </ng-template>
       </p-dialog>
     </section>
+    }
+
   `,
   styles: [`
     .p-menubar {
@@ -104,10 +114,11 @@ export class MenuBarComponent implements OnInit {
   private auth = inject(AuthService);
   private alert = inject(AlertService);
   private fileService = inject(FileService)
+  private cf = inject(ChangeDetectorRef);
   @ViewChild('fileInput') fileInput: ElementRef | undefined;
 
   ref: DynamicDialogRef | undefined;
-  items: MenuItem[] | undefined;
+  items: MenuItem[] = this.setItems();
   itemsPopup: MenuItem[] | undefined;
   user: CustomUsuario | null = null;
 
@@ -115,6 +126,7 @@ export class MenuBarComponent implements OnInit {
   imagePreview = signal('');
   selectedFile: File | null = null;
   value: number = 0;
+  skeleton = true;
 
   form: FormGroup = new FormGroup({
     email: new FormControl<string | null>(null),
@@ -136,6 +148,10 @@ export class MenuBarComponent implements OnInit {
       if (this.user.profilePhoto) {
         this.imagePreview.set(this.user.profilePhoto);
       }
+      setTimeout(() => {
+        this.skeleton = false;
+        this.cf.detectChanges();
+      }, 1500)
     }
   }
 
@@ -200,20 +216,29 @@ export class MenuBarComponent implements OnInit {
 
   private navigate(rota: string) {
     this.router.navigate([rota]);
+    this.cf.detectChanges();
   }
 
-  setItems() {
-    this.items = [
+  private setItems() {
+    let items: MenuItem[] = [
       { label: 'Home', icon: 'bi bi-house', command: () => { this.navigate('home') } },
-      { label: 'Mensagens', icon: 'bi bi-chat-square-text-fill', command: () => { this.navigate('msg') } },
-      {
+    ];
+
+    if (this.auth.isProf() || this.auth.isAdmin()) {
+      items.push({ label: 'Mensagens', icon: 'bi bi-chat-square-text-fill', command: () => { this.navigate('/msg') } });
+    }
+
+    if (this.auth.isAdmin()) {
+      items.push({
         label: 'Configurações', icon: 'bi bi-sliders',
         items: [
-          { label: 'Cursos', icon: 'bi bi-collection', command: () => { this.navigate('cursos') } },
-          { label: 'Usuarios', icon: 'bi bi-people-fill', command: () => { this.navigate('users') } }
+          { label: 'Cursos', icon: 'bi bi-collection', command: () => { this.navigate('/cursos') } },
+          { label: 'Usuarios', icon: 'bi bi-people-fill', command: () => { this.navigate('/users') } }
         ]
-      },
-    ]
+      });
+    }
+
+    return items;
   }
 
   setItemsPopup() {

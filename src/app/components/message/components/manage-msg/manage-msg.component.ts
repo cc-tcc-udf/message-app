@@ -24,7 +24,7 @@ import { ModalLinksComponent } from '../modais/modal-links.component';
   providers: [DialogService]
 })
 export class ManageMsgComponent implements AfterViewInit, OnInit {
-  anexos: FileApp[] = [];
+  anexos = [];
   ref: DynamicDialogRef | undefined;
   rota: string = '';
   user = this.auth.getUserFromSessionStorage()
@@ -78,9 +78,7 @@ export class ManageMsgComponent implements AfterViewInit, OnInit {
     this.service.getMsg(id)
       .subscribe((res) => {
         if (res.success) {
-          console.log(res.data)
           this.form.patchValue(res.data as Message);
-          console.log(this.form.getRawValue());
         }
       })
   }
@@ -177,6 +175,6 @@ export class ManageMsgComponent implements AfterViewInit, OnInit {
 
 
   back() {
-    this.router.navigate([this.rota]);
+    this.router.navigate([this.rota || 'msg']);
   }
 }

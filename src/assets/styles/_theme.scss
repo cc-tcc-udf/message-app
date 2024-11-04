@@ -2,7 +2,7 @@
 
 @mixin theme($primary, $secondary, $tertiary,
   $btn, $background, $yellow,
-  $border-radius, $txt, $shadow) {
+  $border-radius, $txt, $shadow, $skeleton) {
   background-color: $background;
   color: $txt;
   transition: background-color 0.3s ease, color 0.3s ease;
@@ -441,6 +441,10 @@
     margin: 0;
     border: none;
     background: none;
+  }
+
+  .p-skeleton {
+    background-color: $skeleton;
   }
 
   .NAO_ENVIADO,

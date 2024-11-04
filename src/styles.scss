@@ -20,7 +20,7 @@ body {
       $light_yellow,
       $border_radius,
       $light_txt_color,
-      $light_box_shadow);
+      $light_box_shadow, $light_skeleton);
 
     @include shared($light_primary,
       $light_secondary,
@@ -42,7 +42,7 @@ body {
       $dark_yellow,
       $border_radius,
       $dark_txt_color,
-      $dark_box_shadow);
+      $dark_box_shadow, $dark_skeleton);
 
     @include shared($dark_primary,
       $dark_secondary,

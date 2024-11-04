@@ -19,7 +19,7 @@ export class ThemeService {
       }
       return this.setThemeNavegador();
     }
-    return 'light';
+    return 'dark';
   }
 
   getLocalValue() {
@@ -45,7 +45,7 @@ export class ThemeService {
   setTheme(theme: string) {
     if (this.verify()) {
       localStorage.setItem('theme', theme);
-      document.body.className = theme; // Adiciona a classe ao body
+      document.body.className = theme;
     }
   }
 
