@@ -1,6 +1,7 @@
-import { NgFor } from '@angular/common';
-import { AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
+import { NgClass, NgFor } from '@angular/common';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '@auth/auth.service';
 import { MessageService } from '@components/message/message.service';
@@ -18,16 +19,17 @@ import { ModalLinksComponent } from '../modais/modal-links.component';
   selector: 'app-manage-msg',
   standalone: true,
   imports: [ScrollPanelModule, ReactiveFormsModule,
-    InputComponent, EditorModule, NgFor],
+    InputComponent, EditorModule, NgFor, NgClass],
   templateUrl: './manage-msg.component.html',
   styleUrls: ['./manage-msg.component.scss'],
   providers: [DialogService]
 })
 export class ManageMsgComponent implements AfterViewInit, OnInit {
-  anexos = [];
+  anexos: Array<File | FileApp> = [];
   ref: DynamicDialogRef | undefined;
   rota: string = '';
-  user = this.auth.getUserFromSessionStorage()
+  user = this.auth.getUserFromSessionStorage();
+  @ViewChild('fileInput') fileInput!: ElementRef;
   form: FormGroup = new FormGroup({
     id: new FormControl<number | null>(null),
     course_id: new FormControl<number | null>(null),
@@ -59,7 +61,8 @@ export class ManageMsgComponent implements AfterViewInit, OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private auth: AuthService,
-    private cr: ChangeDetectorRef
+    private cr: ChangeDetectorRef,
+    private sanitizer: DomSanitizer
   ) {
   }
 
@@ -121,18 +124,52 @@ export class ManageMsgComponent implements AfterViewInit, OnInit {
     })
 
     this.ref.onClose.subscribe((p) => {
-      if (p) {
-        const links = this.getControl('links').value || [];
-        this.getControl('links').setValue([...links, p]);
-        this.cr.detectChanges();
+      if (p as Links) {
+        if (p.title && p.link) {
+          const links = this.getControl('links').value || [];
+          this.getControl('links').setValue([...links, p]);
+          this.cr.detectChanges();
+        }
       }
     });
 
   }
 
-  addAnexos() {
-
+  addAnexos(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files) {
+      const anexos = input.files as FileList;
+      console.log(anexos[0] as File);
+      this.anexos.push(anexos[0] as File);
+    }
   }
+
+  getUrl(anexo: File | FileApp | null): SafeUrl | string {
+    if (anexo instanceof File) {
+      return URL.createObjectURL(anexo);
+    } else {
+      return (anexo as FileApp).url;
+    }
+  }
+  getClass(type: string) {
+    console.log(type)
+    return "bi-pdf"
+  }
+
+
+  viewAnexo(anexo: File | FileApp | null) {
+    // const url = URL.createObjectURL(anexo.file);
+    // window.open(url, '_blank');
+    console.log(anexo)
+  }
+
+  removeAnexo(index: number | null) {
+    // const attachments = this.anexos || [];
+    // attachments.splice(index, 1);
+    // this.anexos.push(...attachments);
+    console.log(index)
+  }
+
 
   ngAfterViewInit(): void {
     setTimeout(() => {

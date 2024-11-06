@@ -57,6 +57,8 @@ export class ModalLinksComponent implements OnInit {
     // }
   }
   save() {
+    this.form.markAllAsTouched();
+    if (!this.form.valid) return
     const form = this.form.getRawValue();
     this.dialog.close(form);
   }

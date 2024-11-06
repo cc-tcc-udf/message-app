@@ -1,8 +1,9 @@
 @import '@variables';
 
-.layout {
-  .content {
-    height: calc(100dvh - 6rem);
+.base_layout {
+  .base_content {
+    height: auto;
+    min-height: calc(100dvh - 6rem);
   }
 }
 
