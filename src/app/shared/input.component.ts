@@ -1,6 +1,6 @@
 import { NgClass, NgIf } from "@angular/common";
 import { Component, forwardRef, Input, Optional } from "@angular/core";
-import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR } from "@angular/forms";
+import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, Validators } from "@angular/forms";
 
 @Component({
   selector: 'app-input',
@@ -16,8 +16,8 @@ import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR } from "@angular/f
   ],
   template: `
   <div class="input_" [ngClass]="{'gap-2': label}">
-    <label [for]="inputId">{{ label }}</label>
-    <div class="content" [ngClass]="{'icon-left': iconPosition === 'left', 'icon-right': iconPosition === 'right'}">
+    <label [for]="inputId">{{ label }} <b *ngIf="isRequired()" class="text-red-500">*</b></label>
+    <div [ngClass]="{'is-invalid': showError()}"  class="content" [ngClass]="{'icon-left': iconPosition === 'left', 'icon-right': iconPosition === 'right'}">
       <!-- Ícone à esquerda -->
       <ng-container *ngIf="icon && iconPosition === 'left'">
         <section class="flex align-items-center px-2">
@@ -32,9 +32,8 @@ import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR } from "@angular/f
         [value]="value"
         (input)="onInputChange($event)"
         [disabled]="disabled"
-        [ngClass]="{'is-invalid': showError()}" 
         [attr.aria-invalid]="showError()"
-        [required]="required"
+        [required]="isRequired()"
         [placeholder]="placeholder"
         [attr.maxlength]="maxlength"/>
       
@@ -54,6 +53,9 @@ import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR } from "@angular/f
         class="toggle-password-btn">
         <i [class]="showPassword ? 'bi bi-eye-slash-fill' : 'bi bi-eye-fill'"></i>
       </button>
+
+      <!-- Ícone à direita -->
+      <i *ngIf="showError()" class="bi px-1 bi-exclamation-circle text-red-500"></i>
     </div>
     
     <!-- Exibição de erros -->
@@ -68,7 +70,6 @@ export class InputComponent implements ControlValueAccessor {
   @Optional() @Input() type: string = 'text';
   @Optional() @Input() autocomplete: string = '';
   @Input() control?: FormControl | null;
-  @Optional() @Input() required: boolean = false;
   @Optional() @Input() placeholder: string = '';
   @Optional() @Input() maxlength?: string;
 
@@ -143,5 +144,9 @@ export class InputComponent implements ControlValueAccessor {
       return 'Campo obrigatório';
     }
     return 'Erro no campo';
+  }
+
+  isRequired(): boolean {
+    return !!this.control?.hasValidator(Validators.required);
   }
 }
