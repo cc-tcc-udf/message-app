@@ -1,0 +1,7 @@
+<section class="w-full h-full msg_list">
+  <p-tabView>
+    <p-tabPanel *ngFor="let tab of tabs" [header]="tab.header">
+      <app-message-list [data]="tab.data" />
+    </p-tabPanel>
+  </p-tabView>
+</section>

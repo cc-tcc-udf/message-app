@@ -1,0 +1,483 @@
+@import "@variables";
+
+@mixin theme($primary, $secondary, $tertiary,
+  $btn, $background, $yellow,
+  $border-radius, $txt, $shadow, $skeleton) {
+  background-color: $background;
+  color: $txt;
+  transition: background-color 0.3s ease, color 0.3s ease;
+
+  .base_layout {
+    .base_content {
+      padding: 1rem 0;
+    }
+  }
+
+  .modal_usr {
+
+    .edit_photo,
+    .loading {
+      background-color: rgba(0, 0, 0, 0.5);
+      backdrop-filter: grayscale(.8);
+      -webkit-backdrop-filter: grayscale(.8);
+      cursor: pointer;
+    }
+
+    .img {
+      border-radius: 50%;
+      overflow: hidden;
+      border: 2px dashed $txt;
+
+      &:hover {
+        border: 2px dashed var(--orange-500);
+
+        .edit_photo {
+          display: flex !important;
+        }
+      }
+    }
+  }
+
+  .error-message {
+    color: red;
+    font-size: 0.875rem;
+  }
+
+  .default-transition {
+    transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+  }
+
+  .default_bg {
+    background-color: $background;
+    box-shadow: $shadow;
+    @extend .default-transition;
+  }
+
+  .default-tag {
+    background: $tertiary;
+    border-radius: $border-radius;
+    padding: 0 .5rem;
+    color: $txt;
+    @extend .default-transition;
+  }
+
+  .card_default {
+    background: $primary;
+    border-radius: $border-radius;
+    padding: .5rem;
+    color: $txt;
+    box-shadow: $shadow;
+  }
+
+  .shadow_default {
+    box-shadow: $shadow !important;
+  }
+
+  .default-radius {
+    border-radius: $border-radius !important;
+  }
+
+  i.default {
+    color: $txt;
+  }
+
+  // Buttons
+  button.theme {
+    all: unset;
+    @extend .default-transition;
+  }
+
+  button.link {
+    all: unset;
+    background: #769FCD;
+    width: max-content;
+    color: white;
+    border-radius: $border-radius;
+    padding: .25rem .5rem;
+    cursor: pointer;
+
+    i {
+      font-size: 1.25rem
+    }
+  }
+
+  button.default {
+    all: unset;
+    cursor: pointer;
+    background: $secondary;
+    @extend .default-transition;
+  }
+
+  button.view {
+    background: var(--blue-100) !important;
+    color: var(--blue-700) !important;
+
+    &:hover {
+      background: var(--blue-200) !important;
+    }
+  }
+
+  button.send {
+    background: var(--green-100) !important;
+    color: var(--green-700) !important;
+
+    &:hover {
+      background: var(--green-200) !important;
+    }
+  }
+
+  button.edit {
+    background: var(--orange-100) !important;
+    color: var(--orange-700) !important;
+
+    &:hover {
+      background: var(--orange-200) !important;
+    }
+  }
+
+  button.del {
+    background: var(--red-100) !important;
+    color: var(--red-700) !important;
+
+    &:hover {
+      background: var(--red-200) !important;
+    }
+  }
+
+  button.success {
+    color: white;
+    font-weight: 500;
+    background: var(--green-500);
+    box-shadow: $shadow;
+    border-radius: $border-radius;
+    padding: .5rem .75rem;
+    font-size: large;
+    cursor: pointer;
+
+    i {
+      font-size: medium;
+    }
+
+    @extend .default-transition
+  }
+
+  button.basic {
+    color: $txt;
+    background: $btn;
+    font-weight: 500;
+    box-shadow: $shadow;
+    border-radius: $border-radius;
+    padding: .5rem .75rem;
+    font-size: large;
+    cursor: pointer;
+
+    i {
+      font-size: medium;
+    }
+
+    @extend .default-transition
+  }
+
+  button.add {
+    border-radius: $border-radius;
+    box-shadow: $shadow;
+    padding: .5rem 1rem;
+    display: flex;
+    align-items: center;
+    background-color: $primary;
+    color: $txt;
+    @extend .default-transition;
+
+    &:hover {
+      background: $secondary;
+    }
+  }
+
+  button.icon {
+    all: unset;
+    border-radius: $border-radius;
+    padding: .2rem .75rem;
+    background: $secondary;
+    box-shadow: $shadow;
+    cursor: pointer;
+
+    i {
+      font-size: 1.25rem;
+      color: $txt
+    }
+
+    &:hover {
+      background: $primary;
+    }
+
+    @extend .default-transition;
+  }
+
+  span.tag {
+    background-color: $primary;
+    padding: .25rem .75rem;
+    box-shadow: $default_shadow;
+    border-radius: $border_radius;
+    color: $txt;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  // PrimeNG
+  .p-menubar .p-menuitem>.p-menuitem-content .p-menuitem-link .p-menuitem-icon,
+  .p-menubar .p-menubar-root-list>.p-menuitem>.p-menuitem-content .p-menuitem-link .p-menuitem-text,
+  .p-menubar .p-menubar-root-list>.p-menuitem>.p-menuitem-content .p-menuitem-link .p-submenu-icon,
+  .p-breadcrumb .p-breadcrumb-list li .p-menuitem-link .p-menuitem-icon,
+  .p-breadcrumb .p-breadcrumb-list li.p-menuitem-separator,
+  .p-breadcrumb .p-breadcrumb-list li .p-menuitem-link .p-menuitem-text,
+  .p-datatable .p-datatable-tbody>tr,
+  .p-datatable .p-datatable-thead>tr>th,
+  .p-tabview .p-tabview-nav,
+  .p-tabview .p-tabview-panels,
+  .p-tabview .p-tabview-nav li .p-tabview-nav-link,
+  .p-menubar .p-menuitem>.p-menuitem-content .p-menuitem-link .p-menuitem-text,
+  .p-dialog .p-dialog-header {
+    color: $txt;
+    @extend .default-transition;
+  }
+
+  .p-tabview .p-tabview-nav,
+  .p-tabview .p-tabview-panels,
+  .p-tabview .p-tabview-nav li .p-tabview-nav-link {
+    background: none;
+  }
+
+  .p-datatable .p-datatable-tbody>tr {
+    background: $background;
+
+    td {
+      border: none;
+    }
+  }
+
+  .p-tabview .p-tabview-nav {
+    border-color: $background;
+    @extend .default-transition;
+  }
+
+  .p-tabview .p-tabview-nav li.p-highlight .p-tabview-nav-link {
+    background: $background;
+    border-color: $txt;
+  }
+
+  .p-tabview .p-tabview-nav li .p-tabview-nav-link {
+    border: solid $background;
+    border-width: 0 0 2px 0;
+    border-color: transparent transparent $background transparent;
+  }
+
+  .p-menubar .p-menubar-root-list>.p-menuitem:not(.p-highlight):not(.p-disabled)>.p-menuitem-content:hover,
+  .p-menubar .p-menuitem.p-highlight>.p-menuitem-content,
+  .p-menubar .p-menuitem:not(.p-highlight):not(.p-disabled)>.p-menuitem-content:hover,
+  .p-menubar .p-menuitem:not(.p-highlight):not(.p-disabled).p-focus>.p-menuitem-content,
+  .p-dialog .p-dialog-header,
+  .p-dialog .p-dialog-content,
+  .p-dialog .p-dialog-footer,
+  .p-multiselect-panel,
+  .p-multiselect-panel .p-multiselect-header,
+  .p-checkbox .p-checkbox-box,
+  .p-paginator .p-paginator-pages .p-paginator-page:not(.p-highlight):hover,
+  .p-paginator .p-paginator-first:not(.p-disabled):not(.p-highlight):hover,
+  .p-paginator .p-paginator-prev:not(.p-disabled):not(.p-highlight):hover,
+  .p-paginator .p-paginator-next:not(.p-disabled):not(.p-highlight):hover,
+  .p-paginator .p-paginator-last:not(.p-disabled):not(.p-highlight):hover,
+  .p-dropdown-panel .p-dropdown-items .p-dropdown-item:not(.p-highlight):not(.p-disabled):hover,
+  .p-dropdown-panel .p-dropdown-items .p-dropdown-item:not(.p-highlight):not(.p-disabled).p-focus,
+  .p-dropdown-panel .p-dropdown-items .p-dropdown-item.p-highlight.p-focus,
+  .p-dropdown-panel .p-dropdown-header,
+  .p-menu .p-menuitem:not(.p-highlight):not(.p-disabled)>.p-menuitem-content:hover {
+    background: $primary;
+    color: $txt;
+  }
+
+  .p-checkbox:not(.p-checkbox-disabled) .p-checkbox-box.p-focus {
+    box-shadow: $shadow;
+  }
+
+  .p-multiselect-panel .p-multiselect-header,
+  .p-dropdown:not(.p-disabled):hover,
+  .p-dropdown-panel .p-dropdown-header {
+    border: none;
+  }
+
+  .p-checkbox .p-checkbox-box.p-highlight,
+  .p-checkbox:not(.p-checkbox-disabled) .p-checkbox-box:hover,
+  .p-checkbox:not(.p-checkbox-disabled) .p-checkbox-box.p-focus {
+    border-color: $tertiary;
+  }
+
+  .p-multiselect-panel .p-multiselect-items .p-multiselect-item:not(.p-highlight):not(.p-disabled).p-focus,
+  .p-multiselect-panel .p-multiselect-items .p-multiselect-item:not(.p-highlight):not(.p-disabled):hover,
+  .p-paginator .p-paginator-pages .p-paginator-page.p-highlight {
+    background: $secondary;
+    color: $txt;
+  }
+
+  .p-multiselect-panel .p-multiselect-items .p-multiselect-item,
+  .p-multiselect-panel .p-multiselect-header .p-multiselect-filter-container .p-multiselect-filter-icon,
+  .p-checkbox .p-checkbox-box .p-checkbox-icon,
+  .p-multiselect .p-multiselect-label.p-placeholder,
+  .p-multiselect .p-multiselect-trigger,
+  .p-paginator .p-paginator-first,
+  .p-paginator .p-paginator-prev,
+  .p-paginator .p-paginator-next,
+  .p-paginator .p-paginator-last,
+  .p-dropdown-panel .p-dropdown-items .p-dropdown-item,
+  .p-dropdown-panel .p-dropdown-items .p-dropdown-empty-message,
+  .p-menu .p-menuitem>.p-menuitem-content .p-menuitem-link .p-menuitem-text,
+  .p-menu .p-menuitem>.p-menuitem-content .p-menuitem-link .p-menuitem-icon {
+    color: $txt;
+    @extend .default-transition;
+  }
+
+  .p-multiselect,
+  .p-inputtext,
+  .p-inputtext:enabled:focus,
+  .p-dropdown {
+    background-color: $primary;
+    border-color: $primary;
+    color: $txt;
+    box-shadow: $shadow;
+    border: none;
+  }
+
+  .p-dropdown .p-dropdown-trigger {
+    background-color: $primary;
+  }
+
+  .p-menubar .p-submenu-list,
+  .p-menu.p-menu-overlay,
+  .p-dropdown-panel {
+    background: $secondary;
+  }
+
+  .p-progressbar {
+    background: $background;
+
+    .p-progressbar-value {
+      background: $secondary;
+    }
+  }
+
+  .p-multiselect,
+  .p-dropdown {
+    width: 100%;
+  }
+
+  .p-dialog .p-dialog-header .p-dialog-header-icon:enabled:hover,
+  .p-multiselect-panel .p-multiselect-header .p-multiselect-close:enabled:hover,
+  .p-editor-container .p-editor-content .ql-editor {
+    background: $primary;
+    color: $txt;
+    box-shadow: $shadow;
+  }
+
+  p-multiselect.ng-dirty.ng-invalid>.p-multiselect {
+    border: 1px solid var(--red-500) !important;
+  }
+
+
+  // Quill
+  .ql-toolbar.ql-snow,
+  .p-editor-container .p-editor-content.ql-snow,
+  .ql-toolbar.ql-snow .ql-picker.ql-expanded .ql-picker-options {
+    border: none;
+  }
+
+  .ql-toolbar.ql-snow {
+    box-shadow: $shadow;
+  }
+
+  .p-editor-container {
+    box-shadow: $shadow;
+    border-radius: $border-radius;
+    overflow: hidden;
+  }
+
+  .ql-snow .ql-picker-options {
+    background: $secondary;
+    box-shadow: $shadow;
+    border-radius: $border-radius;
+    color: $txt;
+  }
+
+  .ql-toolbar.ql-snow .ql-picker.ql-expanded .ql-picker-label {
+    border-color: $primary;
+    background: $secondary;
+    color: $txt;
+    border-radius: $border-radius;
+  }
+
+  .p-scrollpanel .p-scrollpanel-bar {
+    background: $secondary;
+  }
+
+  .msg_list .p-datatable-wrapper {
+    height: calc(100% - 4.25rem);
+  }
+
+  .p-tabview-panel,
+  .p-datatable {
+    height: 100%;
+  }
+
+  .p-tabview-panels {
+    height: 80dvh;
+  }
+
+  .p-datatable .p-datatable-thead>tr>th,
+  .p-datatable .p-datatable-header {
+    background: none;
+    border: none;
+    padding: .5rem 0;
+  }
+
+  .p-dropdown {
+    width: 100%;
+  }
+
+  .p-paginator {
+    height: 3rem;
+    padding: 0;
+    margin: 0;
+    border: none;
+    background: none;
+  }
+
+  .p-skeleton {
+    background-color: $skeleton;
+  }
+
+  .NAO_ENVIADO,
+  .Inativo {
+    background-color: var(--red-100) !important;
+    color: var(--red-700) !important;
+  }
+
+  .RECEBIDO,
+  .Ativo {
+    background-color: var(--green-100) !important;
+    color: var(--green-700) !important;
+  }
+
+  .ENVIADO {
+    background-color: var(--blue-100) !important;
+    color: var(--blue-700) !important;
+  }
+
+  .VISUALIZADO {
+    background-color: var(--yellow-100) !important;
+    color: var(--yellow-700) !important;
+  }
+
+  .REMOVIDA {
+    background-color: var(--orange-100) !important;
+    color: var(--orange-700) !important;
+  }
+
+
+}

@@ -1,9 +1,27 @@
-import { ApplicationConfig } from '@angular/core';
+import { ApplicationConfig, LOCALE_ID } from '@angular/core';
 import { provideRouter } from '@angular/router';
 
-import { routes } from './app.routes';
+import { DatePipe, registerLocaleData } from '@angular/common';
+import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
+import localePt from '@angular/common/locales/pt';
 import { provideClientHydration } from '@angular/platform-browser';
+import { provideAnimations } from '@angular/platform-browser/animations';
+import { HttpInterceptor } from '@utils/http.interceptor';
+import { ThemeService } from '@utils/services/theme.service';
+import { MessageService } from 'primeng/api';
+import { routes } from './app.routes';
+
+registerLocaleData(localePt, 'pt');
 
 export const appConfig: ApplicationConfig = {
-  providers: [provideRouter(routes), provideClientHydration()]
+  providers: [
+    provideRouter(routes),
+    provideClientHydration(),
+    provideAnimations(),
+    provideHttpClient(withFetch(), withInterceptors([HttpInterceptor])),
+    { provide: LOCALE_ID, useValue: 'pt' },
+    ThemeService,
+    DatePipe,
+    MessageService
+  ]
 };

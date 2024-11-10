@@ -1,1 +1,61 @@
-/* You can add global styles to this file, and also import other style files */
+@import 'primeflex/primeflex.scss';
+@import '@variables';
+@import '@theme';
+@import '@sharedStyle';
+@import "../node_modules/quill/dist/quill.core.css";
+@import "../node_modules/quill/dist/quill.snow.css";
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+
+body {
+  margin: 0;
+  font-family: "Inter", sans-serif;
+  font-optical-sizing: auto;
+
+  &.light {
+    @include theme($light_primary,
+      $light_secondary,
+      $light_tertiary,
+      $light_btn,
+      $light_background,
+      $light_yellow,
+      $border_radius,
+      $light_txt_color,
+      $light_box_shadow, $light_skeleton);
+
+    @include shared($light_primary,
+      $light_secondary,
+      $light_tertiary,
+      $light_btn,
+      $light_background,
+      $light_yellow,
+      $border_radius,
+      $light_txt_color,
+      $light_box_shadow);
+  }
+
+  &.dark {
+    @include theme($dark_primary,
+      $dark_secondary,
+      $dark_tertiary,
+      $dark_btn,
+      $dark_background,
+      $dark_yellow,
+      $border_radius,
+      $dark_txt_color,
+      $dark_box_shadow, $dark_skeleton);
+
+    @include shared($dark_primary,
+      $dark_secondary,
+      $dark_tertiary,
+      $dark_btn,
+      $dark_background,
+      $dark_yellow,
+      $border_radius,
+      $dark_txt_color,
+      $dark_box_shadow);
+  }
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
