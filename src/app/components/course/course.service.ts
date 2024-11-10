@@ -23,4 +23,8 @@ export class CourseService {
   create(obj: Course) {
     return this.http.post<GenericResponse>(`${this.api}/public/course/create`, obj);
   }
+
+    getByResp(id: Number) {
+    return this.http.get<GenericResponse>(`${this.api}/private/course/listByResp/${id}`);
+  }
 }
