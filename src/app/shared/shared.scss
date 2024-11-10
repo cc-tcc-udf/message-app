@@ -22,6 +22,7 @@
       overflow: hidden;
       box-shadow: $shadow;
       display: flex;
+      align-items: center;
 
       i {
         color: $txt;
@@ -62,17 +63,17 @@
         opacity: 0.6;
       }
 
-      &.is-invalid {
-        border: 1px solid var(--red-500);
-        border-radius: $border-radius;
-      }
-
       @extend .default-transition;
     }
 
     .error-message {
       color: red;
       font-size: 0.875rem;
+    }
+
+    .is-invalid {
+      border: 1px solid var(--red-500) !important;
+      border-radius: $border-radius !important;
     }
 
     input:-webkit-autofill,
