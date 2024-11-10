@@ -118,7 +118,7 @@ export class MenuBarComponent implements OnInit {
   @ViewChild('fileInput') fileInput: ElementRef | undefined;
 
   ref: DynamicDialogRef | undefined;
-  items: MenuItem[] = this.setItems();
+  items: MenuItem[] = this._setItems();
   itemsPopup: MenuItem[] | undefined;
   user: CustomUsuario | null = null;
 
@@ -133,118 +133,98 @@ export class MenuBarComponent implements OnInit {
     name: new FormControl<string | null>(null),
     phone: new FormControl<string | null>(null),
     profilePhoto: new FormControl<FileApp | null>(null)
-  })
+  });
 
   ngOnInit(): void {
-    this.setItems();
-    this.setItemsPopup();
-    this.loadUser();
+    this._initializeMenu();
+    this._loadUser();
   }
-  private loadUser() {
+
+  private _initializeMenu() {
+    this.itemsPopup = [
+      { label: 'Meu perfil', icon: 'bi bi-person-circle', command: () => this._toggleProfileDialog(true) },
+      { label: 'Sair', icon: 'bi bi-box-arrow-left', command: () => this.auth.logout() }
+    ];
+  }
+
+  private _loadUser() {
     const usr = this.auth.getUserFromSessionStorage();
     if (usr) {
       this.form.patchValue(usr);
       this.user = new CustomUsuario(usr);
-      if (this.user.profilePhoto) {
-        this.imagePreview.set(this.user.profilePhoto);
-      }
-      setTimeout(() => {
-        this.skeleton = false;
-        this.cf.detectChanges();
-      }, 1500)
+      if (this.user.profilePhoto) this.imagePreview.set(this.user.profilePhoto);
     }
+    setTimeout(() => {
+      this.skeleton = false;
+      this.cf.detectChanges();
+    }, 500);
   }
 
   async saveProfile() {
-    const form = this.form.getRawValue();
     if (this.form.valid) {
-      if (this.selectedFile) {
-        this.value = 30;
-        await this.uploadFile(this.selectedFile, form);
-      }
-
-      this.auth.updateUser(form).subscribe((u) => {
+      this.selectedFile && (await this._uploadFile(this.selectedFile));
+      this.auth.updateUser(this.form.getRawValue()).subscribe((u) => {
         if (u.success) {
-          const usr = this.auth.getUserFromSessionStorage();
-          if (usr) {
-            const usrN = new Usuario(u.data as Usuario);
-            this.auth.setUserInSessionStorage(usrN);
-            this.value = 100;
-          }
-          this.loadUser();
-          this.value = 0;
-          this.visible = false;
-          this.alert.showMsg('success', 'Perfil', 'dados atualizada com sucesso');
+          this.auth.setUserInSessionStorage(new Usuario(u.data as Usuario));
+          this._loadUser();
+          this.alert.showMsg('success', 'Perfil', 'Dados atualizados com sucesso');
+          this._toggleProfileDialog(false);
         }
       });
     }
   }
 
   onFileChange(event: Event): void {
-    const inputElement = event.target as HTMLInputElement;
-    const file = inputElement?.files?.[0] || null;
+    const file = (event.target as HTMLInputElement).files?.[0];
     if (file) {
       this.imagePreview.set(URL.createObjectURL(file));
       this.selectedFile = file;
     }
   }
 
-  async uploadFile(file: File | null, form: Usuario): Promise<void> {
-    this.value = 50;
-    return new Promise<void>((resolve, reject) => {
-      if (file && file.type.startsWith('image/')) {
-        this.value = 70;
-        this.fileService.createFile(file)
-          .subscribe({
-            next: (p: FileApp) => {
-              if (p) {
-                form.profilePhoto = p;
-                this.value = 80;
-                resolve();
-              }
-            },
-            error: (err) => {
-              this.alert.showMsg('error', 'Erro no upload', 'Ocorreu um erro ao enviar a imagem');
-              reject(err);
-            }
-          });
-      } else {
-        resolve();
-      }
-    });
-  }
-
-  private navigate(rota: string) {
-    this.router.navigate([rota]);
-    this.cf.detectChanges();
-  }
-
-  private setItems() {
-    const items: MenuItem[] = [
-      { label: 'Home', icon: 'bi bi-house', command: () => { this.navigate('home') } },
-    ];
-
-    if (this.auth.isProf() || this.auth.isAdmin()) {
-      items.push({ label: 'Mensagens', icon: 'bi bi-chat-square-text-fill', command: () => { this.navigate('/msg') } });
+  private async _uploadFile(file: File | null): Promise<void> {
+    if (file && file.type.startsWith('image/')) {
+      this.value = 70;
+      return new Promise<void>((resolve, reject) => {
+        this.fileService.createFile(file).subscribe({
+          next: (uploadedFile: FileApp) => {
+            this.form.patchValue({ profilePhoto: uploadedFile });
+            this.value = 100;
+            resolve();
+          },
+          error: () => {
+            this.alert.showMsg('error', 'Erro no upload', 'Ocorreu um erro ao enviar a imagem');
+            reject();
+          }
+        });
+      });
     }
+  }
 
+  private _toggleProfileDialog(show: boolean) {
+    this.visible = show;
+    this.value = 0;
+  }
+
+  private _setItems(): MenuItem[] {
+    const items: MenuItem[] = [
+      { label: 'Home', icon: 'bi bi-house', command: () => this._navigate('home') }
+    ];
+    if (this.auth.isProf() || this.auth.isAdmin()) items.push({ label: 'Mensagens', icon: 'bi bi-chat-square-text-fill', command: () => this._navigate('/msg') });
     if (this.auth.isAdmin()) {
       items.push({
         label: 'Configurações', icon: 'bi bi-sliders',
         items: [
-          { label: 'Cursos', icon: 'bi bi-collection', command: () => { this.navigate('/cursos') } },
-          { label: 'Usuarios', icon: 'bi bi-people-fill', command: () => { this.navigate('/users') } }
+          { label: 'Cursos', icon: 'bi bi-collection', command: () => this._navigate('/cursos') },
+          { label: 'Usuarios', icon: 'bi bi-people-fill', command: () => this._navigate('/users') }
         ]
       });
     }
-
     return items;
   }
 
-  setItemsPopup() {
-    this.itemsPopup = [
-      { label: 'Meu perfil', icon: 'bi bi-person-circle', command: () => { this.visible = true; this.value = 0 } },
-      { label: 'Sair', icon: 'bi bi-box-arrow-left', command: () => { this.auth.logout() } }
-    ]
+  private _navigate(route: string) {
+    this.router.navigate([route]);
+    this.cf.detectChanges();
   }
 }
