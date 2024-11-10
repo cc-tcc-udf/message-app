@@ -17,6 +17,11 @@
         </button>
       </section>
     </section>
+    <div class="flex flex-column gap-2">
+      <label for="group">Grupo</label>
+      <p-dropdown appendTo="body" id="group" [options]="groups" formControlName="course"
+        placeholder="Selecione um grupo" [editable]="true" optionLabel="name"/>
+    </div>
     <section class="w-full flex flex-column gap-3">
       <app-input [control]="getControl('title')" type="text" label="Titulo" placeholder="Digite o titulo..."
         formControlName="title"></app-input>
