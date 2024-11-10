@@ -1,3 +1,4 @@
+import { Course } from "./Course";
 import { FileApp } from "./File";
 import { Links } from "./Links";
 
@@ -8,6 +9,7 @@ export class Message {
   sendDate: string;
   status: string;
   message: string;
+  course: Course;
   responsible: string;
   attachments: FileApp[];
   links: Links[];
@@ -22,6 +24,7 @@ export class Message {
     this.responsible = msg.responsible;
     this.attachments = msg.attachments;
     this.links = msg.links;
+    this.course = msg.course;
   }
 }
 
