@@ -41,10 +41,8 @@ export class CourseComponent implements OnInit {
   private getData() {
     this.service.getAllCourses(true).
       subscribe((obj: GenericResponse) => {
-        console.log("saçkdmslkm", obj.data)
         this.courses = (obj.data as Course[])
           .map(course => new CourseCustom(course));
-        console.log(this.courses);
         this.loading = false;
         this.cr.detectChanges();
       });
@@ -63,6 +61,7 @@ export class CourseComponent implements OnInit {
     this.ref.onClose.subscribe((p) => {
       if (p) {
         this.getData();
+        this.cr.detectChanges();
       }
     })
   }
