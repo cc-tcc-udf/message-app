@@ -4,12 +4,16 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '@auth/auth.service';
+import { CourseService } from '@components/course/course.service';
 import { MessageService } from '@components/message/message.service';
+import { SubCourse } from '@models/Course';
 import { FileApp } from '@models/File';
+import { GenericResponse } from '@models/GenericResponse';
 import { Links } from '@models/Links';
 import { Message } from '@models/Message';
 import { InputComponent } from '@shared/input.component';
 import { AlertService } from '@utils/services/alert.service';
+import { DropdownModule } from 'primeng/dropdown';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { Editor, EditorModule } from 'primeng/editor';
 import { ScrollPanelModule } from 'primeng/scrollpanel';
@@ -19,7 +23,7 @@ import { ModalLinksComponent } from '../modais/modal-links.component';
   selector: 'app-manage-msg',
   standalone: true,
   imports: [ScrollPanelModule, ReactiveFormsModule,
-    InputComponent, EditorModule, NgFor, NgClass],
+    InputComponent, EditorModule, NgFor, NgClass, DropdownModule],
   templateUrl: './manage-msg.component.html',
   styleUrls: ['./manage-msg.component.scss'],
   providers: [DialogService]
@@ -29,10 +33,11 @@ export class ManageMsgComponent implements AfterViewInit, OnInit {
   ref: DynamicDialogRef | undefined;
   rota: string = '';
   user = this.auth.getUserFromSessionStorage();
+  groups: SubCourse[] = [];
   @ViewChild('fileInput') fileInput!: ElementRef;
   form: FormGroup = new FormGroup({
     id: new FormControl<number | null>(null),
-    course_id: new FormControl<number | null>(null),
+    course: new FormControl<number | null>(null),
     responsible: new FormControl<string | null>(this.user?.uid ? this.user.uid : null),
     title: new FormControl<string | null>(null, [Validators.required]),
     status: new FormControl<string | null>('NAO_ENVIADO'),
@@ -62,7 +67,8 @@ export class ManageMsgComponent implements AfterViewInit, OnInit {
     private router: Router,
     private auth: AuthService,
     private cr: ChangeDetectorRef,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private courseService: CourseService,
   ) {
   }
 
@@ -75,13 +81,18 @@ export class ManageMsgComponent implements AfterViewInit, OnInit {
         }
         this.rota = params['rota'];
       })
+    if (this.user?.id) {
+      this.getGroups(this.user?.id);
+    }
   }
 
   private getMsg(id: number | string) {
     this.service.getMsg(id)
       .subscribe((res) => {
         if (res.success) {
-          this.form.patchValue(res.data as Message);
+          const data = res.data as Message;
+          const course = this.groups.find((c: SubCourse) => c.id === data.course?.id);
+          this.form.patchValue({ ...data, course: course });
         }
       })
   }
@@ -208,6 +219,16 @@ export class ManageMsgComponent implements AfterViewInit, OnInit {
         console.error('Quill not initialized');
       }
     }, 500);
+  }
+  getGroups(id: Number) {
+    this.courseService.getByResp(id)
+      .subscribe((response: GenericResponse) => {
+        if (response.success) {
+          const data = response.data as SubCourse[];
+          this.groups = [{ id: null, name: 'Nenhum' }, ...data.filter(c => c.id)];
+          console.log(this.groups);
+        }
+      });
   }
 
 
