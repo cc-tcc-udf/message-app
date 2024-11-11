@@ -37,13 +37,13 @@ export class ModalCourseComponent implements OnInit {
   ];
 
   form: FormGroup = new FormGroup({
-    id: new FormControl<number | null>(null),
+    id: new FormControl<string | null>(null),
     abbreviation: new FormControl<string | null>(null),
     name: new FormControl<string | null>(null),
     description: new FormControl<string | null>(null),
-    courseGroupId: new FormControl<number | null>(null),
+    courseGroupId: new FormControl<string | null>(null),
     resp: new FormGroup({
-      id: new FormControl<number | null>(null)
+      id: new FormControl<string | null>(null)
     }),
     isGroup: new FormControl<boolean | null>(null),
   })

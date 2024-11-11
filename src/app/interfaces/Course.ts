@@ -1,12 +1,12 @@
 import { CustomUsuario, Usuario } from "./Usuario";
 
 export class Course {
-  id: number;
+  id: string;
   name: string;
   description: string;
   abbreviation: string;
   resp: Usuario;
-  courseGroupId: number;
+  courseGroupId: string;
   isGroup: boolean;
   courses?: SubCourse[];
 
@@ -22,12 +22,12 @@ export class Course {
   }
 }
 export class CourseCustom {
-  id: number;
+  id: string;
   name: string;
   description: string;
   abbreviation: string;
   resp?: CustomUsuario;
-  courseGroupId: number;
+  courseGroupId: string;
   isGroup: boolean;
   courses?: SubCourse[];
 
@@ -46,12 +46,12 @@ export class CourseCustom {
 
 
 export class SubCourse {
-  id?: number | null;
+  id?: string | null;
   name?: string;
   description?: string;
   abbreviation?: string;
   resp?: Usuario;
-  courseGroupId?: number;
+  courseGroupId?: string;
   isGroup?: boolean;
   siglaGroup?: string
 
@@ -68,12 +68,12 @@ export class SubCourse {
 }
 
 export class SubCourseCustom {
-  id?: number | null;
+  id?: string | null;
   name?: string;
   description?: string;
   abbreviation?: string;
   resp?: CustomUsuario;
-  courseGroupId?: number;
+  courseGroupId?: string;
   isGroup?: boolean;
   siglaGroup?: string
 

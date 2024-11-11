@@ -1,6 +1,4 @@
-import { NgClass, NgIf } from '@angular/common';
 import { Component, inject, OnInit, ViewEncapsulation } from '@angular/core';
-import { RouterLink } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { BreadcrumbModule } from 'primeng/breadcrumb';
 import { BreadcrumbService } from '../services/breadcrumb.service';
@@ -8,7 +6,7 @@ import { BreadcrumbService } from '../services/breadcrumb.service';
 @Component({
   selector: 'app-breadcrumb',
   standalone: true,
-  imports: [BreadcrumbModule, NgClass, NgIf, RouterLink],
+  imports: [BreadcrumbModule],
   template: `
   <section class="w-full align-items-center flex">
     <p-breadcrumb class="max-w-full" [model]="items" [home]="home" />

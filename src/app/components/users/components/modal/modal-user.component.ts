@@ -42,7 +42,7 @@ export class ModalUserComponent implements OnInit {
     { label: 'Inativo', value: false }
   ];
   form: FormGroup = new FormGroup({
-    id: new FormControl<number | null>(null),
+    id: new FormControl<string | null>(null),
     email: new FormControl<string | null>(null, [Validators.required]),
     name: new FormControl<string | null>(null, [Validators.required]),
     phone: new FormControl<string | null>(null, [Validators.required]),
@@ -50,7 +50,7 @@ export class ModalUserComponent implements OnInit {
     roles: new FormControl<string[] | null>(null, [Validators.required]),
     profilePhoto: new FormControl<FileApp | null>(null),
     active: new FormControl<boolean | null>(false),
-    id_curso: new FormControl<number | null>(null)
+    id_curso: new FormControl<string | null>(null)
   })
 
   constructor(

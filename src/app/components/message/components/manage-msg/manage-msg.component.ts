@@ -36,9 +36,9 @@ export class ManageMsgComponent implements AfterViewInit, OnInit {
   groups: SubCourse[] = [];
   @ViewChild('fileInput') fileInput!: ElementRef;
   form: FormGroup = new FormGroup({
-    id: new FormControl<number | null>(null),
-    course: new FormControl<number | null>(null),
-    responsible: new FormControl<string | null>(this.user?.uid ? this.user.uid : null),
+    id: new FormControl<string | null>(null),
+    course: new FormControl<string | null>(null),
+    responsible: new FormControl<string | null>(this.user?.id ?? null),
     title: new FormControl<string | null>(null, [Validators.required]),
     status: new FormControl<string | null>('NAO_ENVIADO'),
     summary: new FormControl<string | null>(null, [Validators.required]),
@@ -86,7 +86,7 @@ export class ManageMsgComponent implements AfterViewInit, OnInit {
     }
   }
 
-  private getMsg(id: number | string) {
+  private getMsg(id: string) {
     this.service.getMsg(id)
       .subscribe((res) => {
         if (res.success) {
@@ -220,7 +220,7 @@ export class ManageMsgComponent implements AfterViewInit, OnInit {
       }
     }, 500);
   }
-  getGroups(id: Number) {
+  getGroups(id: string) {
     this.courseService.getByResp(id)
       .subscribe((response: GenericResponse) => {
         if (response.success) {

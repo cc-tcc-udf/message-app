@@ -2,7 +2,7 @@ import { FileApp } from "./File";
 import { Roles_user } from "./Roles";
 
 export class Usuario {
-  id!: number;
+  id!: string;
   uid!: string;
   name!: string;
   email!: string;
@@ -11,7 +11,7 @@ export class Usuario {
   coverPhoto!: FileApp;
   roles!: Roles_user[];
   phone!: string;
-  id_curso: number;
+  id_curso: string;
   active: boolean;
 
   constructor(usr: Usuario) {
@@ -30,7 +30,7 @@ export class Usuario {
 }
 
 export class CustomUsuario {
-  id!: number;
+  id!: string;
   uid!: string;
   name!: string;
   email!: string;
@@ -40,7 +40,7 @@ export class CustomUsuario {
   ativo: string;
   coverPhoto!: string;
   roles!: Roles_user[];
-  id_curso: number;
+  id_curso: string;
 
   constructor(user: Usuario) {
     this.id = user.id;

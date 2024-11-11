@@ -3,7 +3,7 @@ import { FileApp } from "./File";
 import { Links } from "./Links";
 
 export class Message {
-  id: number;
+  id: string;
   title: string;
   summary: string;
   sendDate: string;

@@ -1,12 +1,11 @@
 export class FileApp {
-  id!: number;
+  id!: string;
   name!: string;
   type!: string;
   url!: string;
   size!: number;
   key!: string;
-  uid!: string;
-  id_ext!: number;
+  id_ext!: string;
 
   constructor(file: FileApp) {
     this.id = file.id;
@@ -15,7 +14,6 @@ export class FileApp {
     this.url = file.url;
     this.size = file.size;
     this.key = file.key;
-    this.uid = file.uid;
     this.id_ext = file.id_ext;
   }
 }

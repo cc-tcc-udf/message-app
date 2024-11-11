@@ -36,7 +36,7 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
 export class ModalLinksComponent implements OnInit {
 
   form: FormGroup = new FormGroup({
-    id: new FormControl<number | null>(null),
+    id: new FormControl<string | null>(null),
     title: new FormControl<string | null>(null, [Validators.required]),
     link: new FormControl<string | null>(null, [Validators.required]),
   })

@@ -129,6 +129,7 @@ export class MenuBarComponent implements OnInit {
   skeleton = true;
 
   form: FormGroup = new FormGroup({
+    id: new FormControl<string | null>(null),
     email: new FormControl<string | null>(null),
     name: new FormControl<string | null>(null),
     phone: new FormControl<string | null>(null),
@@ -162,7 +163,10 @@ export class MenuBarComponent implements OnInit {
 
   async saveProfile() {
     if (this.form.valid) {
-      this.selectedFile && (await this._uploadFile(this.selectedFile));
+      if (this.selectedFile) {
+        await this._uploadFile(this.selectedFile);
+      }
+
       this.auth.updateUser(this.form.getRawValue()).subscribe((u) => {
         if (u.success) {
           this.auth.setUserInSessionStorage(new Usuario(u.data as Usuario));
