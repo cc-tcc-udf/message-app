@@ -57,7 +57,6 @@ export class MessageListComponent implements OnInit {
       return '';
     }
 
-
     return 'tag ' + msg.status;
   }
 

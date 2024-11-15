@@ -1,5 +1,5 @@
 import { NgClass, NgIf } from '@angular/common';
-import { ChangeDetectorRef, Component, inject, OnInit, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit, ViewEncapsulation } from '@angular/core';
 import { Course, CourseCustom, getCourseCols, getSubCourseCols, SubCourse } from '@models/Course';
 import { GenericResponse } from '@models/GenericResponse';
 import { Column } from '@models/primeng';
@@ -20,6 +20,7 @@ import { CourseService } from './course.service';
   providers: [DialogService],
   templateUrl: './course.component.html',
   styleUrl: './course.component.scss',
+  changeDetection: ChangeDetectionStrategy.Default,
   encapsulation: ViewEncapsulation.None
 })
 export class CourseComponent implements OnInit {
@@ -47,7 +48,6 @@ export class CourseComponent implements OnInit {
         this.cr.detectChanges();
       });
   }
-
   newCourse(obj?: Course | SubCourse) {
     this.ref = this.dialogService.open(
       ModalCourseComponent, {
@@ -61,7 +61,6 @@ export class CourseComponent implements OnInit {
     this.ref.onClose.subscribe((p) => {
       if (p) {
         this.getData();
-        this.cr.detectChanges();
       }
     })
   }

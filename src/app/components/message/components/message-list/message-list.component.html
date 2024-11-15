@@ -20,14 +20,15 @@
   <ng-template pTemplate="body" let-msg let-columns="columns">
     <tr>
       <td *ngFor="let td of columns">
-        <p *ngIf="!td.isTag && !td.isDate; else tag" class="m-0 font-semibold">
+        <p *ngIf="!td.isTag && !td.isDate" class="m-0 font-semibold">
           {{ msg[td.field] }}
         </p>
-        <ng-template #tag>
-          <span [ngClass]="getClassTag(msg, td.isDate)">
-            {{ getTxt(msg, td.isDate) }}
-          </span>
-        </ng-template>
+        <span *ngIf="td.isDate" [ngClass]="getClassTag(msg, td.isDate)">
+          {{ getTxt(msg, td.isDate) }}
+        </span>
+        <span *ngIf="td.isTag && !td.isDate" [ngClass]="{'tag' : td.isTag }">
+          {{msg[td.field]}}
+        </span>
       </td>
       <td class="w-1">
         <section class="flex gap-2">

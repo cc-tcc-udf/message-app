@@ -54,6 +54,26 @@ body {
       $dark_txt_color,
       $dark_box_shadow);
   }
+
+  .pdf {
+    color: var(--red-500);
+  }
+
+  .doc,
+  .docx {
+    color: var(--blue-500);
+  }
+
+  .xls,
+  .xlsx,
+  .csv {
+    color: var(--green-500);
+  }
+
+  .file_ {
+    color: var(--gray-500);
+  }
+
 }
 
 ::-webkit-scrollbar {

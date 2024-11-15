@@ -28,21 +28,29 @@
           </td>
           @for (td of cols; track $index) {
           <td>
-            <span *ngIf="!td.isAction && td.field !== 'qtdCursos' && !td.isImg"
-              [ngClass]="{'tag' : td.isTag, 'bolTrue': td.isBoolean && list[td.field], 'bolFalse': td.isBoolean && !list[td.field] }">
-              {{list[td.field]}}
-            </span>
-            <span *ngIf="!td.isAction && td.field === 'qtdCursos' && list.isGroup && !td.isImg"
-              [ngClass]="{'tag' : td.isTag, 'bolTrue': td.isBoolean && list[td.field], 'bolFalse': td.isBoolean && !list[td.field] }">
-              {{list.courses ? list.courses.length : 0}}
-            </span>
+            <!-- Exibir valor simples, exceto para qtdCursos e imagens -->
+            <ng-container *ngIf="!td.isAction && !td.isImg">
+              <span *ngIf="td.field !== 'qtdCursos'"
+                [ngClass]="{'tag': td.isTag, 'bolTrue': td.isBoolean && list[td.field], 'bolFalse': td.isBoolean && !list[td.field]}">
+                {{ list[td.field] }}
+              </span>
+
+              <!-- Exibir contagem de cursos se for grupo -->
+              <span *ngIf="td.field === 'qtdCursos' && list.isGroup"
+                [ngClass]="{'tag': td.isTag, 'bolTrue': td.isBoolean && list[td.field], 'bolFalse': td.isBoolean && !list[td.field]}">
+                {{ list.courses ? list.courses.length : 0 }}
+              </span>
+            </ng-container>
+
+            <!-- Exibir imagem e nome se for uma imagem e tiver responsavel -->
             <span *ngIf="td.isImg && list.resp" class="flex gap-2 align-items-center">
               <div class="shadow-1 bg-cover bg-center bg-no-repeat border-circle"
                 [style.background-image]="'url(' + list.resp.profilePhoto + ')'" style="width: 2.5rem; height:2.5rem">
               </div>
-              <p class="m-0 font-semibold">{{list.resp.name}} </p>
+              <p class="m-0 font-semibold">{{ list.resp.name }}</p>
             </span>
           </td>
+
           }
           <td class="w-1">
             <section class="flex gap-1">

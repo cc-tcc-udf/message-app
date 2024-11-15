@@ -87,7 +87,7 @@ export class ModalCourseComponent implements OnInit {
     this.service.create(form).subscribe((p) => {
       if (p.success) {
         this.alert.showMsg("success", form.isGroup ? 'Grupo' : 'Curso', p.message);
-        this.dialog.close();
+        this.dialog.close(p);
       } else {
         this.alert.showMsg("error", 'Curso', p.message);
       }

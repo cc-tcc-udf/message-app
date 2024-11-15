@@ -31,7 +31,7 @@ export class Message {
 export function getMessageColuns() {
   return [
     { field: 'title', header: 'Titulo' },
-    { field: 'sendDate', header: 'DataEnvio', isTag: true, isDate: true },
+    { field: 'sendDate', header: 'DataEnvio', isDate: true },
     { field: 'status', header: 'Status', isTag: true },
     { field: 'group', header: 'Curso/Grupo' },
     { field: 'views', header: 'Visualizações' },

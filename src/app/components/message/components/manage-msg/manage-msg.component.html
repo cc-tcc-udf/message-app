@@ -20,7 +20,7 @@
     <div class="flex flex-column gap-2">
       <label for="group">Grupo</label>
       <p-dropdown appendTo="body" id="group" [options]="groups" formControlName="course"
-        placeholder="Selecione um grupo" [editable]="true" optionLabel="name"/>
+        placeholder="Selecione um grupo" [editable]="true" optionLabel="name" />
     </div>
     <section class="w-full flex flex-column gap-3">
       <app-input [control]="getControl('title')" type="text" label="Titulo" placeholder="Digite o titulo..."
@@ -34,7 +34,7 @@
           [modules]="editorModules" />
       </div>
     </section>
-    <section class="flex gap-3">
+    <section class="flex gap-3 pb-2">
       <section class="w-6">
         <span class="text-base">Links <i class="bi pl-1 bi-link-45deg"></i></span>
         <section class="flex flex-wrap pt-2 gap-3">
@@ -58,14 +58,17 @@
           <section *ngFor="let anexo of anexos; let i = index"
             class="card_default addLink flex flex-column justify-content-between">
             <section class="w-full h-full flex justify-content-center p-1">
-              @if(anexo.type.includes('image')){
-              <img [src]="getUrl(anexo)" class="h-6rem border-round max-w-full" alt="imagem do anexo" />
-              }@else {
-              <i class="bi" [ngClass]="getClass(anexo.type)"></i>
-              }
+              <section class="h-6rem">
+                @if(anexo.type.includes('image')){
+                <p-image [src]="getUrl(anexo)" alt="Image do anexo" styleClass="h-6rem" [preview]="true" />
+                <!-- <img [src]="getUrl(anexo)" class="h-6rem border-round max-w-full" alt="imagem do anexo" /> -->
+                }@else {
+                <i class="icon_ bi" [ngClass]="getClass(anexo.name)"></i>
+                }
+              </section>
             </section>
             <section class="actions flex align-items-center justify-content-center gap-2">
-              <button (click)="viewAnexo(null)" class="link view">
+              <button *ngIf="!anexo.type.includes('image')" (click)="viewAnexo(anexo)" class="link view">
                 <i class="bi bi-eye"></i>
               </button>
               <button (click)="removeAnexo(null)" class="link del">
@@ -77,7 +80,7 @@
           <!-- Botão para adicionar novo anexo -->
           <section class="card_default addLink flex justify-content-center align-items-center">
             <input type="file" #fileInput (change)="addAnexos($event)" hidden />
-            <button (click)="fileInput.click()" class="theme border-circle success">
+            <button (click)="fileInput.click()" class="theme text-center p-0 h-3rem w-3rem border-circle success">
               <i class="bi text-2xl bi-plus"></i>
             </button>
           </section>

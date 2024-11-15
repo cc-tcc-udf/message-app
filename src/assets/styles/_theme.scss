@@ -452,6 +452,27 @@
     background-color: $skeleton;
   }
 
+  .addLink {
+    .p-image-preview-container {
+      height: 100%;
+      max-width: 100%;
+
+      .p-image-preview-indicator {
+        border-radius: 5px;
+      }
+
+      img {
+        max-width: 100%;
+        height: 100%;
+        border-radius: 5px;
+      }
+
+      .p-image-preview {
+        max-height: 80dvh;
+      }
+    }
+  }
+
   .NAO_ENVIADO,
   .Inativo {
     background-color: var(--red-100) !important;

@@ -1,4 +1,4 @@
-import { NgClass, NgFor } from '@angular/common';
+import { NgClass, NgFor, NgIf } from '@angular/common';
 import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
@@ -12,21 +12,23 @@ import { GenericResponse } from '@models/GenericResponse';
 import { Links } from '@models/Links';
 import { Message } from '@models/Message';
 import { InputComponent } from '@shared/input.component';
+import { ModalViewComponent } from '@shared/modal-view.component';
 import { AlertService } from '@utils/services/alert.service';
 import { DropdownModule } from 'primeng/dropdown';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { Editor, EditorModule } from 'primeng/editor';
+import { ImageModule } from 'primeng/image';
 import { ScrollPanelModule } from 'primeng/scrollpanel';
 import { ModalLinksComponent } from '../modais/modal-links.component';
-
 @Component({
   selector: 'app-manage-msg',
   standalone: true,
   imports: [ScrollPanelModule, ReactiveFormsModule,
-    InputComponent, EditorModule, NgFor, NgClass, DropdownModule],
+    InputComponent, EditorModule, NgFor, NgIf,
+    NgClass, DropdownModule, ImageModule],
   templateUrl: './manage-msg.component.html',
   styleUrls: ['./manage-msg.component.scss'],
-  providers: [DialogService]
+  viewProviders: [DialogService]
 })
 export class ManageMsgComponent implements AfterViewInit, OnInit {
   anexos: Array<File | FileApp> = [];
@@ -150,10 +152,19 @@ export class ManageMsgComponent implements AfterViewInit, OnInit {
     const input = event.target as HTMLInputElement;
     if (input.files) {
       const anexos = input.files as FileList;
-      console.log(anexos[0] as File);
-      this.anexos.push(anexos[0] as File);
+      const file = anexos[0] as File;
+
+      const allowedExtensions = ['pdf', 'png', 'jpg', 'jpeg', 'gif', 'doc', 'docx', 'xls', 'xlsx', 'csv'];
+      const extension = file.name.split('.').pop()?.toLowerCase();
+
+      if (extension && allowedExtensions.includes(extension)) {
+        this.anexos.push(file);
+      } else {
+        this.alert.showMsg("warn", "Anexo", 'Esse tipo de anexo não é suportado!')
+      }
     }
   }
+
 
   getUrl(anexo: File | FileApp | null): SafeUrl | string {
     if (anexo instanceof File) {
@@ -162,16 +173,36 @@ export class ManageMsgComponent implements AfterViewInit, OnInit {
       return (anexo as FileApp).url;
     }
   }
-  getClass(type: string) {
-    console.log(type)
-    return "bi-pdf"
+
+  getClass(fileName: string): string {
+    const extension = this.getExtension(fileName);
+    switch (extension) {
+      case 'pdf':
+        return 'bi-file-earmark-pdf-fill ' + extension;
+      case 'doc':
+      case 'docx':
+        return 'bi-file-earmark-word-fill ' + extension;
+      case 'xls':
+      case 'xlsx':
+        return 'bi-file-earmark-excel-fill ' + extension;
+      case 'csv':
+        return 'bi-filetype-csv ' + extension;
+      default:
+        return 'bi-file-earmark-fill ' + 'file_';
+    }
   }
 
-
   viewAnexo(anexo: File | FileApp | null) {
-    // const url = URL.createObjectURL(anexo.file);
-    // window.open(url, '_blank');
-    console.log(anexo)
+    if (anexo) {
+      const ex = this.getExtension(anexo.name);
+      const v = ex === 'pdf' ? '80%' : '30%';
+      this.dialogService.open(ModalViewComponent, {
+        data: anexo,
+        header: 'Visualizar Anexo',
+        width: v,
+        height: v,
+      });
+    }
   }
 
   removeAnexo(index: number | null) {
@@ -231,6 +262,9 @@ export class ManageMsgComponent implements AfterViewInit, OnInit {
       });
   }
 
+  getExtension(name: string) {
+    return name?.split('.').pop()?.toLowerCase();
+  }
 
   back() {
     this.router.navigate([this.rota || 'msg']);
