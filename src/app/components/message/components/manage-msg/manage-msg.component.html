@@ -7,11 +7,11 @@
         voltar
       </span>
       <section class="flex gap-4">
-        <button (click)="save()" class="basic theme">
+        <button (click)="save('create')" class="basic theme">
           <i class="bi pr-1 bi-floppy"></i>
           salvar
         </button>
-        <button class="success theme">
+        <button (click)="save('send')" class="success theme">
           enviar
           <i class="bi pl-1 bi-send"></i>
         </button>
@@ -38,11 +38,16 @@
       <section class="w-6">
         <span class="text-base">Links <i class="bi pl-1 bi-link-45deg"></i></span>
         <section class="flex flex-wrap pt-2 gap-3">
-          <section *ngFor="let link of getControl('links').value"
+          <section *ngFor="let link of getControl('links').value; let i = index"
             class="card_default addLink flex flex-column justify-content-between">
             <p class="m-0">{{link.title}}</p>
             <section class="actions flex align-items-center justify-content-center gap-2">
-              <button class="link"><i class="bi bi-link"></i></button>
+              <button (click)="openModal(link.link, '30%', 'link')" class="link view">
+                <i class="bi bi-eye"></i>
+              </button>
+              <button (click)="remove('link', i)" class="link del">
+                <i class="bi bi-trash"></i>
+              </button>
             </section>
           </section>
           <section class="card_default addLink flex justify-content-center align-items-center">
@@ -61,7 +66,6 @@
               <section class="h-6rem">
                 @if(anexo.type.includes('image')){
                 <p-image [src]="getUrl(anexo)" alt="Image do anexo" styleClass="h-6rem" [preview]="true" />
-                <!-- <img [src]="getUrl(anexo)" class="h-6rem border-round max-w-full" alt="imagem do anexo" /> -->
                 }@else {
                 <i class="icon_ bi" [ngClass]="getClass(anexo.name)"></i>
                 }
@@ -71,7 +75,7 @@
               <button *ngIf="!anexo.type.includes('image')" (click)="viewAnexo(anexo)" class="link view">
                 <i class="bi bi-eye"></i>
               </button>
-              <button (click)="removeAnexo(null)" class="link del">
+              <button (click)="remove('anexo', i)" class="link del">
                 <i class="bi bi-trash"></i>
               </button>
             </section>

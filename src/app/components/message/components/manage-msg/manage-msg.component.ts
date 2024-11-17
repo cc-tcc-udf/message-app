@@ -14,12 +14,13 @@ import { Message } from '@models/Message';
 import { InputComponent } from '@shared/input.component';
 import { ModalViewComponent } from '@shared/modal-view.component';
 import { AlertService } from '@utils/services/alert.service';
+import { FileService } from '@utils/services/file.service';
 import { DropdownModule } from 'primeng/dropdown';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { Editor, EditorModule } from 'primeng/editor';
 import { ImageModule } from 'primeng/image';
 import { ScrollPanelModule } from 'primeng/scrollpanel';
-import { ModalLinksComponent } from '../modais/modal-links.component';
+import { ModalLinksComponent } from '../utils/modal-links.component';
 @Component({
   selector: 'app-manage-msg',
   standalone: true,
@@ -28,7 +29,7 @@ import { ModalLinksComponent } from '../modais/modal-links.component';
     NgClass, DropdownModule, ImageModule],
   templateUrl: './manage-msg.component.html',
   styleUrls: ['./manage-msg.component.scss'],
-  viewProviders: [DialogService]
+  viewProviders: [DialogService, FileService]
 })
 export class ManageMsgComponent implements AfterViewInit, OnInit {
   anexos: Array<File | FileApp> = [];
@@ -71,6 +72,7 @@ export class ManageMsgComponent implements AfterViewInit, OnInit {
     private cr: ChangeDetectorRef,
     private sanitizer: DomSanitizer,
     private courseService: CourseService,
+    private fileService: FileService
   ) {
   }
 
@@ -94,6 +96,9 @@ export class ManageMsgComponent implements AfterViewInit, OnInit {
         if (res.success) {
           const data = res.data as Message;
           const course = this.groups.find((c: SubCourse) => c.id === data.course?.id);
+          if (data.attachments) {
+            this.anexos = data.attachments;
+          }
           this.form.patchValue({ ...data, course: course });
         }
       })
@@ -103,24 +108,49 @@ export class ManageMsgComponent implements AfterViewInit, OnInit {
     return this.form.get(control) as FormControl;
   }
 
-  save() {
+  async save(type: 'create' | 'send') {
+    const form = this.form.getRawValue();
     this.form.markAllAsTouched();
-    console.log(this.form.getRawValue());
     if (this.form.valid) {
-      this.service.create(this.form.getRawValue())
-        .subscribe((response) => {
-          if (response.success) {
-            this.alert.showMsg('success', 'Sucesso', 'Formulário salvo com sucesso');
-            if (response.data)
-              this.form.patchValue(response.data)
-          }
+      try {
+        await this.saveAnexos(form);
 
-        })
+        this.service[type](form)
+          .subscribe((response) => {
+            if (response.success) {
+              this.alert.showMsg('success', 'Sucesso', 'Formulário salvo com sucesso');
+              if (response.data) {
+                this.form.patchValue(response.data);
+              }
+            }
+          });
+      } catch (error) {
+        this.alert.showMsg('error', 'Erro', 'Ocorreu um erro ao salvar o formulário');
+      }
     } else {
-      this.alert.showMsg('error', 'Error', 'Formulário invalid');
+      this.alert.showMsg('error', 'Erro', 'Formulário inválido');
     }
-
   }
+
+  async saveAnexos(form: any): Promise<void> {
+    const anexos = this.anexos || [];
+
+    const promises = anexos.map((anexo: File | FileApp) => {
+      if (anexo instanceof File) {
+        return this.fileService.createFile(anexo).toPromise()
+          .then((fileApp: FileApp | undefined) => {
+            if (fileApp) {
+              form.attachments = form.attachments || [];
+              form.attachments.push(fileApp);
+            }
+          });
+      }
+      return Promise.resolve();
+    });
+
+    await Promise.all(promises);
+  }
+
 
   send() {
     if (this.form.valid) {
@@ -195,21 +225,44 @@ export class ManageMsgComponent implements AfterViewInit, OnInit {
   viewAnexo(anexo: File | FileApp | null) {
     if (anexo) {
       const ex = this.getExtension(anexo.name);
-      const v = ex === 'pdf' ? '80%' : '30%';
-      this.dialogService.open(ModalViewComponent, {
-        data: anexo,
-        header: 'Visualizar Anexo',
-        width: v,
-        height: v,
-      });
+      this.openModal(anexo, ex === 'pdf' ? '80%' : '35%', 'anexo');
     }
   }
 
-  removeAnexo(index: number | null) {
-    // const attachments = this.anexos || [];
-    // attachments.splice(index, 1);
-    // this.anexos.push(...attachments);
-    console.log(index)
+  openModal(obj: unknown, wh: string, title: string) {
+    this.dialogService.open(ModalViewComponent, {
+      data: obj,
+      header: 'Visualizar ' + title,
+      width: wh,
+      height: wh,
+    });
+  }
+
+  remove(type: 'link' | 'anexo', index: number) {
+    if (type === 'link') {
+      this.removeLink(index);
+    } else if (type === 'anexo') {
+      this.removeAnexo(index);
+    }
+  }
+
+  removeAnexo(index: number) {
+    const attachments = this.form.get('attachments')?.value;
+    if (Array.isArray(attachments) && index >= 0 && index < attachments.length) {
+      attachments.splice(index, 1); // Remove o item do array
+      this.form.get('attachments')?.setValue([...attachments]);
+    }
+  }
+
+  private removeLink(index: number) {
+    const links = this.form.get('links')?.value;
+    if (Array.isArray(links) && index >= 0 && index < links.length) {
+      const obj = links[index];
+      if (obj.id) {
+        links.splice(index, 1);
+        this.form.get('links')?.setValue([...links]);
+      }
+    }
   }
 
 

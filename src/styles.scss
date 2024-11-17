@@ -56,22 +56,45 @@ body {
   }
 
   .pdf {
-    color: var(--red-500);
+    color: var(--red-500) !important;
   }
 
   .doc,
   .docx {
-    color: var(--blue-500);
+    color: var(--blue-500) !important;
   }
 
   .xls,
   .xlsx,
   .csv {
-    color: var(--green-500);
+    color: var(--green-500) !important;
   }
 
   .file_ {
-    color: var(--gray-500);
+    color: var(--gray-500) !important;
+  }
+
+  /////////////////////////////
+  .pdf_ {
+    color: var(--red-500) !important;
+    background: var(--red-200) !important;
+  }
+
+  .doc_,
+  .docx_ {
+    color: var(--blue-500) !important;
+    background: var(--blue-200) !important;
+  }
+
+  .xls_,
+  .xlsx_,
+  .csv_ {
+    color: var(--green-500) !important;
+    background: var(--green-200) !important;
+  }
+
+  .file__ {
+    color: var(--gray-500) !important;
   }
 
 }

@@ -23,4 +23,8 @@ export class MessageService {
   create(obj: Message) {
     return this.http.post<GenericResponse>(`${this.api}/public/msg/create`, obj);
   }
+  
+  send(obj: Message) {
+    return this.http.post<GenericResponse>(`${this.api}/public/msg/send`, obj);
+  }
 }
