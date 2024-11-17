@@ -125,14 +125,14 @@ export class ManageMsgComponent implements AfterViewInit, OnInit {
             }
           });
       } catch (error) {
-        this.alert.showMsg('error', 'Erro', 'Ocorreu um erro ao salvar o formulário');
+        this.alert.showMsg('error', 'Erro', 'Ocorreu um erro ao salvar o formulário' + error);
       }
     } else {
       this.alert.showMsg('error', 'Erro', 'Formulário inválido');
     }
   }
 
-  async saveAnexos(form: any): Promise<void> {
+  async saveAnexos(form: Message): Promise<void> {
     const anexos = this.anexos || [];
 
     const promises = anexos.map((anexo: File | FileApp) => {
