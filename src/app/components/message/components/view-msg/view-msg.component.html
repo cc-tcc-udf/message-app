@@ -1,46 +1,56 @@
-@if (msg) {
-<p-tabView>
-  <p-tabPanel header="Mensagem">
-    <section class="flex flex-column gap-3">
-      <p class="m-0"><strong>Titulo:</strong> {{msg.title}}</p>
-      <p class="m-0"><strong>Resumo:</strong> {{msg.summary}}</p>
-      <section><strong>Mensagem:</strong>
-        <div [innerHTML]="msg.message"></div>
-      </section>
+<section class="w-full min-h-screen h-auto py-1">
+  @if (msg) {
+  <p-tabView>
+    <p-tabPanel header="Mensagem">
+      <section class="flex flex-column gap-3">
+        <p class="m-0"><strong>Titulo:</strong> {{msg.title}}</p>
+        <p class="m-0"><strong>Resumo:</strong> {{msg.summary}}</p>
+        <section><strong>Mensagem:</strong>
+          <div [innerHTML]="msg.message"></div>
+        </section>
 
-      <section class="flex gap-3 ">
-        @if (msg.links.length > 0) {
-        <section class="w-full md:w-6">
-          <p class="m-0 font-bold ">Links</p>
-          <section class="w-full flex flex-wrap gap-3">
-            @for (link of msg.links; track $index) {
-            <section class="flex gap-3 justify-content-between w-10rem h-7rem card_default flex-column">
-              <p class="m-0 font-bold">{{link.title}}</p>
-              <section class="w-full text-center">
-                <button class="link">
-                  <i class="bi bi-link-45deg"></i>
+        <section class="flex gap-3 flex-column lg:flex-row">
+          @if (msg.links.length > 0) {
+          <section class="w-full lg:w-6">
+            <p class="m-0 font-bold ">Links</p>
+            <section class="w-full py-1 flex flex-column flex-wrap gap-3">
+              @for (link of msg.links; track $index) {
+              <section class="flex gap-3 h-5rem py-3 justify-content-between w-full card_default">
+                <p class="m-0 font-bold">{{link.title}}</p>
+                <button (click)="openModal(link.link, '30%', 'link')" class="link view">
+                  <i class="bi bi-eye"></i>
                 </button>
               </section>
+              }
             </section>
-            }
           </section>
+          }
+          @if (msg.attachments.length > 0) {
+          <section class="w-full lg:w-6">
+            <p class="m-0 font-bold ">Anexos</p>
+            <section class="w-full py-1 flex flex-column flex-wrap gap-3">
+              @for (file of msg.attachments; track $index) {
+              <section class="flex gap-3  h-5rem py-3 justify-content-between w-full card_default">
+                <p class="m-0 font-bold">{{file.name}}</p>
+                <button (click)="viewAnexo(file)" class="link view">
+                  <i class="bi bi-eye"></i>
+                </button>
+              </section>
+              }
+            </section>
+          </section>
+          }
         </section>
-        }
-        @if (msg.attachments.length > 0) {
-        <section class="w-full md:w-6">
-          <p class="m-0 font-bold">Anexos</p>
-        </section>
-        }
-      </section>
 
-    </section>
-  </p-tabPanel>
-  <p-tabPanel header="Visualizações">
-    your content
-  </p-tabPanel>
-</p-tabView>
-}@else {
-<section class="w-full">
-  <p>Erro ao carregar a mensagem</p>
+      </section>
+    </p-tabPanel>
+    <p-tabPanel header="Visualizações">
+      your content
+    </p-tabPanel>
+  </p-tabView>
+  }@else {
+  <section class="w-full">
+    <p>Erro ao carregar a mensagem</p>
+  </section>
+  }
 </section>
-}

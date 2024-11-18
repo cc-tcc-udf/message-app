@@ -11,7 +11,6 @@ import { DynamicDialogConfig } from "primeng/dynamicdialog";
   template: `
   @if(safeUrl){
       <iframe [src]="safeUrl" width="100%" height="100%" frameborder="0"></iframe>
-      a
   }
   @if(fileExterno) {    
     <section class="flex text-center h-full flex-column justify-content-between gap-1 align-items-center">

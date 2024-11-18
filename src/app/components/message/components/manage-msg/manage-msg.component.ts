@@ -19,14 +19,16 @@ import { DropdownModule } from 'primeng/dropdown';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { Editor, EditorModule } from 'primeng/editor';
 import { ImageModule } from 'primeng/image';
+import { MultiSelectModule } from 'primeng/multiselect';
 import { ScrollPanelModule } from 'primeng/scrollpanel';
 import { ModalLinksComponent } from '../utils/modal-links.component';
+
 @Component({
   selector: 'app-manage-msg',
   standalone: true,
   imports: [ScrollPanelModule, ReactiveFormsModule,
     InputComponent, EditorModule, NgFor, NgIf,
-    NgClass, DropdownModule, ImageModule],
+    NgClass, DropdownModule, ImageModule, MultiSelectModule],
   templateUrl: './manage-msg.component.html',
   styleUrls: ['./manage-msg.component.scss'],
   viewProviders: [DialogService, FileService]
@@ -40,7 +42,7 @@ export class ManageMsgComponent implements AfterViewInit, OnInit {
   @ViewChild('fileInput') fileInput!: ElementRef;
   form: FormGroup = new FormGroup({
     id: new FormControl<string | null>(null),
-    course: new FormControl<string | null>(null),
+    courses: new FormControl<string[] | null>(null),
     responsible: new FormControl<string | null>(this.user?.id ?? null),
     title: new FormControl<string | null>(null, [Validators.required]),
     status: new FormControl<string | null>('NAO_ENVIADO'),
@@ -95,11 +97,11 @@ export class ManageMsgComponent implements AfterViewInit, OnInit {
       .subscribe((res) => {
         if (res.success) {
           const data = res.data as Message;
-          const course = this.groups.find((c: SubCourse) => c.id === data.course?.id);
+          // const course = this.groups.find((c: SubCourse) => c.id === data.course?.id);
           if (data.attachments) {
             this.anexos = data.attachments;
           }
-          this.form.patchValue({ ...data, course: course });
+          this.form.patchValue(data);
         }
       })
   }
@@ -111,6 +113,7 @@ export class ManageMsgComponent implements AfterViewInit, OnInit {
   async save(type: 'create' | 'send') {
     const form = this.form.getRawValue();
     this.form.markAllAsTouched();
+    console.log(form);
     if (this.form.valid) {
       try {
         await this.saveAnexos(form);
@@ -309,7 +312,7 @@ export class ManageMsgComponent implements AfterViewInit, OnInit {
       .subscribe((response: GenericResponse) => {
         if (response.success) {
           const data = response.data as SubCourse[];
-          this.groups = [{ id: null, name: 'Nenhum' }, ...data.filter(c => c.id)];
+          this.groups = [...data.filter(c => c.id && !c.isGroup)];
           console.log(this.groups);
         }
       });
@@ -321,5 +324,9 @@ export class ManageMsgComponent implements AfterViewInit, OnInit {
 
   back() {
     this.router.navigate([this.rota || 'msg']);
+  }
+
+  showError(control: string): boolean {
+    return !!(this.getControl(control) && this.getControl(control).invalid && this.getControl(control).touched);
   }
 }

@@ -24,7 +24,7 @@ export class CourseService {
     return this.http.post<GenericResponse>(`${this.api}/public/course/create`, obj);
   }
 
-    getByResp(id: string) {
+  getByResp(id: string) {
     return this.http.get<GenericResponse>(`${this.api}/private/course/listByResp/${id}`);
   }
 }

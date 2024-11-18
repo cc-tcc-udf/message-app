@@ -9,7 +9,7 @@ export class Message {
   sendDate: string;
   status: string;
   message: string;
-  course: Course;
+  courses: Course[];
   responsible: string;
   attachments: FileApp[];
   links: Links[];
@@ -24,7 +24,7 @@ export class Message {
     this.responsible = msg.responsible;
     this.attachments = msg.attachments;
     this.links = msg.links;
-    this.course = msg.course;
+    this.courses = msg.courses;
   }
 }
 

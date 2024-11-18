@@ -12,15 +12,18 @@
           salvar
         </button>
         <button (click)="save('send')" class="success theme">
-          enviar
+          enviar h-5rem
           <i class="bi pl-1 bi-send"></i>
         </button>
       </section>
     </section>
     <div class="flex flex-column gap-2">
       <label for="group">Grupo</label>
-      <p-dropdown appendTo="body" id="group" [options]="groups" formControlName="course"
-        placeholder="Selecione um grupo" [editable]="true" optionLabel="name" />
+      <!-- <p-dropdown appendTo="body" id="group" [options]="groups" formControlName="course"
+        placeholder="Selecione um grupo" [editable]="true" optionLabel="name" /> -->
+      <p-multiSelect [ngClass]="{'ng-dirty ng-invalid': showError('courses')}" id="select" appendTo="body"
+        [options]="groups" formControlName="courses" placeholder="Selecione a permissão" optionLabel="name"
+        display="chip" [showClear]="true" />
     </div>
     <section class="w-full flex flex-column gap-3">
       <app-input [control]="getControl('title')" type="text" label="Titulo" placeholder="Digite o titulo..."
@@ -40,7 +43,7 @@
         <section class="flex flex-wrap pt-2 gap-3">
           <section *ngFor="let link of getControl('links').value; let i = index"
             class="card_default addLink flex flex-column justify-content-between">
-            <p class="m-0">{{link.title}}</p>
+            <p class="m-0 lowercase">{{link.title}}</p>
             <section class="actions flex align-items-center justify-content-center gap-2">
               <button (click)="openModal(link.link, '30%', 'link')" class="link view">
                 <i class="bi bi-eye"></i>
