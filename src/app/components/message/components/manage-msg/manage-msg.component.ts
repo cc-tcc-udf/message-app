@@ -6,7 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '@auth/auth.service';
 import { CourseService } from '@components/course/course.service';
 import { MessageService } from '@components/message/message.service';
-import { SubCourse } from '@models/Course';
+import { Course } from '@models/Course';
 import { FileApp } from '@models/File';
 import { GenericResponse } from '@models/GenericResponse';
 import { Links } from '@models/Links';
@@ -38,11 +38,11 @@ export class ManageMsgComponent implements AfterViewInit, OnInit {
   ref: DynamicDialogRef | undefined;
   rota: string = '';
   user = this.auth.getUserFromSessionStorage();
-  groups: SubCourse[] = [];
+  courses: Course[] = [];
   @ViewChild('fileInput') fileInput!: ElementRef;
   form: FormGroup = new FormGroup({
     id: new FormControl<string | null>(null),
-    courses: new FormControl<string[] | null>(null),
+    courses: new FormControl<Course[] | null>(null),
     responsible: new FormControl<string | null>(this.user?.id ?? null),
     title: new FormControl<string | null>(null, [Validators.required]),
     status: new FormControl<string | null>('NAO_ENVIADO'),
@@ -79,6 +79,9 @@ export class ManageMsgComponent implements AfterViewInit, OnInit {
   }
 
   ngOnInit(): void {
+    if (this.user?.id) {
+      this.getGroups(this.user?.id);
+    }
     this.route.queryParams
       .subscribe(params => {
         const id = params['id'];
@@ -87,9 +90,6 @@ export class ManageMsgComponent implements AfterViewInit, OnInit {
         }
         this.rota = params['rota'];
       })
-    if (this.user?.id) {
-      this.getGroups(this.user?.id);
-    }
   }
 
   private getMsg(id: string) {
@@ -97,11 +97,15 @@ export class ManageMsgComponent implements AfterViewInit, OnInit {
       .subscribe((res) => {
         if (res.success) {
           const data = res.data as Message;
-          // const course = this.groups.find((c: SubCourse) => c.id === data.course?.id);
           if (data.attachments) {
             this.anexos = data.attachments;
           }
-          this.form.patchValue(data);
+          const courses = this.courses.filter((c: Course) =>
+            data.courses.some((course: Course) => course.id === c.id)
+          );
+
+          console.log(courses)
+          this.form.patchValue({ ...data, courses: courses });
         }
       })
   }
@@ -311,9 +315,8 @@ export class ManageMsgComponent implements AfterViewInit, OnInit {
     this.courseService.getByResp(id)
       .subscribe((response: GenericResponse) => {
         if (response.success) {
-          const data = response.data as SubCourse[];
-          this.groups = [...data.filter(c => c.id && !c.isGroup)];
-          console.log(this.groups);
+          const data = response.data as Course[];
+          this.courses = [...data.filter(c => !c.isGroup)];
         }
       });
   }

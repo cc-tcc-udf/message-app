@@ -118,7 +118,7 @@ export class MenuBarComponent implements OnInit {
   @ViewChild('fileInput') fileInput: ElementRef | undefined;
 
   ref: DynamicDialogRef | undefined;
-  items: MenuItem[] = this._setItems();
+  items: MenuItem[] = [];
   itemsPopup: MenuItem[] | undefined;
   user: CustomUsuario | null = null;
 
@@ -155,6 +155,7 @@ export class MenuBarComponent implements OnInit {
       this.user = new CustomUsuario(usr);
       if (this.user.profilePhoto) this.imagePreview.set(this.user.profilePhoto);
     }
+    this.items = this._setItems();
     setTimeout(() => {
       this.skeleton = false;
       this.cf.detectChanges();

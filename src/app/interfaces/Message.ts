@@ -1,13 +1,14 @@
 import { Course } from "./Course";
 import { FileApp } from "./File";
 import { Links } from "./Links";
+import { Status } from "./Status";
 
 export class Message {
   id: string;
   title: string;
   summary: string;
   sendDate: string;
-  status: string;
+  status: Status;
   message: string;
   courses: Course[];
   responsible: string;
@@ -32,8 +33,8 @@ export function getMessageColuns() {
   return [
     { field: 'title', header: 'Titulo' },
     { field: 'sendDate', header: 'DataEnvio', isDate: true },
-    { field: 'status', header: 'Status', isTag: true },
-    { field: 'group', header: 'Curso/Grupo' },
+    { field: 'status', header: 'Status', isTag: true, isStatus: true },
+    { field: 'courses', header: 'Cursos', isTag: true },
     { field: 'views', header: 'Visualizações' },
   ]
 }

@@ -9,21 +9,19 @@
       <section class="flex gap-4">
         <button (click)="save('create')" class="basic theme">
           <i class="bi pr-1 bi-floppy"></i>
-          salvar
+          salvar rascunho
         </button>
         <button (click)="save('send')" class="success theme">
-          enviar h-5rem
+          salvar e enviar
           <i class="bi pl-1 bi-send"></i>
         </button>
       </section>
     </section>
     <div class="flex flex-column gap-2">
       <label for="group">Grupo</label>
-      <!-- <p-dropdown appendTo="body" id="group" [options]="groups" formControlName="course"
-        placeholder="Selecione um grupo" [editable]="true" optionLabel="name" /> -->
-      <p-multiSelect [ngClass]="{'ng-dirty ng-invalid': showError('courses')}" id="select" appendTo="body"
-        [options]="groups" formControlName="courses" placeholder="Selecione a permissão" optionLabel="name"
-        display="chip" [showClear]="true" />
+      <p-multiSelect [ngClass]="{'ng-dirty ng-invalid': showError('courses')}" appendTo="body" [options]="courses"
+        formControlName="courses" placeholder="Selecione os cursos" display="chip" [showClear]="true"
+        optionLabel="name" />
     </div>
     <section class="w-full flex flex-column gap-3">
       <app-input [control]="getControl('title')" type="text" label="Titulo" placeholder="Digite o titulo..."

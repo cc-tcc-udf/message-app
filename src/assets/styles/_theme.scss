@@ -61,6 +61,19 @@
     @extend .default-transition;
   }
 
+  .card_custom {
+    padding: .5rem;
+    background: $background;
+    color: $txt;
+    border-radius: .5rem;
+
+    button {
+      height: 2rem !important;
+    }
+
+    @extend .default-transition;
+  }
+
   .card_default {
     background: $primary;
     border-radius: $border-radius;

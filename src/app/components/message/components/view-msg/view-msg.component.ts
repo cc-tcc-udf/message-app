@@ -1,3 +1,4 @@
+import { DatePipe, NgIf } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService } from '@components/message/message.service';
@@ -11,7 +12,7 @@ import { TabViewModule } from 'primeng/tabview';
 @Component({
   selector: 'app-view-msg',
   standalone: true,
-  imports: [TabViewModule],
+  imports: [TabViewModule, NgIf, DatePipe],
   templateUrl: './view-msg.component.html',
   styleUrl: './view-msg.component.scss',
   viewProviders: [DialogService]
@@ -73,5 +74,17 @@ export class ViewMsgComponent implements OnInit {
 
   back() {
     this.router.navigate([this.rota]);
+  }
+
+  getCourse() {
+    const c = this.msg?.courses;
+    let v = '';
+    c?.forEach((course, index) => {
+      v += course.name + '(' + course.abbreviation + ')';
+      if (index < c.length - 1) {
+        v += ' | ';
+      }
+    });
+    return v;
   }
 }

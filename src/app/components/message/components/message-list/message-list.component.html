@@ -1,43 +1,49 @@
 <p-table #tbMsg [paginator]="true" [rows]="8" [columns]="cols" [value]="data" [tableStyle]="{ 'min-width': '50rem' }"
   [globalFilterFields]="getFields()">
 
+  <!-- Cabeçalho -->
   <ng-template pTemplate="caption">
     <section class="flex gap-2 justify-content-end">
       <app-new-button icon="bi-plus" navigateTo="msg/msg-manage"></app-new-button>
-      <app-input icon="bi bi-search" iconPosition="left" #in type="text" placeholder="Buscar mensagem"
-        (input)="tbMsg?.filterGlobal(in.value, 'contains')" />
+      <app-input icon="bi bi-search" iconPosition="left" #searchInput type="text" placeholder="Buscar mensagem"
+        (input)="tbMsg?.filterGlobal(searchInput.value, 'contains')" />
     </section>
   </ng-template>
 
+  <!-- Header das colunas -->
   <ng-template pTemplate="header" let-columns>
     <tr>
-      <th [pSortableColumn]="col.field" *ngFor="let col of columns">
-        {{ col.header }} <p-sortIcon [field]="col.field"></p-sortIcon>
+      <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+        {{ col.header }}
+        <p-sortIcon [field]="col.field"></p-sortIcon>
       </th>
+      <th class="w-1">Ações</th>
     </tr>
   </ng-template>
 
+  <!-- Corpo da Tabela -->
   <ng-template pTemplate="body" let-msg let-columns="columns">
     <tr>
       <td *ngFor="let td of columns">
         <p *ngIf="!td.isTag && !td.isDate" class="m-0 font-semibold">
           {{ msg[td.field] }}
         </p>
-        <span *ngIf="td.isDate" [ngClass]="getClassTag(msg, td.isDate)">
+        <span *ngIf="td.isDate" [ngClass]="getClassTag(msg)">
           {{ getTxt(msg, td.isDate) }}
         </span>
-        <span *ngIf="td.isTag && !td.isDate" [ngClass]="{'tag' : td.isTag }">
-          {{msg[td.field]}}
+        <span *ngIf="td.isTag && !td.isDate && !td.isStatus" [ngClass]="{'tag': td.isTag}">
+          {{ getCourse(msg[td.field]) }}
+        </span>
+        <span class="tag" *ngIf="td.isStatus" [ngClass]="msg[td.field]">
+          {{getStatus( msg[td.field]) }}
         </span>
       </td>
       <td class="w-1">
         <section class="flex gap-2">
-          <div *ngFor="let action of actions">
-            <button [attr.aria-label]="action.label" class="add {{ action.class }} default"
-              (click)="action.method(msg)">
-              <i class="text-base font-semibold" [ngClass]="action.icon"></i>
-            </button>
-          </div>
+          <button *ngFor="let action of getActions(msg)" [attr.aria-label]="action.label" [class]="action.class"
+            (click)="action.method(msg)">
+            <i class="text-base font-semibold" [ngClass]="action.icon"></i>
+          </button>
         </section>
       </td>
     </tr>

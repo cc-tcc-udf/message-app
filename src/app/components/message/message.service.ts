@@ -12,19 +12,22 @@ export class MessageService {
 
   constructor(private http: HttpClient) { }
 
+  getAllByResp(id: string) {
+    return this.http.get<GenericResponse>(`${this.api}/private/msg/listByResp/${id}`);
+  }
   getAllMessages() {
-    return this.http.get<GenericResponse>(`${this.api}/public/msg/list`);
+    return this.http.get<GenericResponse>(`${this.api}/private/msg/listAll`);
   }
 
   getMsg(id: number | string) {
-    return this.http.get<GenericResponse>(`${this.api}/public/msg/${id}`);
+    return this.http.get<GenericResponse>(`${this.api}/private/msg/${id}`);
   }
 
   create(obj: Message) {
-    return this.http.post<GenericResponse>(`${this.api}/public/msg/create`, obj);
+    return this.http.post<GenericResponse>(`${this.api}/private/msg/create`, obj);
   }
-  
+
   send(obj: Message) {
-    return this.http.post<GenericResponse>(`${this.api}/public/msg/send`, obj);
+    return this.http.post<GenericResponse>(`${this.api}/private/msg/send`, obj);
   }
 }
