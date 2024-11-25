@@ -36,11 +36,11 @@ export class CustomMessage {
   sendDate?: string;
   status: Status;
   message: string;
-  courses: String;
+  courses: string;
   responsible: string;
   attachments?: FileApp[];
   links?: Links[];
-  views: Number;
+  views: number;
 
   constructor(msg: Message) {
     this.id = msg.id;

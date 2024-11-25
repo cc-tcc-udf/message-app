@@ -16,8 +16,9 @@ export class HomeListComponent implements OnInit {
   @Input() msgs: CustomMessage[] = [];
   cols: Column[] = getColumnsMsg()
   private router = inject(Router);
-  ngOnInit(): void {
 
+  ngOnInit(): void {
+    console.log(this.msgs);
   }
 
   view(msg: CustomMessage): void {
