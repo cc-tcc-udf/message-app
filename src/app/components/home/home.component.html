@@ -1,3 +1,47 @@
-<section class="flex w-full h-full justify-content-center align-content-center gap-1">
-  <app-list-home />
+<section class="flex w-full gap-1 justify-content-between h-full">
+  <section class="flex gap-2 flex-column">
+    <section class="flex justify-content-between">
+      <div class="flex flex-column gap-2">
+        <label for="group">Grupo</label>
+        <p-dropdown [showClear]="true" [editable]="true" appendTo="body" id="group" [options]="courses"
+          formControlName="courseGroupId" placeholder="Selecione um grupo" [editable]="true" optionLabel="name"
+          optionValue="id" />
+        <small id="username-help">
+          Ultimas mensagens enviadas
+        </small>
+      </div>
+      <div class="flex h-auto align-items-center gap-2">
+        <app-new-button icon="bi-plus" navigateTo="msg/msg-manage"></app-new-button>
+        <app-new-button icon="bi-eye" buttonText="Ver mais" navigateTo="msg"></app-new-button>
+      </div>
+    </section>
+    <app-list-home [msgs]="messages" />
+  </section>
+  @if (message) {
+  <section class="w-auto h-full">
+    <section class="flex p-1 justify-content-between">
+      <span class="font-light">Ultima mensagem enviada</span>
+      @if (message.sendDate) {
+      <span>{{message.sendDate | date:'dd/MM/yyyy - HH:mm' }}</span>
+      }
+    </section>
+    <div class="last_msg p-3 justify-content-between flex w-30rem flex-column gap-2 card_default">
+      <section class="flex flex-column gap-2">
+        <section class="flex justify-content-between">
+          <span><b>Titulo:</b>{{message.title}}</span>
+          <button class="view px-2 py-1 default add">
+            <i class="text-base font-semibold bi bi-eye"></i>
+          </button>
+        </section>
+        <div class="overflow-auto">
+          <strong>Mensagem:</strong>
+          <span [innerHTML]="message.message"></span>
+        </div>
+      </section>
+      <section class="text-right">
+        <img class="h-9rem" src="assets/img/svg/home.svg" />
+      </section>
+    </div>
+  </section>
+  }
 </section>

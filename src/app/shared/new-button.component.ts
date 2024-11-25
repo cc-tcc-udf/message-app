@@ -13,7 +13,7 @@ import { DialogService, DynamicDialogRef } from "primeng/dynamicdialog";
     <section class="flex justify-content-end">
         <button
           aria-label="button-action"
-          class="add default"
+          class="add default h-auto"
           (click)="handleClick()"
         >
           <i *ngIf="icon" class="text-xl font-semibold bi pr-1" [ngClass]="icon"></i>

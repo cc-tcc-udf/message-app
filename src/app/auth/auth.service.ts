@@ -217,6 +217,4 @@ export class AuthService {
     const user = this.getUserFromSessionStorage();
     return user?.roles.includes(role) ?? false;
   }
-
-
 }

@@ -90,6 +90,10 @@
     border-radius: $border-radius !important;
   }
 
+  .last_msg {
+    box-shadow: $shadow;
+  }
+
   i.default {
     color: $txt;
   }
@@ -439,7 +443,8 @@
   }
 
   .p-tabview-panels {
-    height: 80dvh;
+    height: auto;
+    min-height: 80dvh;
   }
 
   .p-datatable .p-datatable-thead>tr>th,

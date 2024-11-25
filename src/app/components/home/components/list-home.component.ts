@@ -1,35 +1,26 @@
-import { Component, OnInit } from "@angular/core";
+import { DatePipe, NgIf } from "@angular/common";
+import { Component, inject, Input, OnInit } from "@angular/core";
+import { Router } from "@angular/router";
+import { CustomMessage, getColumnsMsg } from "@models/Message";
+import { Column } from "@models/primeng";
 import { TableModule } from "primeng/table";
 
 @Component({
   selector: 'app-list-home',
   standalone: true,
-  imports: [TableModule],
-  template: `
-  <div class="flex h-full h-full align-items-center">
-    <p class="font-bold text-6xl">Em construção</p>
-    </div>
-  `,
+  imports: [TableModule, NgIf, DatePipe],
+  templateUrl: './list-home.component.html',
   styles: [``]
 })
 export class HomeListComponent implements OnInit {
-
-  products!: unknown[];
-
+  @Input() msgs: CustomMessage[] = [];
+  cols: Column[] = getColumnsMsg()
+  private router = inject(Router);
   ngOnInit(): void {
-    this.products = [
-      {
-        id: '1000',
-        code: 'f230fh0g3',
-        name: 'Bamboo Watch',
-        description: 'Product Description',
-        image: 'bamboo-watch.jpg',
-        price: 65,
-        category: 'Accessories',
-        quantity: 24,
-        inventoryStatus: 'INSTOCK',
-        rating: 5
-      },
-    ];
+
+  }
+
+  view(msg: CustomMessage): void {
+    this.router.navigate(['msg', 'msg-view'], { queryParams: { id: msg.id, rota: 'home' } });
   }
 }

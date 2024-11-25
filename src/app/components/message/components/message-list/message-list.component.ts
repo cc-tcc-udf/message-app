@@ -3,7 +3,7 @@ import { Component, inject, Input, OnInit, ViewEncapsulation } from '@angular/co
 import { Router } from '@angular/router';
 import { MessageService } from '@components/message/message.service';
 import { Course } from '@models/Course';
-import { getMessageColuns, Message } from '@models/Message';
+import { getMessagecolumns, Message } from '@models/Message';
 import { Column } from '@models/primeng';
 import { Status } from '@models/Status';
 import { InputComponent } from '@shared/input.component';
@@ -28,7 +28,7 @@ import { TableModule } from 'primeng/table';
 })
 export class MessageListComponent implements OnInit {
   @Input() data!: Message[];
-  cols: Column[] = getMessageColuns();
+  cols: Column[] = getMessagecolumns();
   private router = inject(Router);
   private msgService = inject(MessageService);
   private alert = inject(AlertService);

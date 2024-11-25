@@ -1,4 +1,3 @@
-import { NgIf } from '@angular/common';
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { InputComponent } from '@shared/input.component';
@@ -15,8 +14,7 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
   imports: [
     ReactiveFormsModule, InputTextModule,
     InputTextareaModule, ButtonModule,
-    CheckboxModule, DropdownModule,
-    NgIf, InputComponent
+    CheckboxModule, DropdownModule, InputComponent
   ],
   providers: [],
   template: `

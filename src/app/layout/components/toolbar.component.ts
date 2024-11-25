@@ -10,7 +10,7 @@ import { ToggleThemeComponent } from './toggle-theme.component';
 @Component({
   selector: 'app-toolbar',
   standalone: true,
-  imports: [ToggleThemeComponent, DatePipe, BreadcrumbComponent, MenuBarComponent],
+  imports: [ToggleThemeComponent, BreadcrumbComponent, MenuBarComponent],
   template: `
   <section class="flex flex-column">
     <section class="w-full h-3rem toolbar flex align-items-center justify-content-between">
