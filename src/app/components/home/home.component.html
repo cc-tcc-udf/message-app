@@ -34,9 +34,9 @@
             <i class="text-base font-semibold bi bi-eye"></i>
           </button>
         </section>
-        <div class="overflow-auto">
+        <div>
           <strong>Mensagem:</strong>
-          <span [innerHTML]="message.message"></span>
+          <div class="overflow-auto msg__" [innerHTML]="message.message"></div>
         </div>
       </section>
       <section class="text-right">
