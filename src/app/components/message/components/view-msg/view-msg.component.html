@@ -1,6 +1,6 @@
 <section class="w-full h-auto py-1">
   @if (msg) {
-  <p-tabView>
+  <p-tabView (activeIndexChange)="onTabChange($event)">
     <p-tabPanel header="Mensagem">
       <section class="flex flex-column gap-3 h-auto py-2">
         <section class="flex justify-content-between">
@@ -8,7 +8,6 @@
           <p *ngIf="msg.sendDate" class="m-0">
             <strong>Envio:</strong> {{ msg.sendDate | date:'EEEE, dd/MM/yyyy - HH:mm' }}
           </p>
-
         </section>
         <p class="m-0"><strong>Titulo:</strong> {{msg.title}}</p>
         <p class="m-0"><strong>Resumo:</strong> {{msg.summary}}</p>
@@ -54,7 +53,7 @@
 
       </section>
     </p-tabPanel>
-    <p-tabPanel header="Visualizações">
+    <p-tabPanel header="Visualizações" (selected)="getViews()">
       your content
     </p-tabPanel>
   </p-tabView>

@@ -23,6 +23,14 @@ export class MessageService {
     return this.http.get<GenericResponse>(`${this.api}/private/msg/${id}`);
   }
 
+  getListById(id: number | string, end: string) {
+    return this.http.get<GenericResponse>(`${this.api}/private/msg/list/${end}/${id}`);
+  }
+
+  getViews(id: number | string) {
+    return this.http.get<GenericResponse>(`${this.api}/private/view/list/${id}`);
+  }
+
   create(obj: Message) {
     return this.http.post<GenericResponse>(`${this.api}/private/msg/create`, obj);
   }

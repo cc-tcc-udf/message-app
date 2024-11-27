@@ -7,8 +7,8 @@ import { Course } from '@models/Course';
 import { GenericResponse } from '@models/GenericResponse';
 import { CustomMessage, Message } from '@models/Message';
 import { DropdownModule } from 'primeng/dropdown';
-import { HomeListComponent } from './components/list-home.component';
 import { NewButtonComponent } from "../../shared/new-button.component";
+import { HomeListComponent } from './components/list-home.component';
 @Component({
   selector: 'app-home',
   standalone: true,
@@ -30,9 +30,14 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.user?.id) {
-      this.getGroups(this.user?.id);
+      const id = this.user?.id;
+      this.getGroups(id);
+      this.getAll(id);
     }
-    this.service.getAllMessages()
+  }
+
+  getAll(id: string) {
+    this.service.getListById(id, 'resp')
       .subscribe((response: GenericResponse) => {
         if (response.success) {
           const msg = response.data as Message[];
@@ -41,6 +46,23 @@ export class HomeComponent implements OnInit {
           this.cr.detectChanges();
         }
       });
+  }
+
+  getByCourse(id: string) {
+    if (id) {
+      this.service.getListById(id, 'course')
+        .subscribe((response: GenericResponse) => {
+          if (response.success) {
+            const msg = response.data as Message[];
+            this.messages = msg.map(m => new CustomMessage(m));
+            this.message = this.messages.length > 0 ? this.messages[0] : null;
+            this.cr.detectChanges();
+          }
+        });
+    } else {
+      if (this.user?.id)
+        this.getAll(this.user.id);
+    }
   }
 
   getGroups(id: string) {

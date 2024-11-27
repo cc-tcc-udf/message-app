@@ -14,7 +14,7 @@ export class Message {
   responsible: string;
   attachments: FileApp[];
   links: Links[];
-
+  vlrViews: string;
   constructor(msg: Message) {
     this.id = msg.id;
     this.title = msg.title;
@@ -26,6 +26,7 @@ export class Message {
     this.attachments = msg.attachments;
     this.links = msg.links;
     this.courses = msg.courses;
+    this.vlrViews = msg.vlrViews;
   }
 }
 
@@ -40,7 +41,7 @@ export class CustomMessage {
   responsible: string;
   attachments?: FileApp[];
   links?: Links[];
-  views: number;
+  vlrViews: string;
 
   constructor(msg: Message) {
     this.id = msg.id;
@@ -53,7 +54,7 @@ export class CustomMessage {
     this.attachments = msg.attachments;
     this.links = msg.links;
     this.courses = msg.courses.map(course => course.abbreviation).join('/');
-    this.views = 0;
+    this.vlrViews = msg.vlrViews;
   }
 }
 
@@ -69,14 +70,14 @@ export function getMessagecolumns() {
   return [
     ...getCommonColumns(),
     { field: 'status', header: 'Status', isTag: true, isStatus: true },
-    { field: 'views', header: 'Visualizações' },
+    { field: 'vlrViews', header: 'Visualizações' },
   ];
 }
 
 export function getColumnsMsg() {
   return [
     ...getCommonColumns(),
-    { field: 'views', header: 'Visualizações' },
+    { field: 'vlrViews', header: 'Visualizações' },
   ];
 }
 

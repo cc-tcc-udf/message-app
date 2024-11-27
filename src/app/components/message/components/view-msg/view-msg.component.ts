@@ -20,7 +20,7 @@ import { TabViewModule } from 'primeng/tabview';
 export class ViewMsgComponent implements OnInit {
   msg!: Message;
   rota: string = '';
-
+  id!: string;
   constructor(
     private alert: AlertService,
     private service: MessageService,
@@ -35,6 +35,7 @@ export class ViewMsgComponent implements OnInit {
       .subscribe(params => {
         const id = params['id'];
         if (id) {
+          this.id = id;
           this.getMsg(id);
         }
         this.rota = params['rota'];
@@ -86,5 +87,22 @@ export class ViewMsgComponent implements OnInit {
       }
     });
     return v;
+  }
+
+  onTabChange(index: number) {
+    if (index === 1) {
+      this.getViews();
+    }
+  }
+
+  getViews() {
+    const id = this.id;
+    this.service.getViews(id)
+      .subscribe((res) => {
+        if (res.success) {
+          this.msg = res.data as Message;
+          this.cr.detectChanges();
+        }
+      })
   }
 }

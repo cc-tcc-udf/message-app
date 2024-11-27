@@ -1,11 +1,12 @@
-<section class="flex w-full gap-1 justify-content-between h-full">
-  <section class="flex gap-2 flex-column">
+<section class="flex w-full gap-3 justify-content-between h-full">
+  <section class="flex gap-3 flex-column list_home_i">
     <section class="flex justify-content-between">
       <div class="flex flex-column gap-2">
         <label for="group">Grupo</label>
-        <p-dropdown [showClear]="true" [editable]="true" appendTo="body" id="group" [options]="courses"
-          formControlName="courseGroupId" placeholder="Selecione um grupo" [editable]="true" optionLabel="name"
-          optionValue="id" />
+        <p-dropdown [showClear]="true" [editable]="true" appendTo="body" id="course" [options]="courses"
+          placeholder="Selecione um grupo" optionLabel="name" optionValue="id" (onChange)="getByCourse($event.value)">
+        </p-dropdown>
+
         <small id="username-help">
           Ultimas mensagens enviadas
         </small>
