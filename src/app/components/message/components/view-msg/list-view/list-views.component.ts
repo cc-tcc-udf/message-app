@@ -1,8 +1,9 @@
 import { DatePipe, NgClass, NgIf } from "@angular/common";
 import { Component, inject, Input, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
-import { getColumnsViews, ViewMessage } from "@models/Message";
+import { CustomViewMessage, getColumnsViews, ViewMessage } from "@models/Message";
 import { Column } from "@models/primeng";
+import { Usuario } from "@models/Usuario";
 import { TableModule } from "primeng/table";
 
 @Component({
@@ -13,11 +14,16 @@ import { TableModule } from "primeng/table";
   styles: [``]
 })
 export class ListViewsComponent implements OnInit {
-  @Input() views: ViewMessage[] | null = [];
+  @Input() views: ViewMessage[] = [];
   cols: Column[] = getColumnsViews();
   private router = inject(Router);
+  vws: CustomViewMessage[] = [];
 
   ngOnInit(): void {
-    console.log(this.views || []);
+    this.vws = this.views?.map((p) => new CustomViewMessage(p)) ?? [];
+  }
+
+  getPicture(user: Usuario) {
+    return user?.profilePhoto?.url ?? null;
   }
 }

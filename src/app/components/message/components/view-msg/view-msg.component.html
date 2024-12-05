@@ -54,11 +54,11 @@
       </section>
     </p-tabPanel>
     <p-tabPanel header="Visualizações">
-      <section class="w-full">
-        <section class="flex">
+      <section class="w-full flex flex-column gap-2">
+        <section class="flex justify-content-end">
           <span class="tag">
             Visualizações:
-            <strong> {{msg.vlrViews}}</strong>
+            <strong class="px-1">{{msg.vlrViews}}</strong>
           </span>
         </section>
         @if(views.length > 0){

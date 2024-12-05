@@ -1,5 +1,5 @@
-<div class="h-full w-full card_default">
-  <p-table [columns]="cols" [value]="views || []" [tableStyle]="{ 'min-width': '50rem' }">
+<div class="h-full w-full card_default shadow_default">
+  <p-table [columns]="cols" [value]="vws || []" [tableStyle]="{ 'min-width': '50rem' }">
     <ng-template pTemplate="header" let-columns>
       <tr>
         @for (col of columns; track $index) {
@@ -13,11 +13,18 @@
       <tr>
         @for (td of columns; track $index) {
         <td>
-          <span *ngIf="!td.isDate" [ngClass]="{'tag': td.isTag}">
+          <span *ngIf="!td.isDate && !td.isUser"
+            [ngClass]="{'tag docx_': td.isTag, 'csv_': td.isTag && td.isBoolean && msg[td.field] === 'Sim'}">
             {{ msg[td.field] }}
           </span>
           <span *ngIf="td.isDate">
             {{ msg[td.field] | date:'dd/MM/yyyy - HH:mm' }}
+          </span>
+          <span *ngIf="td.isUser" class="flex gap-2 align-items-center">
+            <div class="shadow-1 bg-cover bg-center bg-no-repeat border-circle"
+              [style.background-image]="'url(' + getPicture(msg?.user) + ')'" style="width: 2.5rem; height:2.5rem">
+            </div>
+            <p class="m-0 font-semibold">{{ msg?.user?.name }}</p>
           </span>
         </td>
         }

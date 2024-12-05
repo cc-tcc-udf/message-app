@@ -78,6 +78,30 @@ export class ViewMessage {
     this.viewed = vw.viewed;
   }
 }
+export class CustomViewMessage {
+  id: string;
+  favorite: boolean;
+  message: Message;
+  received: boolean;
+  user: Usuario;
+  photo: string;
+  email: string;
+  viewDate: string;
+  viewed: string;
+
+  constructor(vw: ViewMessage) {
+    this.id = vw.id;
+    this.favorite = vw.favorite;
+    this.message = vw.message;
+    this.received = vw.received;
+    this.user = vw.user;
+    this.viewDate = vw.viewDate;
+    this.viewed = vw.viewed ? 'Sim' : 'Não';
+    this.photo = vw?.user?.profilePhoto?.url ?? null;
+    this.email = vw?.user?.email ?? null;
+
+  }
+}
 
 
 export function getCommonColumns() {
@@ -104,8 +128,10 @@ export function getColumnsMsg() {
 }
 export function getColumnsViews() {
   return [
+    { field: 'user', header: 'Aluno', isUser: true },
+    { field: 'email', header: 'Email', isTag: true },
     { field: 'viewDate', header: 'Data de visualização', isDate: true },
-    { field: 'viewed', header: 'Visualizado', isTag: true },
+    { field: 'viewed', header: 'Visualizado', isTag: true, isBoolean: true },
   ];
 }
 

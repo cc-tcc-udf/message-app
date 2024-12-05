@@ -6,5 +6,6 @@ export interface Column {
   isDate?: boolean;
   isStatus?: boolean;
   isBoolean?: boolean;
+  isUser?: boolean;
   isAction?: boolean;
 }
