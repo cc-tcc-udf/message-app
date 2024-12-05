@@ -1,4 +1,4 @@
-import { AsyncPipe, NgClass, NgIf } from '@angular/common';
+import { AsyncPipe, NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, OnInit, ViewEncapsulation } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { AuthService } from '@auth/auth.service';
@@ -11,7 +11,7 @@ import { ToastModule } from 'primeng/toast';
   standalone: true,
   imports:
     [RouterOutlet, NgIf,
-      NgClass, ToastModule,
+      ToastModule,
       ProgressBarModule, AsyncPipe
     ],
   changeDetection: ChangeDetectionStrategy.OnPush,

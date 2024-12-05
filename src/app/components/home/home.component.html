@@ -53,7 +53,7 @@
       <section class="flex flex-column gap-2">
         <section class="flex justify-content-between">
           <span><b>Titulo:</b>{{message.title}}</span>
-          <button class="view px-2 py-1 default add">
+          <button class="view px-2 py-1 default add" (click)="view(message.id)">
             <i class="text-base font-semibold bi bi-eye"></i>
           </button>
         </section>

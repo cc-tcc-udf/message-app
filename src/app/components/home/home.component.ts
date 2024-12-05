@@ -1,5 +1,6 @@
 import { DatePipe, NgFor, NgIf } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { AuthService } from '@auth/auth.service';
 import { CourseService } from '@components/course/course.service';
 import { MessageService } from '@components/message/message.service';
@@ -41,6 +42,7 @@ export class HomeComponent implements OnInit {
     private cr: ChangeDetectorRef,
     private courseService: CourseService,
     private auth: AuthService,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -106,5 +108,9 @@ export class HomeComponent implements OnInit {
           this.courses = [...data.filter(c => !c.isGroup)];
         }
       });
+  }
+
+  view(id: string): void {
+    this.router.navigate(['msg', 'msg-view'], { queryParams: { id: id, rota: 'home' } });
   }
 }

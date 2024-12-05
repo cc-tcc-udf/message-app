@@ -1,4 +1,4 @@
-import { NgIf, NgStyle } from '@angular/common';
+import { NgFor, NgIf, NgStyle } from '@angular/common';
 import { ChangeDetectorRef, Component, ElementRef, inject, OnInit, signal, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -20,7 +20,7 @@ import { SkeletonModule } from 'primeng/skeleton';
   selector: 'app-menu-bar',
   standalone: true,
   imports: [
-    MenubarModule, AvatarModule,
+    MenubarModule, AvatarModule, NgFor,
     DynamicDialogModule, MenuModule, DialogModule,
     InputComponent, ReactiveFormsModule, NgStyle,
     ProgressBarModule, NgIf, SkeletonModule
@@ -28,9 +28,7 @@ import { SkeletonModule } from 'primeng/skeleton';
   template: `
     @if(skeleton){
       <div class="flex align-items-center gap-3">        
-        <p-skeleton width="6rem" height="1.75rem"/>
-        <p-skeleton width="6rem" height="1.75rem"/>
-        <p-skeleton width="6rem" height="1.75rem"/>
+        <p-skeleton *ngFor="let i of [].constructor(4)" width="6rem" height="1.75rem"/>
         <p-skeleton shape="circle" size="2.5rem"/>        
       </div>
     } @else {
@@ -148,15 +146,15 @@ export class MenuBarComponent implements OnInit {
   private _loadUser() {
     this.auth.user$
       .subscribe((usr) => {
-        console.log(usr)
         if (usr) {
           const u = new CustomUsuario(usr);
-          console.log(usr)
           this.user = u;
           this.imagePreview.set(u.profilePhoto ?? '');
           this.items = this._setItems();
-          this.skeleton = false;
-          this.cf.detectChanges();
+          setTimeout(() => {
+            this.skeleton = false;
+            this.cf.detectChanges();
+          }, 500)
         }
       })
   }

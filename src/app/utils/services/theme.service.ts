@@ -11,19 +11,16 @@ export class ThemeService {
   constructor() { }
 
   getTheme() {
-    if (this.verify()) {
-      const exist = this.getLocalValue();
-      if (exist) {
-        this.setTheme(exist);
-        return exist;
-      }
-      return this.setThemeNavegador();
+    const exist = this.getLocalValue();
+    if (exist) {
+      this.setTheme(exist);
+      return exist;
     }
-    return 'dark';
+    return this.setThemeNavegador();
   }
 
   getLocalValue() {
-    return localStorage.getItem('theme');
+    return this.verify() ? localStorage.getItem('theme') : null;
   }
 
   getLogos() {
@@ -35,10 +32,13 @@ export class ThemeService {
   }
 
   setThemeNavegador() {
-    const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const value = isDark ? 'dark' : 'light';
-    this.setTheme(value);
-    return value;
+    if (this.verify()) {
+      const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const value = isDark ? 'dark' : 'light';
+      this.setTheme(value);
+      return value;
+    }
+    return 'light'
   }
 
 

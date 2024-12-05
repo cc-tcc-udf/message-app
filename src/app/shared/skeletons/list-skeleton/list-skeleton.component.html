@@ -1,4 +1,4 @@
-<div *ngIf="cols" class="h-full w-full card_default">
+<div *ngIf="cols && qtd" class="h-full w-full card_default">
   <p-table [columns]="cols" [value]="products" [tableStyle]="{ 'min-width': '50rem' }">
     <ng-template pTemplate="header" let-columns>
       <tr>
@@ -11,7 +11,7 @@
     </ng-template>
     <ng-template pTemplate="body" let-product>
       <tr>
-        <td *ngFor="let j of [].constructor(qtd ?? 5)"><p-skeleton /></td>
+        <td *ngFor="let j of [].constructor(qtd)"><p-skeleton /></td>
         <td class="w-1">
           <p-skeleton height="1.75rem" width="3.5rem" />
         </td>

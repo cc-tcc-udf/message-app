@@ -16,6 +16,8 @@ import { BehaviorSubject, catchError, Observable, of, tap, throwError } from 'rx
 export class AuthService {
   private userSubject = new BehaviorSubject<Usuario | null>(null);
   user$: Observable<Usuario | null> = this.userSubject.asObservable();
+  private authInitializedSubject = new BehaviorSubject<boolean>(false);
+  isAuthInitialized$ = this.authInitializedSubject.asObservable();
   private isUserInitialized = false;
   private attToken = false;
   constructor(
@@ -77,8 +79,8 @@ export class AuthService {
         this.userSubject.next(null);
       }
     }
-
     this.isUserInitialized = true;
+    this.authInitializedSubject.next(true);
   }
 
 

@@ -1,6 +1,5 @@
-<p-table #tbMsg [paginator]="true" [rows]="8" [columns]="cols" [value]="data" [tableStyle]="{ 'min-width': '50rem' }"
-  [globalFilterFields]="getFields()">
-
+<p-table #tbMsg [paginator]="data.length > 0" [rows]="8" [columns]="cols" [value]="data"
+  [tableStyle]="{ 'min-width': '50rem' }" [globalFilterFields]="getFields()">
   <!-- Cabeçalho -->
   <ng-template pTemplate="caption">
     <section class="flex gap-2 justify-content-end">
