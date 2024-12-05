@@ -1,24 +1,47 @@
 <section class="flex w-full gap-3 justify-content-between h-full">
   <section class="flex gap-3 flex-column list_home_i">
     <section class="flex justify-content-between">
-      <div class="flex flex-column gap-2">
-        <label for="group">Grupo</label>
+      <div *ngIf="courses.length > 0 && !skeleton.courses" class="flex flex-column gap-2">
+        <label for="group">Curso</label>
         <p-dropdown [showClear]="true" [editable]="true" appendTo="body" id="course" [options]="courses"
-          placeholder="Selecione um grupo" optionLabel="name" optionValue="id" (onChange)="getByCourse($event.value)">
+          placeholder="Selecione um curso para filtrar" optionLabel="name" optionValue="id"
+          (onChange)="getByCourse($event.value)">
         </p-dropdown>
-
         <small id="username-help">
           Ultimas mensagens enviadas
         </small>
       </div>
-      <div class="flex h-auto align-items-center gap-2">
-        <app-new-button icon="bi-plus" navigateTo="msg/msg-manage"></app-new-button>
-        <app-new-button icon="bi-eye" buttonText="Ver mais" navigateTo="msg"></app-new-button>
+      <div *ngIf="skeleton.courses" class="flex w-3 flex-column gap-2">
+        <p-skeleton width="85%"></p-skeleton>
+        <p-skeleton height="2.5rem"></p-skeleton>
+        <p-skeleton width="70%"></p-skeleton>
+      </div>
+      <div *ngIf="!skeleton.all && messages.length > 0" class="flex h-auto align-items-center gap-2">
+        <app-new-button icon="bi-plus" navigateTo="msg/msg-manage" />
+        <app-new-button icon="bi-eye" buttonText="Ver mais" navigateTo="msg" />
+      </div>
+      <div *ngIf="skeleton.all" class="flex h-auto align-items-center gap-2">
+        <p-skeleton height="2.5rem" width="7rem"></p-skeleton>
+        <p-skeleton height="2.5rem" width="7rem"></p-skeleton>
       </div>
     </section>
-    <app-list-home [msgs]="messages" />
+    <ng-container *ngIf="skeleton.messages">
+      <app-list-skeleton [col]="cols" [qtd]="cols.length" />
+    </ng-container>
+    <ng-container *ngIf="!skeleton.messages && messages.length > 0">
+      <app-list-home [msgs]="messages"></app-list-home>
+    </ng-container>
+    <section *ngIf="!skeleton.messages && messages.length <= 0"
+      class="w-full h-full shadow-none last_msg gap-3 flex flex-column justify-content-center align-items-center">
+      <img class="h-20rem" src="assets/img/svg/home_no_msg.svg" alt="Nenhuma mensagem enviada">
+      <span class="text-5xl font-bold">Você ainda não enviou uma mensagem!</span>
+      <span class="text-2xl text-center">
+        Clique no botão abaixo para começar a gerenciar suas mensagens agora mesmo.
+      </span>
+      <app-new-button iconPosition="left" icon="bi-chat-square-text-fill" buttonText="Mensagens" navigateTo="msg" />
+    </section>
   </section>
-  @if (message) {
+  @if (!skeleton.messages && message) {
   <section class="w-auto h-full">
     <section class="flex p-1 justify-content-between">
       <span class="font-light">Ultima mensagem enviada</span>
@@ -45,4 +68,26 @@
     </div>
   </section>
   }
+  <section *ngIf="skeleton.messages" class="w-auto h-full">
+    <section class="flex p-1 justify-content-between">
+      <p-skeleton width="15rem"></p-skeleton>
+      <p-skeleton width="10rem"></p-skeleton>
+    </section>
+    <div class="last_msg p-3 justify-content-between flex w-30rem flex-column gap-2 card_default">
+      <section class="flex flex-column gap-2">
+        <section class="flex align-items-center justify-content-between">
+          <p-skeleton width="15rem"></p-skeleton>
+          <p-skeleton height="2rem" width="2rem"></p-skeleton>
+        </section>
+        <div class="w-full flex flex-column gap-3 py-2">
+          <p-skeleton *ngFor="let j of [].constructor(5)"></p-skeleton>
+          <p-skeleton width="80%"></p-skeleton>
+          <p-skeleton width="50%"></p-skeleton>
+        </div>
+      </section>
+      <section class="text-right">
+        <img class="h-9rem" alt="imagem" src="assets/img/svg/home.svg" />
+      </section>
+    </div>
+  </section>
 </section>

@@ -1,8 +1,8 @@
 <section class="flex flex-column">
-  <section class="w-full modal_usr flex align-items-center justify-content-center">
+  <section class="w-full modal_usr flex flex-column align-items-center justify-content-center">
     <input (change)="onFileChange($event)" hidden accept="image/*" type="file" #fileInput>
     <section class="foto">
-      <section class="img h-7rem w-7rem" [ngStyle]="{'background-image': 'url(' + (imagePreview() || '') + ')', 
+      <section class="img bg-primary-50 h-7rem w-7rem" [ngStyle]="{'background-image': 'url(' + (imagePreview() || 'assets/img/svg/photo.svg') + ')', 
         'background-size': 'cover', 'background-position': 'center'}">
         <section *ngIf="value === 0" tabindex="0" (click)="fileInput.click()" (keydown.enter)="fileInput.click()"
           (keydown.space)="fileInput.click()"
@@ -17,6 +17,7 @@
         </section>
       </section>
     </section>
+    <span *ngIf="!imagePreview()" class="font-bold py-1"> Adicione uma foto de perfil </span>
   </section>
   <form [formGroup]="form">
     <section class="flex flex-column gap-3">

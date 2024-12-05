@@ -3,16 +3,17 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService } from '@components/message/message.service';
 import { FileApp } from '@models/File';
-import { Message } from '@models/Message';
+import { Message, ViewMessage } from '@models/Message';
 import { ModalViewComponent } from '@shared/modal-view.component';
 import { AlertService } from '@utils/services/alert.service';
 import { DialogService } from 'primeng/dynamicdialog';
 import { TabViewModule } from 'primeng/tabview';
+import { ListViewsComponent } from "./list-view/list-views.component";
 
 @Component({
   selector: 'app-view-msg',
   standalone: true,
-  imports: [TabViewModule, NgIf, DatePipe],
+  imports: [TabViewModule, NgIf, DatePipe, ListViewsComponent],
   templateUrl: './view-msg.component.html',
   styleUrl: './view-msg.component.scss',
   viewProviders: [DialogService]
@@ -21,6 +22,8 @@ export class ViewMsgComponent implements OnInit {
   msg!: Message;
   rota: string = '';
   id!: string;
+  views: ViewMessage[] = [];
+
   constructor(
     private alert: AlertService,
     private service: MessageService,
@@ -100,8 +103,7 @@ export class ViewMsgComponent implements OnInit {
     this.service.getViews(id)
       .subscribe((res) => {
         if (res.success) {
-          this.msg = res.data as Message;
-          this.cr.detectChanges();
+          this.views = res.data as ViewMessage[];
         }
       })
   }

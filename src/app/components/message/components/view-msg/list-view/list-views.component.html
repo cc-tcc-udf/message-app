@@ -1,5 +1,5 @@
 <div class="h-full w-full card_default">
-  <p-table [columns]="cols" [value]="msgs || []" [tableStyle]="{ 'min-width': '50rem' }">
+  <p-table [columns]="cols" [value]="views || []" [tableStyle]="{ 'min-width': '50rem' }">
     <ng-template pTemplate="header" let-columns>
       <tr>
         @for (col of columns; track $index) {
@@ -13,7 +13,7 @@
       <tr>
         @for (td of columns; track $index) {
         <td>
-          <span *ngIf="!td.isDate">
+          <span *ngIf="!td.isDate" [ngClass]="{'tag': td.isTag}">
             {{ msg[td.field] }}
           </span>
           <span *ngIf="td.isDate">
@@ -21,11 +21,6 @@
           </span>
         </td>
         }
-        <td class="w-1">
-          <button class="view default add" (click)="view(msg)">
-            <i class="text-base font-semibold bi bi-eye"></i>
-          </button>
-        </td>
       </tr>
     </ng-template>
   </p-table>

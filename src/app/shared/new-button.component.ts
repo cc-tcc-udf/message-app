@@ -16,8 +16,11 @@ import { DialogService, DynamicDialogRef } from "primeng/dynamicdialog";
           class="add default h-auto"
           (click)="handleClick()"
         >
-          <i *ngIf="icon" class="text-xl font-semibold bi pr-1" [ngClass]="icon"></i>
+        <span class="flex align-items-center">
+          <i *ngIf="icon && iconPosition === 'right'" class="text-xl font-semibold bi pr-1" [ngClass]="icon"></i>
           {{ buttonText }}
+          <i *ngIf="icon && iconPosition === 'left'" class="text-xl font-semibold bi pl-1" [ngClass]="icon"></i>
+        </span>
         </button>
       </section>
   `
@@ -29,6 +32,7 @@ export class NewButtonComponent {
   @Input() paramsRota?: Params;
   @Input() modalComponent?: Type<unknown>;
   @Input() modalTitle?: string;
+  @Input() iconPosition?: 'left' | 'right' = 'right';
   @Input() modalData?: unknown;
   @Input() onModalClose?: (result: unknown) => void;
   private dialog = inject(DialogService);

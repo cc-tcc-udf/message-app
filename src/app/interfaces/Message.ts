@@ -2,6 +2,7 @@ import { Course } from "./Course";
 import { FileApp } from "./File";
 import { Links } from "./Links";
 import { Status } from "./Status";
+import { Usuario } from "./Usuario";
 
 export class Message {
   id: string;
@@ -58,6 +59,27 @@ export class CustomMessage {
   }
 }
 
+export class ViewMessage {
+  id: string;
+  favorite: boolean;
+  message: Message;
+  received: boolean;
+  user: Usuario;
+  viewDate: string;
+  viewed: boolean;
+
+  constructor(vw: ViewMessage) {
+    this.id = vw.id;
+    this.favorite = vw.favorite;
+    this.message = vw.message;
+    this.received = vw.received;
+    this.user = vw.user;
+    this.viewDate = vw.viewDate;
+    this.viewed = vw.viewed;
+  }
+}
+
+
 export function getCommonColumns() {
   return [
     { field: 'title', header: 'Titulo' },
@@ -78,6 +100,12 @@ export function getColumnsMsg() {
   return [
     ...getCommonColumns(),
     { field: 'vlrViews', header: 'Visualizações' },
+  ];
+}
+export function getColumnsViews() {
+  return [
+    { field: 'viewDate', header: 'Data de visualização', isDate: true },
+    { field: 'viewed', header: 'Visualizado', isTag: true },
   ];
 }
 

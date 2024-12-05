@@ -37,6 +37,7 @@ export class AuthService {
     sessionStorage.setItem('access_token', token);
   }
   setUserInSessionStorage(user: Usuario): void {
+    this.userSubject.next(user);
     sessionStorage.setItem('user', JSON.stringify(user));
   }
 
@@ -51,10 +52,10 @@ export class AuthService {
 
   initUser(): void {
     if (this.isUserInitialized) return;
+
     const user = this.getUserFromSessionStorage();
     if (user) {
       this.userSubject.next(user);
-      this.isUserInitialized = true;
     } else {
       const userEmail = this.getUserEmail();
       const token = this.getAccessToken();
@@ -66,17 +67,20 @@ export class AuthService {
               this.userSubject.next(user);
               this.setUserInSessionStorage(user);
             }),
-            catchError(() => of(null))
+            catchError(() => {
+              this.userSubject.next(null);
+              return of(null);
+            })
           )
           .subscribe();
-
-        this.isUserInitialized = true;
       } else {
         this.userSubject.next(null);
-        this.isUserInitialized = true;
       }
     }
+
+    this.isUserInitialized = true;
   }
+
 
 
   login(usr: Usuario): Observable<UserResponse> {
@@ -87,16 +91,20 @@ export class AuthService {
           this.getUser({ email: response.email, token: response.token })
             .pipe(
               tap(user => {
-                this.setUserInSessionStorage(user);
                 this.userSubject.next(user);
+                this.setUserInSessionStorage(user);
               }),
-              catchError(() => of(null))
+              catchError(() => {
+                this.userSubject.next(null);
+                return of(null);
+              })
             )
             .subscribe();
         }),
         catchError(this.handleError)
       );
   }
+
 
   logout(): void {
     this.clearSessionStorage();

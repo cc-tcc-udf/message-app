@@ -4,14 +4,14 @@
     <p-tabPanel header="Mensagem">
       <section class="flex flex-column gap-3 h-auto py-2">
         <section class="flex justify-content-between">
-          <p class="m-0"><strong>Cursos:</strong> {{getCourse()}}</p>
-          <p *ngIf="msg.sendDate" class="m-0">
+          <p class="m-0 card_default"><strong>Cursos:</strong> {{getCourse()}}</p>
+          <p *ngIf="msg.sendDate" class="m-0 card_default">
             <strong>Envio:</strong> {{ msg.sendDate | date:'EEEE, dd/MM/yyyy - HH:mm' }}
           </p>
         </section>
-        <p class="m-0"><strong>Titulo:</strong> {{msg.title}}</p>
-        <p class="m-0"><strong>Resumo:</strong> {{msg.summary}}</p>
-        <section><strong>Mensagem:</strong>
+        <p class="m-0 card_default"><strong>Titulo:</strong> {{msg.title}}</p>
+        <p class="m-0 card_default"><strong>Resumo:</strong> {{msg.summary}}</p>
+        <section class="card_default"><strong>Mensagem:</strong>
           <section class="px-2">
             <div [innerHTML]="msg.message"></div>
           </section>
@@ -53,8 +53,22 @@
 
       </section>
     </p-tabPanel>
-    <p-tabPanel header="Visualizações" (selected)="getViews()">
-      your content
+    <p-tabPanel header="Visualizações">
+      <section class="w-full">
+        <section class="flex">
+          <span class="tag">
+            Visualizações:
+            <strong> {{msg.vlrViews}}</strong>
+          </span>
+        </section>
+        @if(views.length > 0){
+        <app-list-views [views]="views" />
+        }@else {
+        <section class="w-full">
+          ainda não teve Visualizações;
+        </section>
+        }
+      </section>
     </p-tabPanel>
   </p-tabView>
   }@else {

@@ -13,12 +13,12 @@ import { TableModule } from "primeng/table";
   styles: [``]
 })
 export class HomeListComponent implements OnInit {
-  @Input() msgs: CustomMessage[] = [];
-  cols: Column[] = getColumnsMsg()
+  @Input() msgs: CustomMessage[] | null = [];
+  cols: Column[] = getColumnsMsg();
   private router = inject(Router);
 
   ngOnInit(): void {
-    console.log(this.msgs);
+    console.log(this.msgs || []);
   }
 
   view(msg: CustomMessage): void {

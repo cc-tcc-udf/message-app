@@ -41,25 +41,26 @@ import { SkeletonModule } from 'primeng/skeleton';
             <div (click)="menu.toggle($event)" (keydown.enter)="menu.toggle($event)"
             class="flex cursor-pointer align-items-center ml-2 gap-2" tabindex="0" role="button"
             aria-label="Menu de perfil">
-              <div class="shadow-1 bg-cover bg-center bg-no-repeat border-circle"
-              [style.background-image]="'url(' + user?.profilePhoto + ')'" style="width: 2.5rem; height:2.5rem">
-            </div>
+            <div class="shadow-1 bg-cover bg-primary-50 bg-center bg-no-repeat border-circle"
+            [style.background-image]="'url(' + (user?.profilePhoto ?? 'assets/img/svg/photo.svg') + ')'" 
+            style="width: 2.5rem; height: 2.5rem">
+             </div>
             <i class="default bi bi-chevron-down"></i>
           </div>
         </ng-template>
       </p-menubar>
-      <p-dialog [modal]="true" [(visible)]="visible" [style]="{ width: '25rem' }">
+      <p-dialog *ngIf="user" [modal]="true" [(visible)]="visible" [style]="{ width: '25rem' }">
         <ng-template pTemplate="header">
           <div class="inline-flex align-items-center justify-content-center gap-2">
             <span class="font-bold white-space-nowrap">
-              {{user?.name}}
+              {{user.name}}
             </span>
           </div>
         </ng-template>
         <section class="w-full modal_usr flex align-items-center justify-content-center">
           <input (change)="onFileChange($event)" hidden accept="image/*" type="file" #fileInput>
           <section class="foto">
-            <section class="img h-7rem w-7rem" [ngStyle]="{'background-image': 'url(' + (imagePreview() || '') + ')', 
+            <section class="img h-7rem w-7rem" [ngStyle]="{'background-image': 'url(' + (imagePreview() || 'assets/img/svg/photo.svg') + ')', 
               'background-size': 'cover', 'background-position': 'center'}">
                 <section *ngIf="value === 0" 
                   tabindex="0" 
@@ -119,7 +120,10 @@ export class MenuBarComponent implements OnInit {
 
   ref: DynamicDialogRef | undefined;
   items: MenuItem[] = [];
-  itemsPopup: MenuItem[] | undefined;
+  itemsPopup: MenuItem[] = [
+    { label: 'Meu perfil', icon: 'bi bi-person-circle', command: () => this._toggleProfileDialog(true) },
+    { label: 'Sair', icon: 'bi bi-box-arrow-left', command: () => this.auth.logout() }
+  ];
   user: CustomUsuario | null = null;
 
   visible: boolean = false;
@@ -137,29 +141,24 @@ export class MenuBarComponent implements OnInit {
   });
 
   ngOnInit(): void {
-    this._initializeMenu();
+    this.auth.initUser();
     this._loadUser();
   }
 
-  private _initializeMenu() {
-    this.itemsPopup = [
-      { label: 'Meu perfil', icon: 'bi bi-person-circle', command: () => this._toggleProfileDialog(true) },
-      { label: 'Sair', icon: 'bi bi-box-arrow-left', command: () => this.auth.logout() }
-    ];
-  }
-
   private _loadUser() {
-    const usr = this.auth.getUserFromSessionStorage();
-    if (usr) {
-      this.form.patchValue(usr);
-      this.user = new CustomUsuario(usr);
-      if (this.user.profilePhoto) this.imagePreview.set(this.user.profilePhoto);
-    }
-    this.items = this._setItems();
-    setTimeout(() => {
-      this.skeleton = false;
-      this.cf.detectChanges();
-    }, 500);
+    this.auth.user$
+      .subscribe((usr) => {
+        console.log(usr)
+        if (usr) {
+          const u = new CustomUsuario(usr);
+          console.log(usr)
+          this.user = u;
+          this.imagePreview.set(u.profilePhoto ?? '');
+          this.items = this._setItems();
+          this.skeleton = false;
+          this.cf.detectChanges();
+        }
+      })
   }
 
   async saveProfile() {
@@ -167,15 +166,15 @@ export class MenuBarComponent implements OnInit {
       if (this.selectedFile) {
         await this._uploadFile(this.selectedFile);
       }
-
-      this.auth.updateUser(this.form.getRawValue()).subscribe((u) => {
-        if (u.success) {
-          this.auth.setUserInSessionStorage(new Usuario(u.data as Usuario));
-          this._loadUser();
-          this.alert.showMsg('success', 'Perfil', 'Dados atualizados com sucesso');
-          this._toggleProfileDialog(false);
-        }
-      });
+      this.auth.updateUser(this.form.getRawValue())
+        .subscribe((u) => {
+          if (u.success) {
+            this.auth.setUserInSessionStorage(new Usuario(u.data as Usuario));
+            this._loadUser();
+            this.alert.showMsg('success', 'Perfil', 'Dados atualizados com sucesso');
+            this._toggleProfileDialog(false);
+          }
+        });
     }
   }
 
