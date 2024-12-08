@@ -7,13 +7,15 @@
         voltar
       </span>
       <section class="flex gap-4">
-        <button (click)="save('create')" class="basic theme">
-          <i class="bi pr-1 bi-floppy"></i>
+        <button [disabled]="skeleton.create" (click)="save('create')" class="basic flex gap-1 align-items-center theme">
+          <i *ngIf="!skeleton.create" class="bi pr-1 bi-floppy"></i>
           salvar rascunho
+          <i *ngIf="skeleton.create" class="pi pi-spin pi-spinner"></i>
         </button>
-        <button (click)="save('send')" class="success theme">
+        <button [disabled]="skeleton.send" (click)="save('send')" class="success theme">
           salvar e enviar
-          <i class="bi pl-1 bi-send"></i>
+          <i *ngIf="!skeleton.send" class="bi pl-1 bi-send"></i>
+          <i *ngIf="skeleton.send" class="pi pi-spin pi-spinner"></i>
         </button>
       </section>
     </section>

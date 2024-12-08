@@ -1,7 +1,7 @@
 import { NgClass, NgFor, NgIf } from '@angular/common';
 import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { SafeUrl } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '@auth/auth.service';
 import { CourseService } from '@components/course/course.service';
@@ -52,6 +52,11 @@ export class ManageMsgComponent implements AfterViewInit, OnInit {
     attachments: new FormControl<FileApp[] | null>([])
   });
 
+  skeleton = {
+    create: false,
+    send: false
+  }
+
   editorModules = {
     toolbar: [
       [{ 'header': [1, 2, false] }],
@@ -72,7 +77,6 @@ export class ManageMsgComponent implements AfterViewInit, OnInit {
     private router: Router,
     private auth: AuthService,
     private cr: ChangeDetectorRef,
-    private sanitizer: DomSanitizer,
     private courseService: CourseService,
     private fileService: FileService
   ) {
@@ -113,18 +117,20 @@ export class ManageMsgComponent implements AfterViewInit, OnInit {
   }
 
   async save(type: 'create' | 'send') {
+    this.skeleton[type] = true;
     const form = this.form.getRawValue();
     this.form.markAllAsTouched();
     if (this.form.valid) {
       try {
         await this.saveAnexos(form);
-
         this.service[type](form)
           .subscribe((response) => {
             if (response.success) {
               this.alert.showMsg('success', 'Sucesso', 'Formulário salvo com sucesso');
+              this.skeleton[type] = false;
               if (response.data) {
-                this.form.patchValue(response.data);
+                const id = (response?.data as Message).id;
+                this.router.navigate(['msg', 'msg-view'], { queryParams: { id: id, rota: 'msg' } });
               }
             }
           });
@@ -314,6 +320,11 @@ export class ManageMsgComponent implements AfterViewInit, OnInit {
         if (response.success) {
           const data = response.data as Course[];
           this.courses = [...data.filter(c => !c.isGroup)];
+
+          if (this.courses.length === 1) {
+            this.form.patchValue({ courses: [this.courses[0]] })
+          }
+
         }
       });
   }
