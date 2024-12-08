@@ -1,6 +1,17 @@
 import { FileApp } from "./File";
 import { Roles_user } from "./Roles";
 
+export class Login {
+  email!: string;
+  password!: string;
+  isMobile: boolean = false;
+
+  constructor(usr: Login) {
+    this.email = usr.email;
+    this.password = usr.password;
+    this.isMobile = false;
+  }
+}
 export class Usuario {
   id!: string;
   uid!: string;

@@ -103,8 +103,6 @@ export class ManageMsgComponent implements AfterViewInit, OnInit {
           const courses = this.courses.filter((c: Course) =>
             data.courses.some((course: Course) => course.id === c.id)
           );
-
-          console.log(courses)
           this.form.patchValue({ ...data, courses: courses });
         }
       })
@@ -117,7 +115,6 @@ export class ManageMsgComponent implements AfterViewInit, OnInit {
   async save(type: 'create' | 'send') {
     const form = this.form.getRawValue();
     this.form.markAllAsTouched();
-    console.log(form);
     if (this.form.valid) {
       try {
         await this.saveAnexos(form);

@@ -1,17 +1,21 @@
 import { CommonModule, NgClass, NgFor, NgIf } from '@angular/common';
 import { Component, inject, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
+import { AuthService } from '@auth/auth.service';
 import { MessageService } from '@components/message/message.service';
 import { Course } from '@models/Course';
+import { GenericResponse, PaginatedModel } from '@models/GenericResponse';
 import { getMessagecolumns, Message } from '@models/Message';
+import { PageableDTO } from '@models/pageable';
 import { Column } from '@models/primeng';
 import { Status } from '@models/Status';
+import { Usuario } from '@models/Usuario';
 import { InputComponent } from '@shared/input.component';
 import { NewButtonComponent } from '@shared/new-button.component';
 import { customDate } from '@utils/date.formate';
 import { AlertService } from '@utils/services/alert.service';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { TableModule } from 'primeng/table';
+import { TableLazyLoadEvent, TableModule } from 'primeng/table';
 
 @Component({
   selector: 'app-message-list',
@@ -27,14 +31,43 @@ import { TableModule } from 'primeng/table';
   encapsulation: ViewEncapsulation.None,
 })
 export class MessageListComponent implements OnInit {
-  @Input() data!: Message[];
+  totalRecords: number = 0;
+  loading: boolean = true;
+  data!: Message[];
+  @Input() flag: string = 'all';
+  value: Message[] = [];
   cols: Column[] = getMessagecolumns();
   private router = inject(Router);
   private msgService = inject(MessageService);
   private alert = inject(AlertService);
+  private auth = inject(AuthService);
+  user!: Usuario;
 
   ngOnInit(): void {
-    console.log(this.data);
+    this.auth.user$.subscribe((p) => {
+      if (p) {
+        this.user = p;
+      }
+    });
+  }
+
+  load($event: TableLazyLoadEvent) {
+    const isAdmin = this.auth.isAdmin();
+    const page = $event as PageableDTO;
+    page.objectId = isAdmin ? undefined : this.user.id;
+    page.flag = this.flag;
+    console.log(page)
+    this.loading = true;
+    this.msgService.getPageable(page)
+      .subscribe((response: GenericResponse) => {
+        if (response) {
+          const data = response.data as PaginatedModel;
+          console.log(data);
+          this.totalRecords = data?.totalElements;
+          this.value = data?.content as Message[];
+          this.loading = false;
+        }
+      })
   }
 
   send(msg: Message): void {
@@ -94,4 +127,5 @@ export class MessageListComponent implements OnInit {
     }
     return actions;
   }
+
 }

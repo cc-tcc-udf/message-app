@@ -1,7 +1,21 @@
-<section class="w-full h-full msg_list">
+<!-- <section class="w-full h-full msg_list">
   <p-tabView>
     <p-tabPanel *ngFor="let tab of tabs" [header]="tab.header">
-      <app-message-list [data]="tab.data" />
+      <app-message-list [flag]="tab.flag" />
+    </p-tabPanel>
+  </p-tabView>
+</section> -->
+
+<section class="w-full h-full msg_list">
+  <p-tabView (activeIndexChange)="onTabChange($event)">
+    <p-tabPanel header="Todas">
+      <app-message-list *ngIf="selectedIndex === 0" flag="all" />
+    </p-tabPanel>
+    <p-tabPanel header="Enviadas">
+      <app-message-list *ngIf="selectedIndex === 1" flag="ENVIADO" />
+    </p-tabPanel>
+    <p-tabPanel header="Não enviadas">
+      <app-message-list *ngIf="selectedIndex === 2" flag="NAO_ENVIADO" />
     </p-tabPanel>
   </p-tabView>
 </section>

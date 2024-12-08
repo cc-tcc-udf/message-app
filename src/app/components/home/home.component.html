@@ -5,7 +5,7 @@
         <label for="group">Curso</label>
         <p-dropdown [showClear]="true" [editable]="true" appendTo="body" id="course" [options]="courses"
           placeholder="Selecione um curso para filtrar" optionLabel="name" optionValue="id"
-          (onChange)="getByCourse($event.value)">
+          (onChange)="getByCourse($event.value)" [(ngModel)]="selectedCourseId">
         </p-dropdown>
         <small id="username-help">
           Ultimas mensagens enviadas
@@ -21,8 +21,8 @@
         <app-new-button icon="bi-eye" buttonText="Ver mais" navigateTo="msg" />
       </div>
       <div *ngIf="skeleton.all" class="flex h-auto align-items-center gap-2">
-        <p-skeleton height="2.5rem" width="7rem"></p-skeleton>
-        <p-skeleton height="2.5rem" width="7rem"></p-skeleton>
+        <p-skeleton height="2.5rem" width="6rem"></p-skeleton>
+        <p-skeleton height="2.5rem" width="5.5rem"></p-skeleton>
       </div>
     </section>
     <ng-container *ngIf="skeleton.messages">

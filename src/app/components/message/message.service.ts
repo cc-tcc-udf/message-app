@@ -3,6 +3,7 @@ import { Injectable } from "@angular/core";
 import { environment } from "@env/env";
 import { GenericResponse } from "@models/GenericResponse";
 import { Message } from "@models/Message";
+import { PageableDTO } from "@models/pageable";
 
 @Injectable({
   providedIn: 'root'
@@ -15,8 +16,13 @@ export class MessageService {
   getAllByResp(id: string) {
     return this.http.get<GenericResponse>(`${this.api}/private/msg/listByResp/${id}`);
   }
+
   getAllMessages() {
     return this.http.get<GenericResponse>(`${this.api}/private/msg/listAll`);
+  }
+
+  getPageable(page: PageableDTO) {
+    return this.http.post<GenericResponse>(`${this.api}/private/msg/list/pageable`, page);
   }
 
   getMsg(id: number | string) {
@@ -38,4 +44,12 @@ export class MessageService {
   send(obj: Message) {
     return this.http.post<GenericResponse>(`${this.api}/private/msg/send`, obj);
   }
+
+  getMessages(page: number, size: number, isAdmin: boolean, id?: string) {
+    const url = isAdmin
+      ? `${this.api}/private/msg/listAll?page=${page}&size=${size}`
+      : `${this.api}/private/msg/listByResp/${id}?page=${page}&size=${size}`;
+    return this.http.get<GenericResponse>(url);
+  }
+
 }

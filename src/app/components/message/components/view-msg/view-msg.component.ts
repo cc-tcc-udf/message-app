@@ -67,7 +67,6 @@ export class ViewMsgComponent implements OnInit {
   viewAnexo(anexo: File | FileApp | null) {
     if (anexo) {
       const ex = this.getExtension(anexo.name);
-      console.log(ex)
       this.openModal(anexo, ex === 'pdf' ? '80%' : '35%', 'anexo');
     }
   }

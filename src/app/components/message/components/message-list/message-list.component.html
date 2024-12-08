@@ -1,5 +1,6 @@
-<p-table #tbMsg [paginator]="data.length > 0" [rows]="8" [columns]="cols" [value]="data"
-  [tableStyle]="{ 'min-width': '50rem' }" [globalFilterFields]="getFields()">
+<p-table #tbMsg [paginator]="true" [rows]="8" [columns]="cols" [value]="value" [lazy]="true" (onLazyLoad)="load($event)"
+  [totalRecords]="totalRecords" [loading]="loading" [tableStyle]="{ 'min-width': '50rem' }"
+  [globalFilterFields]="getFields()">
   <!-- Cabeçalho -->
   <ng-template pTemplate="caption">
     <section class="flex gap-2 justify-content-end">
@@ -29,7 +30,7 @@
         <span *ngIf="td.isDate" [ngClass]="getClassTag(msg)">
           {{ getTxt(msg, td.isDate) }}
         </span>
-        <span *ngIf="td.isTag && !td.isDate && !td.isStatus" [ngClass]="{'tag': td.isTag}">
+        <span *ngIf="td.isTag && !td.isDate && !td.isStatus" class="course_tag" [ngClass]="{'tag': td.isTag}">
           {{ getCourse(msg[td.field]) }}
         </span>
         <span class="tag" *ngIf="td.isStatus" [ngClass]="msg[td.field]">
@@ -44,6 +45,24 @@
           </button>
         </section>
       </td>
+    </tr>
+  </ng-template>
+  <!-- caso não tenha mensagens -->
+  <ng-template pTemplate="emptymessage">
+    <tr>
+      <section class="w-full h-full shadow-none last_msg gap-3 
+        flex flex-column justify-content-center align-items-center" aria-label="Seção de mensagens vazias">
+        <img class="h-20rem" src="assets/img/svg/no_msg.svg"
+          alt="Ilustração indicando que não há mensagens disponíveis" />
+        <div class="text-center">
+          <span class="text-5xl font-bold">Ops! Nenhuma mensagem encontrada.</span>
+          <p class="text-2xl mt-2">
+            Clique no botão '<strong>Novo</strong>' para começar e criar uma nova mensagem.
+          </p>
+        </div>
+        <app-new-button icon="bi-plus" navigateTo="msg/msg-manage"
+          aria-label="Botão para criar uma nova mensagem"></app-new-button>
+      </section>
     </tr>
   </ng-template>
 </p-table>

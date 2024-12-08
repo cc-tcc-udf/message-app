@@ -42,8 +42,6 @@ export class ModalViewComponent implements OnInit {
 
   ngOnInit(): void {
     const data = this.config.data;
-    console.log(data)
-
     if (typeof data === 'string') {
       this.link = data;
     } else {
@@ -51,7 +49,6 @@ export class ModalViewComponent implements OnInit {
       const extension = data.name.split('.').pop()?.toLowerCase();
       if (extension === 'pdf') {
         const url = this.getUrl(data);
-        console.log(url)
         this.safeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
       } else {
         this.fileExterno = true;

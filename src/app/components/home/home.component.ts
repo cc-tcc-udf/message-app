@@ -1,5 +1,6 @@
 import { DatePipe, NgFor, NgIf } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '@auth/auth.service';
 import { CourseService } from '@components/course/course.service';
@@ -7,6 +8,7 @@ import { MessageService } from '@components/message/message.service';
 import { Course } from '@models/Course';
 import { GenericResponse } from '@models/GenericResponse';
 import { CustomMessage, getColumnsMsg, Message } from '@models/Message';
+import { Usuario } from '@models/Usuario';
 import { NewButtonComponent } from '@shared/new-button.component';
 import { ListSkeletonComponent } from '@shared/skeletons/list-skeleton/list-skeleton.component';
 import { DropdownModule } from 'primeng/dropdown';
@@ -19,7 +21,7 @@ import { HomeListComponent } from './components/list-home.component';
     HomeListComponent, DatePipe,
     DropdownModule, NewButtonComponent,
     NgIf, SkeletonModule, NgFor,
-    ListSkeletonComponent
+    ListSkeletonComponent, FormsModule
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
@@ -29,7 +31,8 @@ export class HomeComponent implements OnInit {
   message: CustomMessage | null = null;
   courses: Course[] = [];
   cols = getColumnsMsg();
-  user = this.auth.getUserFromSessionStorage();
+  selectedCourseId: string | null = null;
+  user!: Usuario;
   skeleton = {
     courses: true,
     all: true,
@@ -46,11 +49,15 @@ export class HomeComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    if (this.user?.id) {
-      const id = this.user?.id;
-      this.getGroups(id);
-      this.getAll(id);
-    }
+    this.auth.user$
+      .subscribe((p) => {
+        if (p) {
+          this.user = p;
+          const id = p?.id;
+          this.getGroups(id);
+          this.getAll(id);
+        }
+      })
   }
 
   getAll(id: string) {
@@ -106,6 +113,12 @@ export class HomeComponent implements OnInit {
         if (response.success) {
           const data = response.data as Course[];
           this.courses = [...data.filter(c => !c.isGroup)];
+
+          if (this.courses.length === 1) {
+            const singleCourseId = this.courses[0].id;
+            this.selectedCourseId = singleCourseId;
+            this.getByCourse(singleCourseId);
+          }
         }
       });
   }

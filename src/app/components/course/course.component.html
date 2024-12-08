@@ -1,9 +1,10 @@
 <section class="w-full h-full config-courses flex flex-column gap-2">
   <section class="w-full flex p-1 justify-content-end align-content-center">
-    <button aria-label="adicionar curso" class="add default" (click)="newCourse()">
+    <button *ngIf="!loading" aria-label="adicionar curso" class="add default" (click)="newCourse()">
       <i class="text-xl font-semibold bi bi-plus"></i>
       Novo
     </button>
+    <p-skeleton *ngIf="loading" height="2.5rem" width="5.5rem"></p-skeleton>
   </section>
   <section class="w-full" *ngIf="!loading">
     <p-table [value]="courses" dataKey="name">
@@ -112,7 +113,7 @@
     </ng-template>
     </p-table>
   </section>
-  <section *ngIf="loading" class="flex w-full justify-content-between align-content-center">
-    <p class="font-bold text-6xl">Loading...</p>
+  <section *ngIf="loading" class="w-full">
+    <app-list-skeleton [col]="cols" [qtd]="cols.length" />
   </section>
 </section>

@@ -105,7 +105,6 @@ export class InputComponent implements ControlValueAccessor {
     const input = event.target as HTMLInputElement;
     if (this.mask) {
       this.value = this.setMask(input.value.replace(/\D/g, ''));
-      console.log(this.value)
       this.onChange(this.value);
       this.onTouched();
     } else {

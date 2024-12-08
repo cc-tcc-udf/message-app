@@ -2,7 +2,7 @@ import { Component, OnInit, ViewEncapsulation, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '@auth/auth.service';
-import { Usuario } from '@models/Usuario';
+import { Login } from '@models/Usuario';
 import { AlertService } from '@utils/services/alert.service';
 import { ThemeService } from '@utils/services/theme.service';
 import { InputTextModule } from 'primeng/inputtext';
@@ -47,7 +47,7 @@ export class LoginComponent implements OnInit {
   send() {
     this.theme.show();
     const usr = this.form.getRawValue();
-    this.auth.login(usr as Usuario)
+    this.auth.login(usr as Login)
       .subscribe({
         next: () => {
           this.auth.user$.subscribe(u => {

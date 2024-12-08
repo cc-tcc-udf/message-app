@@ -6,7 +6,7 @@ import { GenericResponse } from '@models/GenericResponse';
 import { RefreshToken } from '@models/RefreshToken';
 import { Roles_user } from '@models/Roles';
 import { UserResponse } from '@models/UserResponse';
-import { Usuario } from '@models/Usuario';
+import { Login, Usuario } from '@models/Usuario';
 import { AlertService } from '@utils/services/alert.service';
 import { BehaviorSubject, catchError, Observable, of, tap, throwError } from 'rxjs';
 
@@ -85,7 +85,8 @@ export class AuthService {
 
 
 
-  login(usr: Usuario): Observable<UserResponse> {
+  login(usr: Login): Observable<UserResponse> {
+    usr.isMobile = false;
     return this.http.post<UserResponse>(`${environment.API_URL}/public/auth/login`, usr)
       .pipe(
         tap(response => {
@@ -144,7 +145,7 @@ export class AuthService {
         this.logout();
         return of(null);
       }
-      const url = `${environment.API_URL}/public/refreshToken?email=${encodeURIComponent(email)}`;
+      const url = `${environment.API_URL}/public/refreshToken?email=${encodeURIComponent(email)}&isMobile=false`;
       return this.http.get<RefreshToken>(url).pipe(
         tap((token: RefreshToken) => {
           if (token) {

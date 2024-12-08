@@ -47,7 +47,6 @@ export class RegisterComponent implements OnInit {
   send() {
     this.theme.show();
     const usr = this.form.getRawValue();
-    console.log(usr);
     this.auth.register(usr)
       .subscribe({
         next: (res) => {

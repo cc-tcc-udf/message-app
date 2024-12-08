@@ -100,7 +100,6 @@ export class ModalCourseComponent implements OnInit {
         if (response.success) {
           const data = response.data as SubCourse[];
           this.groups = [{ id: null, name: 'Nenhum' }, ...data.filter(c => c.id)];
-          console.log(this.groups);
         }
       });
   }

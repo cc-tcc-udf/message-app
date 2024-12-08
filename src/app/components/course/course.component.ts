@@ -3,8 +3,10 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit, 
 import { Course, CourseCustom, getCourseCols, getSubCourseCols, SubCourse } from '@models/Course';
 import { GenericResponse } from '@models/GenericResponse';
 import { Column } from '@models/primeng';
+import { ListSkeletonComponent } from '@shared/skeletons/list-skeleton/list-skeleton.component';
 import { ButtonModule } from 'primeng/button';
 import { DialogService, DynamicDialogModule, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { SkeletonModule } from 'primeng/skeleton';
 import { TableModule } from 'primeng/table';
 import { ModalCourseComponent } from './components/modal-course.component';
 import { CourseService } from './course.service';
@@ -15,7 +17,9 @@ import { CourseService } from './course.service';
   imports: [
     TableModule, NgClass,
     ButtonModule, NgIf,
-    DynamicDialogModule
+    DynamicDialogModule,
+    ListSkeletonComponent,
+    SkeletonModule
   ],
   providers: [DialogService],
   templateUrl: './course.component.html',
