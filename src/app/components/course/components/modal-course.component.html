@@ -49,7 +49,7 @@
           <p-dropdown appendTo="body" id="group" [options]="groups" formControlName="courseGroupId"
             placeholder="Selecione um grupo" [editable]="true" optionLabel="name" optionValue="id" />
         </div>
-        <div formGroupName="resp" class="flex flex-column gap-2">
+        <!-- <div *ngIf="form.controls['isGroup']?.value" formGroupName="resp" class="flex flex-column gap-2">
           <label for="group">Responsavel</label>
           <p-dropdown appendTo="body" id="resp" [options]="resps" formControlName="id"
             placeholder="Selecione um responsavel" [showClear]="true" [filter]="true" filterBy="name" optionLabel="name"
@@ -70,7 +70,7 @@
               </div>
             </ng-template>
           </p-dropdown>
-        </div>
+        </div> -->
         <div class="flex flex-column gap-2">
           <label for="name">Nome</label>
           <input pInputText id="name" aria-describedby="name-help" formControlName="name" />

@@ -34,8 +34,8 @@
           <td>
             <!-- Exibir valor simples, exceto para qtdCursos e imagens -->
             <ng-container *ngIf="!td.isAction && !td.isImg">
-              <span *ngIf="td.field !== 'qtdCursos'"
-                [ngClass]="{'tag': td.isTag, 'bolTrue': td.isBoolean && list[td.field], 'bolFalse': td.isBoolean && !list[td.field]}">
+              <span *ngIf="td.field !== 'qtdCursos'" [ngClass]="{'tag': td.isTag, 'bolTrue': td.isBoolean && list[td.field],
+                 'bolFalse': td.isBoolean && !list[td.field], 'course_tag': td.header === 'Sigla'}">
                 {{ list[td.field] }}
               </span>
 

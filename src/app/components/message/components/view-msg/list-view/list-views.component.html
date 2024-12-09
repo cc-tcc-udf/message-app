@@ -14,7 +14,7 @@
         @for (td of columns; track $index) {
         <td>
           <span *ngIf="!td.isDate && !td.isUser"
-            [ngClass]="{'tag docx_': td.isTag, 'csv_': td.isTag && td.isBoolean && msg[td.field] === 'Sim'}">
+            [ngClass]="{'tag docx_': td.isTag, 'course_tag': td.field === 'course'}">
             {{ msg[td.field] }}
           </span>
           <span *ngIf="td.isDate">

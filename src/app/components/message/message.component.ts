@@ -15,11 +15,6 @@ import { MessageListComponent } from "./components/message-list/message-list.com
   styleUrl: './message.component.scss'
 })
 export class MessageComponent {
-  tabs: { header: string, flag: string }[] = [
-    { header: 'Todos', flag: 'all' },
-    { header: 'Enviadas', flag: 'ENVIADO' },
-    { header: 'Não enviadas', flag: 'NAO_ENVIADO' },
-  ];
   selectedIndex: number = 0;
   onTabChange(index: number) {
     this.selectedIndex = index;

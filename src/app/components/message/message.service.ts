@@ -17,6 +17,10 @@ export class MessageService {
     return this.http.get<GenericResponse>(`${this.api}/private/msg/listByResp/${id}`);
   }
 
+  remove(id: string) {
+    return this.http.get<GenericResponse>(`${this.api}/private/msg/remove/${id}`);
+  }
+
   getAllMessages() {
     return this.http.get<GenericResponse>(`${this.api}/private/msg/listAll`);
   }

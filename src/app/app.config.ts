@@ -8,7 +8,7 @@ import { provideClientHydration } from '@angular/platform-browser';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { HttpInterceptor } from '@utils/http.interceptor';
 import { ThemeService } from '@utils/services/theme.service';
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { routes } from './app.routes';
 
 registerLocaleData(localePt, 'pt');
@@ -22,6 +22,7 @@ export const appConfig: ApplicationConfig = {
     { provide: LOCALE_ID, useValue: 'pt' },
     ThemeService,
     DatePipe,
-    MessageService
+    MessageService,
+    ConfirmationService
   ]
 };

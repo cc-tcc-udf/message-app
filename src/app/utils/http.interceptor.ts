@@ -26,6 +26,9 @@ export const HttpInterceptor: HttpInterceptorFn = (
     router.navigate(['/error'], {
       queryParams: { errorCode: status, message },
     });
+    if (status === 0) {
+      auth.logout();
+    }
 
     return throwError(() => error);
   };
@@ -37,7 +40,7 @@ export const HttpInterceptor: HttpInterceptorFn = (
       },
     });
   };
-  
+
   theme.show();
 
   if (auth.isAuthenticated()) {

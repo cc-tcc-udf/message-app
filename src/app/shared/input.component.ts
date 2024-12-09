@@ -1,5 +1,5 @@
 import { NgClass, NgIf } from "@angular/common";
-import { Component, forwardRef, Input, Optional } from "@angular/core";
+import { Component, forwardRef, Input, OnInit, Optional } from "@angular/core";
 import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, Validators } from "@angular/forms";
 
 @Component({
@@ -35,7 +35,8 @@ import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, Validators } from
         [attr.aria-invalid]="showError()"
         [required]="isRequired()"
         [placeholder]="placeholder"
-        [attr.maxlength]="maxlength"/>
+        [attr.maxlength]="maxlength"
+        (keydown.enter)="$event.preventDefault()"/>
       
       <!-- Ícone à direita -->
       <ng-container *ngIf="icon && iconPosition === 'right'">
@@ -55,39 +56,53 @@ import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, Validators } from
       </button>
 
       <!-- Ícone à direita -->
-      <i *ngIf="showError()" class="bi px-1 bi-exclamation-circle text-red-500"></i>
+      <i *ngIf="showError()" class="bi mx-2 bi-exclamation-circle text-red-500"></i>
     </div>
     
     <!-- Exibição de erros -->
     <div *ngIf="showError()" class="error-message">
       {{ getErrorMessage() }}
     </div>
+
+    <!-- Exibição do contador de caracteres restantes -->
+    <small *ngIf="maxlength && !showError() && isInfoLength" [id]="inputId" class="text-muted">
+      {{ remainingChars }} caracteres restantes
+    </small>
   </div>
   `,
 })
-export class InputComponent implements ControlValueAccessor {
+export class InputComponent implements ControlValueAccessor, OnInit {
   @Input() label: string = '';
   @Optional() @Input() type: string = 'text';
   @Optional() @Input() autocomplete: string = '';
   @Input() control?: FormControl | null;
   @Optional() @Input() placeholder: string = '';
-  @Optional() @Input() maxlength?: string;
+  @Optional() @Input() maxlength?: number;
+  @Optional() @Input() isInfoLength?: boolean;
 
   @Input() icon: string = '';  // Classe do ícone, por exemplo, 'bi bi-person'
   @Input() iconPosition: 'left' | 'right' = 'left';  // Posição do ícone
   @Input() mask: string | null = null;
 
   value: string = '';
+  remainingChars: number = 0;
   disabled: boolean = false;
   showPassword: boolean = false;
   inputId: string = `input-${Math.random().toString(36).substring(2)}`;
+
+  ngOnInit(): void {
+    if (this.maxlength)
+      this.remainingChars = this.maxlength;
+  }
 
   onChange = (value: string) => { console.log(value) };
   onTouched = () => { };
 
   writeValue(value: string): void {
-    this.value = value;
+    this.value = value || '';
+    this.updateRemainingChars();
   }
+
 
   registerOnChange(fn: (value: string) => void): void {
     this.onChange = fn;
@@ -103,15 +118,18 @@ export class InputComponent implements ControlValueAccessor {
 
   onInputChange(event: Event): void {
     const input = event.target as HTMLInputElement;
-    if (this.mask) {
-      this.value = this.setMask(input.value.replace(/\D/g, ''));
-      this.onChange(this.value);
-      this.onTouched();
-    } else {
-      this.value = input.value;;
-      this.onChange(this.value);
-      this.onTouched();
+    let inputValue = input.value;
+
+    if (this.maxlength) {
+      const maxLengthValue = this.maxlength;
+      if (!isNaN(maxLengthValue) && inputValue.length > maxLengthValue) {
+        inputValue = inputValue.substring(0, maxLengthValue);
+      }
     }
+    this.value = this.mask ? this.setMask(inputValue.replace(/\D/g, '')) : inputValue;
+    this.updateRemainingChars();
+    this.onChange(this.value);
+    this.onTouched();
   }
 
   setMask(value: string) {
@@ -126,9 +144,15 @@ export class InputComponent implements ControlValueAccessor {
         return value = `(${value.slice(0, 2)}) ${value.slice(2, 7)}-${value.slice(7, 11)}`;
       }
     }
-    return value
+    return value;
   }
 
+  updateRemainingChars() {
+    if (this.maxlength) {
+      const maxLengthValue = this.maxlength;
+      this.remainingChars = maxLengthValue - (this.value ? this.value.length : 0);
+    }
+  }
 
   togglePasswordVisibility(): void {
     this.showPassword = !this.showPassword;

@@ -80,7 +80,7 @@ import { SkeletonModule } from 'primeng/skeleton';
           <section class="w-full h-full flex flex-column gap-3">
             <app-input label="Nome" formControlName="name" type="text" />
             <app-input label="Email" formControlName="email" type="email" />
-            <app-input maxlength="15" mask="phone" label="Telefone" formControlName="phone" type="text" />
+            <app-input [maxlength]="15" mask="phone" label="Telefone" formControlName="phone" type="text" />
           </section>
         </form>
         <ng-template pTemplate="footer">

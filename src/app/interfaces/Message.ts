@@ -67,6 +67,7 @@ export class ViewMessage {
   user: Usuario;
   viewDate: string;
   viewed: boolean;
+  course: string;
 
   constructor(vw: ViewMessage) {
     this.id = vw.id;
@@ -76,6 +77,7 @@ export class ViewMessage {
     this.user = vw.user;
     this.viewDate = vw.viewDate;
     this.viewed = vw.viewed;
+    this.course = vw.course;
   }
 }
 export class CustomViewMessage {
@@ -88,6 +90,7 @@ export class CustomViewMessage {
   email: string;
   viewDate: string;
   viewed: string;
+  course: string;
 
   constructor(vw: ViewMessage) {
     this.id = vw.id;
@@ -98,6 +101,7 @@ export class CustomViewMessage {
     this.viewDate = vw.viewDate;
     this.viewed = vw.viewed ? 'Sim' : 'Não';
     this.photo = vw?.user?.profilePhoto?.url ?? null;
+    this.course = vw.course;
     this.email = vw?.user?.email ?? null;
 
   }
@@ -130,8 +134,8 @@ export function getColumnsViews() {
   return [
     { field: 'user', header: 'Aluno', isUser: true },
     { field: 'email', header: 'Email', isTag: true },
+    { field: 'course', header: 'Curso', isTag: true },
     { field: 'viewDate', header: 'Data de visualização', isDate: true },
-    { field: 'viewed', header: 'Visualizado', isTag: true, isBoolean: true },
   ];
 }
 

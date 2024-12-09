@@ -470,6 +470,12 @@
     background-color: $skeleton;
   }
 
+  .p-button {
+    border: none;
+    outline: none;
+    box-shadow: none;
+  }
+
   .addLink {
     .p-image-preview-container {
       height: 100%;

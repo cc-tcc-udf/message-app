@@ -29,7 +29,6 @@ export class LoginComponent implements OnInit {
   public theme = inject(ThemeService);
   public alert = inject(AlertService);
 
-
   form!: FormGroup;
 
   ngOnInit(): void {
@@ -57,9 +56,13 @@ export class LoginComponent implements OnInit {
           })
         },
         error: (error) => {
-          const summary = error.status >= 400 && error.status < 500 ? 'Não autorizado' : 'Erro';
+          console.log(error);
+          const summary = error.status >= 400 && error.status < 500 ? 'Ação não autorizada' : 'Erro inesperado';
           const severity = this.alert.getSeverity(error.status);
-          this.alert.showMsg(severity, summary, error.error?.message);
+          const message = error.status === 0
+            ? 'Falha ao realizar login. Tente novamente mais tarde. Se o problema persistir, entre em contato com os administradores.'
+            : error.error?.message || 'Ocorreu um erro.';
+          this.alert.showMsg(severity, summary, message);
           this.theme.hide();
         }
       })

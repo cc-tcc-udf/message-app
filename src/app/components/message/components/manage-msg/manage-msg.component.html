@@ -1,33 +1,33 @@
-<form [formGroup]="form">
-  <section class="w-full flex flex-column gap-3 h-auto px-4">
-    <section class="w-full py-3 flex justify-content-between">
-      <span tabindex="0" (keydown.enter)="back()" (keydown.space)="back()" (click)="back()"
-        class="font-light cursor-pointer">
-        <i class=" bi pr-1 bi-arrow-left"></i>
-        voltar
-      </span>
-      <section class="flex gap-4">
-        <button [disabled]="skeleton.create" (click)="save('create')" class="basic flex gap-1 align-items-center theme">
-          <i *ngIf="!skeleton.create" class="bi pr-1 bi-floppy"></i>
-          salvar rascunho
-          <i *ngIf="skeleton.create" class="pi pi-spin pi-spinner"></i>
-        </button>
-        <button [disabled]="skeleton.send" (click)="save('send')" class="success theme">
-          salvar e enviar
-          <i *ngIf="!skeleton.send" class="bi pl-1 bi-send"></i>
-          <i *ngIf="skeleton.send" class="pi pi-spin pi-spinner"></i>
-        </button>
-      </section>
+<section class="w-full flex flex-column gap-3 h-auto px-4">
+  <section class="w-full py-3 flex justify-content-between">
+    <span tabindex="0" (keydown.enter)="back()" (keydown.space)="back()" (click)="back()"
+      class="font-light cursor-pointer">
+      <i class=" bi pr-1 bi-arrow-left"></i>
+      voltar
+    </span>
+    <section class="flex gap-4">
+      <button [disabled]="skeleton.create" (click)="save('create')" class="basic flex gap-1 align-items-center theme">
+        <i *ngIf="!skeleton.create" class="bi pr-1 bi-floppy"></i>
+        salvar rascunho
+        <i *ngIf="skeleton.create" class="pi pi-spin pi-spinner"></i>
+      </button>
+      <button [disabled]="skeleton.send" (click)="save('send')" class="success theme">
+        salvar e enviar
+        <i *ngIf="!skeleton.send" class="bi pl-1 bi-send"></i>
+        <i *ngIf="skeleton.send" class="pi pi-spin pi-spinner"></i>
+      </button>
     </section>
-    <div class="flex flex-column gap-2">
-      <label for="group">Grupo</label>
-      <p-multiSelect [ngClass]="{'ng-dirty ng-invalid': showError('courses')}" appendTo="body" [options]="courses"
-        formControlName="courses" placeholder="Selecione os cursos" display="chip" [showClear]="true"
-        optionLabel="name" />
-    </div>
+  </section>
+  <form [formGroup]="form">
     <section class="w-full flex flex-column gap-3">
-      <app-input [control]="getControl('title')" type="text" label="Titulo" placeholder="Digite o titulo..."
-        formControlName="title"></app-input>
+      <div class="flex flex-column gap-2">
+        <label for="group">Grupo</label>
+        <p-multiSelect [ngClass]="{'ng-dirty ng-invalid': showError('courses')}" appendTo="body" [options]="courses"
+          formControlName="courses" placeholder="Selecione os cursos" display="chip" [showClear]="true"
+          optionLabel="name" />
+      </div>
+      <app-input [control]="getControl('title')" [isInfoLength]="true" type="text" label="Assunto" [maxlength]="150"
+        placeholder="Digite o assunto..." formControlName="title"></app-input>
       <app-input [control]="getControl('summary')" type="text" label="Resumo"
         placeholder="Digite aqui o resumo(conteúdo que ira aparecer na notificação do aplicativo)"
         formControlName="summary"></app-input>
@@ -36,64 +36,61 @@
         <p-editor #editor id="description" formControlName="message" [style]="{ height: '320px' }"
           [modules]="editorModules" />
       </div>
-    </section>
-    <section class="flex gap-3 pb-2">
-      <section class="w-6">
-        <span class="text-base">Links <i class="bi pl-1 bi-link-45deg"></i></span>
-        <section class="flex flex-wrap pt-2 gap-3">
-          <section *ngFor="let link of getControl('links').value; let i = index"
-            class="card_default addLink flex flex-column justify-content-between">
-            <p class="m-0 lowercase">{{link.title}}</p>
-            <section class="actions flex align-items-center justify-content-center gap-2">
-              <button (click)="openModal(link.link, '30%', 'link')" class="link view">
-                <i class="bi bi-eye"></i>
-              </button>
-              <button (click)="remove('link', i)" class="link del">
-                <i class="bi bi-trash"></i>
-              </button>
-            </section>
-          </section>
-          <section class="card_default addLink flex justify-content-center align-items-center">
-            <button (click)="addLinks()" class="theme text-center p-0 h-3rem w-3rem border-circle success">
-              <i class="bi text-2xl bi-plus"></i>
-            </button>
-          </section>
-        </section>
-      </section>
-      <section class="w-6">
-        <span class="text-base">Anexos <i class="bi pl-1 bi-files"></i></span>
-        <section class="flex flex-wrap pt-2 gap-3">
-          <section *ngFor="let anexo of anexos; let i = index"
-            class="card_default addLink flex flex-column justify-content-between">
-            <section class="w-full h-full flex justify-content-center p-1">
-              <section class="h-6rem">
-                @if(anexo.type.includes('image')){
-                <p-image [src]="getUrl(anexo)" alt="Image do anexo" styleClass="h-6rem" [preview]="true" />
-                }@else {
-                <i class="icon_ bi" [ngClass]="getClass(anexo.name)"></i>
-                }
+      <section class="flex gap-3 pb-2">
+        <section class="w-6">
+          <span class="text-base">Links <i class="bi pl-1 bi-link-45deg"></i></span>
+          <section class="flex flex-wrap pt-2 gap-3">
+            <section *ngFor="let link of getControl('links').value; let i = index"
+              class="card_default addLink flex flex-column justify-content-between">
+              <p class="m-0 lowercase">{{link.title}}</p>
+              <section class="actions flex align-items-center justify-content-center gap-2">
+                <button (click)="openModal(link.link, '30%', 'link')" class="link view">
+                  <i class="bi bi-eye"></i>
+                </button>
+                <button (click)="remove('link', i)" class="link del">
+                  <i class="bi bi-trash"></i>
+                </button>
               </section>
             </section>
-            <section class="actions flex align-items-center justify-content-center gap-2">
-              <button *ngIf="!anexo.type.includes('image')" (click)="viewAnexo(anexo)" class="link view">
-                <i class="bi bi-eye"></i>
-              </button>
-              <button (click)="remove('anexo', i)" class="link del">
-                <i class="bi bi-trash"></i>
+            <section class="card_default addLink flex justify-content-center align-items-center">
+              <button (click)="addLinks()" class="theme text-center p-0 h-3rem w-3rem border-circle success">
+                <i class="bi text-2xl bi-plus"></i>
               </button>
             </section>
           </section>
-
-          <!-- Botão para adicionar novo anexo -->
-          <section class="card_default addLink flex justify-content-center align-items-center">
-            <input type="file" #fileInput (change)="addAnexos($event)" hidden />
-            <button (click)="fileInput.click()" class="theme text-center p-0 h-3rem w-3rem border-circle success">
-              <i class="bi text-2xl bi-plus"></i>
-            </button>
+        </section>
+        <section class="w-6">
+          <span class="text-base">Anexos <i class="bi pl-1 bi-files"></i></span>
+          <section class="flex flex-wrap pt-2 gap-3">
+            <section *ngFor="let anexo of anexos; let i = index"
+              class="card_default addLink flex flex-column justify-content-between">
+              <section class="w-full h-full flex justify-content-center p-1">
+                <section class="h-6rem">
+                  @if(anexo.type.includes('image')){
+                  <p-image [src]="getUrl(anexo)" alt="Image do anexo" styleClass="h-6rem" [preview]="true" />
+                  }@else {
+                  <i class="icon_ bi" [ngClass]="getClass(anexo.name)"></i>
+                  }
+                </section>
+              </section>
+              <section class="actions flex align-items-center justify-content-center gap-2">
+                <button *ngIf="!anexo.type.includes('image')" (click)="viewAnexo(anexo)" class="link view">
+                  <i class="bi bi-eye"></i>
+                </button>
+                <button (click)="remove('anexo', i)" class="link del">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </section>
+            </section>
+            <section class="card_default addLink flex justify-content-center align-items-center">
+              <input type="file" #fileInput (change)="addAnexos($event)" hidden />
+              <button (click)="fileInput.click()" class="theme text-center p-0 h-3rem w-3rem border-circle success">
+                <i class="bi text-2xl bi-plus"></i>
+              </button>
+            </section>
           </section>
         </section>
       </section>
-
     </section>
-  </section>
-</form>
+  </form>
+</section>

@@ -14,8 +14,10 @@ import { InputComponent } from '@shared/input.component';
 import { NewButtonComponent } from '@shared/new-button.component';
 import { customDate } from '@utils/date.formate';
 import { AlertService } from '@utils/services/alert.service';
+import { ConfirmationService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { TableLazyLoadEvent, TableModule } from 'primeng/table';
+import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
   selector: 'app-message-list',
@@ -24,7 +26,7 @@ import { TableLazyLoadEvent, TableModule } from 'primeng/table';
     NgIf, NgFor, NgClass,
     TableModule, CommonModule,
     InputComponent, NewButtonComponent,
-    ConfirmDialogModule
+    ConfirmDialogModule, TooltipModule
   ],
   templateUrl: './message-list.component.html',
   styleUrls: ['./message-list.component.scss'],
@@ -33,15 +35,19 @@ import { TableLazyLoadEvent, TableModule } from 'primeng/table';
 export class MessageListComponent implements OnInit {
   totalRecords: number = 0;
   loading: boolean = true;
-  data!: Message[];
   @Input() flag: string = 'all';
   value: Message[] = [];
   cols: Column[] = getMessagecolumns();
   private router = inject(Router);
-  private msgService = inject(MessageService);
+  private service = inject(MessageService);
   private alert = inject(AlertService);
   private auth = inject(AuthService);
+  private confirm = inject(ConfirmationService);
+
   user!: Usuario;
+  skeleton = {
+    send: false
+  }
 
   ngOnInit(): void {
     this.auth.user$.subscribe((p) => {
@@ -58,7 +64,7 @@ export class MessageListComponent implements OnInit {
     page.flag = this.flag;
     console.log(page)
     this.loading = true;
-    this.msgService.getPageable(page)
+    this.service.getPageable(page)
       .subscribe((response: GenericResponse) => {
         if (response) {
           const data = response.data as PaginatedModel;
@@ -71,21 +77,55 @@ export class MessageListComponent implements OnInit {
   }
 
   send(msg: Message): void {
-    this.msgService.send(msg).subscribe({
+    this.skeleton.send = true;
+    this.service.send(msg).subscribe({
       next: (res) => {
         if (res.success) {
-          const index = this.data.findIndex((p) => p.id === msg.id);
+          const index = this.value?.findIndex((p) => p.id === msg.id) ?? -1;
           if (index >= 0) {
-            this.data[index] = res.data as Message;
+            this.value[index] = res.data as Message;
             this.alert.showMsg('success', 'Envio', 'Mensagem enviada com sucesso!');
-          } else {
-            this.alert.showMsg('error', 'Envio', 'Erro ao enviar mensagem, tente novamente mais tarde!');
           }
+        } else {
+          this.alert.showMsg('error', 'Envio', 'Erro ao enviar mensagem, tente novamente mais tarde!');
         }
+        this.skeleton.send = false;
       },
       error: (err) => {
+        this.skeleton.send = false;
         this.alert.showMsg('error', 'Envio', 'Erro ao enviar mensagem, tente novamente mais tarde!' + err);
       }
+    });
+  }
+
+  disable(msg: Message): void {
+    this.service.remove(msg.id).subscribe((resp) => {
+      if (resp.success && this.value) {
+        const index = this.value.findIndex((p) => p.id === msg.id);
+        if (index !== -1) {
+          this.value.splice(index, 1);
+        }
+        this.alert.showMsg('success', 'Message', 'Messagem desabilitado com sucesso!');
+      } else {
+        this.alert.showMsg('error', 'Message', 'Erro ao desabilitado a messagem!');
+      }
+    });
+  }
+
+  remove(msg: Message) {
+    this.confirm.confirm({
+      header: 'Desativar mensagem',
+      message: 'Ao continuar, a mensagem será desativada e inacessível ao aluno. Esta ação é irreversível. ',
+      acceptButtonStyleClass: "p-button-danger p-button-text",
+      rejectButtonStyleClass: "p-button-text p-button-text",
+      acceptIcon: "none",
+      rejectIcon: "none",
+      rejectLabel: "Não",
+      acceptLabel: "Sim",
+
+      accept: () => {
+        this.disable(msg);
+      },
     });
   }
 
@@ -117,15 +157,11 @@ export class MessageListComponent implements OnInit {
     return Status[s as keyof typeof Status];
   }
 
-  getActions(msg: Message) {
-    const actions = [
-      { label: 'Visualizar', class: 'view default add', icon: 'bi bi-eye', method: this.view.bind(this) },
-      { label: 'Editar', class: 'edit default add', icon: 'bi bi-pencil', method: this.edit.bind(this) },
-    ]
-    if (msg.courses.length > 0 && !msg.sendDate) {
-      actions.push({ label: 'Enviar', class: 'send default add', icon: 'bi bi-send', method: this.send.bind(this) })
-    }
-    return actions;
+  getActions() {
+    return [
+      { label: 'Visualizar', class: 'view default add', icon: 'bi bi-eye', method: (msg: Message) => this.view(msg) },
+      { label: 'Editar', class: 'edit default add', icon: 'bi bi-pencil', method: (msg: Message) => this.edit(msg) },
+    ];
   }
 
 }

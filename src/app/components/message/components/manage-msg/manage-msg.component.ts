@@ -44,9 +44,9 @@ export class ManageMsgComponent implements AfterViewInit, OnInit {
     id: new FormControl<string | null>(null),
     courses: new FormControl<Course[] | null>(null),
     responsible: new FormControl<string | null>(this.user?.id ?? null),
-    title: new FormControl<string | null>(null, [Validators.required]),
+    title: new FormControl<string | null>(null, [Validators.required, Validators.maxLength(150)]),
     status: new FormControl<string | null>('NAO_ENVIADO'),
-    summary: new FormControl<string | null>(null, [Validators.required]),
+    summary: new FormControl<string | null>(null),
     message: new FormControl<string | null>(null, [Validators.required]),
     links: new FormControl<Links[] | null>([]),
     attachments: new FormControl<FileApp[] | null>([])

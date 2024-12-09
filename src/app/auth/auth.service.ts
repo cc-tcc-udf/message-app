@@ -111,9 +111,9 @@ export class AuthService {
 
   logout(): void {
     this.clearSessionStorage();
-    this.router.navigate(['/auth/login']);
     this.userSubject.next(null);
     this.isUserInitialized = false;
+    this.router.navigate(['/auth/login']);
   }
 
   getUser(dados: UserResponse): Observable<Usuario> {
