@@ -34,10 +34,11 @@
           <td>
             <!-- Exibir valor simples, exceto para qtdCursos e imagens -->
             <ng-container *ngIf="!td.isAction && !td.isImg">
-              <span *ngIf="td.field !== 'qtdCursos'" [ngClass]="{'tag': td.isTag, 'bolTrue': td.isBoolean && list[td.field],
-                 'bolFalse': td.isBoolean && !list[td.field], 'course_tag': td.header === 'Sigla'}">
-                {{ list[td.field] }}
+              <span *ngIf="td.field !== 'qtdCursos'" [ngClass]="{'tag': td.isTag, 'bolTrue': td.isBoolean && list[td.field], 
+                          'bolFalse': td.isBoolean && !list[td.field], 'course_tag': td.header === 'Sigla'}">
+                {{ list[td.field]?.length > 150 ? (list[td.field] | slice:0:150) + '...' : list[td.field] }}
               </span>
+
 
               <!-- Exibir contagem de cursos se for grupo -->
               <span *ngIf="td.field === 'qtdCursos' && list.isGroup"
@@ -57,7 +58,10 @@
 
           }
           <td class="w-1">
-            <section class="flex gap-1">
+            <section class="flex gap-2">
+              <button pTooltip="Visualizar" aria-label="Visualizar" class="view default add" (click)="view(list)">
+                <i class="text-base font-semibold bi bi-eye"></i>
+              </button>
               <button aria-label="alterar curso" class="add edit default" (click)="newCourse(list)">
                 <i class="text-base font-semibold bi bi-pencil"></i>
               </button>
@@ -85,18 +89,21 @@
           </th>
         </tr>
       </ng-template>
-      <ng-template pTemplate="body" let-list>
+      <ng-template pTemplate="body" let-course>
         <tr>
           @for (td of colsSub; track $index) {
           <td>
             <span [ngClass]="{'tag' : td.isTag, 'bolFalse': td.isBoolean }">
-              {{list[td.field]}}
+              {{ course[td.field]?.length > 150 ? (course[td.field] | slice:0:150) + '...' : course[td.field] }}
             </span>
           </td>
           }
           <td class="w-1">
-            <section class="flex gap-1">
-              <button aria-label="editar curso" class="add edit default" (click)="newCourse(list)">
+            <section class="flex gap-2">
+              <button pTooltip="Visualizar" aria-label="Visualizar" class="view default add" (click)="view(course)">
+                <i class="text-base font-semibold bi bi-eye"></i>
+              </button>
+              <button aria-label="editar curso" class="add edit default" (click)="newCourse(course)">
                 <i class="text-base font-semibold bi bi-pencil"></i>
               </button>
               <button aria-label="excluir curso" class="add del default" (click)="newCourse()">
@@ -114,6 +121,6 @@
     </p-table>
   </section>
   <section *ngIf="loading" class="w-full">
-    <app-list-skeleton [col]="cols" [qtd]="cols.length" />
+    <app-list-skeleton [col]="cols" [qtd]="cols.length" [qtdValues]="8" />
   </section>
 </section>

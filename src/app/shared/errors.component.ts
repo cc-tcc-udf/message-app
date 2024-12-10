@@ -26,7 +26,7 @@ import { Component, Input, Optional } from "@angular/core";
     height: 80dvh;
     background-repeat: no-repeat;
     background-position: bottom right;
-    background-size: 30rem;
+    background-size: 50dvh;
     display: flex;
     flex-direction: column;
     text-align: start;

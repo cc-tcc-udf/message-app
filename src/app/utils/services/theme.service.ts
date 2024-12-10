@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { extractColors } from 'extract-colors';
 import { Subject } from 'rxjs';
 
 @Injectable({
@@ -63,4 +64,17 @@ export class ThemeService {
   hide(): void {
     this._loading.next(false);
   }
+
+  async extractCor(img: string) {
+    try {
+      const colors = await extractColors(img);
+      const dominantColor = colors.sort((a, b) => b.area - a.area)[0];
+      const hexColor = dominantColor.hex;
+      return hexColor ?? '#f5f9ff';
+    } catch (error) {
+      console.error(error);
+      return '#f5f9ff';
+    }
+  }
+
 }

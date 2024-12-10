@@ -9,10 +9,10 @@
     <div *ngIf="form.controls['isGroup'].value !== null">
       <div *ngIf="form.controls['isGroup']?.value" class="flex flex-column gap-2">
         <div formGroupName="resp" class="flex flex-column gap-2">
-          <label for="group">Responsavel</label>
+          <label for="group">Responsável</label>
           <p-dropdown appendTo="body" id="resp" [options]="resps" formControlName="id"
-            placeholder="Selecione um responsavel" [showClear]="true" [filter]="true" filterBy="name" optionLabel="name"
-            optionValue="id">
+            placeholder="Selecione um responsável" [showClear]="true" [filter]="true" filterBy="name"
+            optionLabel="name" optionValue="id">
             <ng-template pTemplate="selectedItem">
               <div class="flex align-items-center gap-2">
                 <div class="shadow-1 bg-cover bg-center bg-no-repeat border-circle"

@@ -1,5 +1,6 @@
-import { NgClass, NgIf } from '@angular/common';
+import { NgClass, NgIf, SlicePipe } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit, ViewEncapsulation } from '@angular/core';
+import { Router } from '@angular/router';
 import { Course, CourseCustom, getCourseCols, getSubCourseCols, SubCourse } from '@models/Course';
 import { GenericResponse } from '@models/GenericResponse';
 import { Column } from '@models/primeng';
@@ -8,7 +9,7 @@ import { ButtonModule } from 'primeng/button';
 import { DialogService, DynamicDialogModule, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { SkeletonModule } from 'primeng/skeleton';
 import { TableModule } from 'primeng/table';
-import { ModalCourseComponent } from './components/modal-course.component';
+import { ModalCourseComponent } from './components/modal/modal-course.component';
 import { CourseService } from './course.service';
 
 @Component({
@@ -19,9 +20,9 @@ import { CourseService } from './course.service';
     ButtonModule, NgIf,
     DynamicDialogModule,
     ListSkeletonComponent,
-    SkeletonModule
+    SkeletonModule, SlicePipe
   ],
-  providers: [DialogService],
+  viewProviders: [DialogService],
   templateUrl: './course.component.html',
   styleUrl: './course.component.scss',
   changeDetection: ChangeDetectionStrategy.Default,
@@ -35,6 +36,7 @@ export class CourseComponent implements OnInit {
   private service = inject(CourseService);
   private dialogService = inject(DialogService);
   private cr = inject(ChangeDetectorRef);
+  private router = inject(Router);
 
   ref: DynamicDialogRef | undefined;
   loading: boolean = true;
@@ -55,7 +57,7 @@ export class CourseComponent implements OnInit {
   newCourse(obj?: Course | SubCourse) {
     this.ref = this.dialogService.open(
       ModalCourseComponent, {
-      header: 'Cadastrar',
+      header: obj ? 'Editar' : 'Cadastrar',
       contentStyle: { overflow: 'auto' },
       data: {
         data: obj
@@ -67,5 +69,9 @@ export class CourseComponent implements OnInit {
         this.getData();
       }
     })
+  }
+
+  view(course: CourseCustom) {
+    this.router.navigate(['courses', 'view'], { queryParams: { id: course.id, rota: 'courses' } });
   }
 }

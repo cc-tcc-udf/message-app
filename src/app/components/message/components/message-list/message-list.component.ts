@@ -1,109 +1,98 @@
-import { CommonModule, NgClass, NgFor, NgIf } from '@angular/common';
-import { Component, inject, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import { NgClass, NgFor, NgIf } from '@angular/common';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthService } from '@auth/auth.service';
 import { MessageService } from '@components/message/message.service';
-import { Course } from '@models/Course';
-import { GenericResponse, PaginatedModel } from '@models/GenericResponse';
-import { getMessagecolumns, Message } from '@models/Message';
-import { PageableDTO } from '@models/pageable';
+import { CustomMessage, getMessagecolumns, Message } from '@models/Message';
 import { Column } from '@models/primeng';
-import { Status } from '@models/Status';
-import { Usuario } from '@models/Usuario';
-import { InputComponent } from '@shared/input.component';
 import { NewButtonComponent } from '@shared/new-button.component';
-import { customDate } from '@utils/date.formate';
+import { ListSkeletonComponent } from '@shared/skeletons/list-skeleton/list-skeleton.component';
 import { AlertService } from '@utils/services/alert.service';
 import { ConfirmationService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { DropdownModule } from 'primeng/dropdown';
+import { IconFieldModule } from 'primeng/iconfield';
+import { InputIconModule } from 'primeng/inputicon';
+import { InputTextModule } from 'primeng/inputtext';
+import { MultiSelectModule } from 'primeng/multiselect';
 import { TableLazyLoadEvent, TableModule } from 'primeng/table';
 import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
-  selector: 'app-message-list',
+  selector: 'app-messages-list',
   standalone: true,
   imports: [
-    NgIf, NgFor, NgClass,
-    TableModule, CommonModule,
-    InputComponent, NewButtonComponent,
-    ConfirmDialogModule, TooltipModule
+    TableModule, IconFieldModule, InputTextModule, ConfirmDialogModule,
+    InputIconModule, MultiSelectModule, DropdownModule,
+    FormsModule, NgClass, NgFor, NgIf, NewButtonComponent,
+    ListSkeletonComponent, TooltipModule
   ],
   templateUrl: './message-list.component.html',
-  styleUrls: ['./message-list.component.scss'],
-  encapsulation: ViewEncapsulation.None,
+  styleUrl: './message-list.component.scss',
+  encapsulation: ViewEncapsulation.None
 })
 export class MessageListComponent implements OnInit {
-  totalRecords: number = 0;
-  loading: boolean = true;
-  @Input() flag: string = 'all';
-  value: Message[] = [];
-  cols: Column[] = getMessagecolumns();
-  private router = inject(Router);
-  private service = inject(MessageService);
-  private alert = inject(AlertService);
-  private auth = inject(AuthService);
-  private confirm = inject(ConfirmationService);
+  totalRecords = 0;
+  message: CustomMessage[] = [];
+  cols = getMessagecolumns();
+  skeleton = { all: true, load: true };
+  statuses = [
+    { label: 'Enviado', value: 'Enviado', original: 'ENVIADO' },
+    { label: 'Não enviado', value: 'Não enviado', original: 'NAO_ENVIADO' },
+    { label: 'Removida', value: 'Removida', original: 'REMOVIDA' },
+  ];
 
-  user!: Usuario;
-  skeleton = {
-    send: false
-  }
+  constructor(
+    private service: MessageService,
+    private router: Router,
+    private alert: AlertService,
+    private confirm: ConfirmationService
+  ) { }
 
   ngOnInit(): void {
-    this.auth.user$.subscribe((p) => {
-      if (p) {
-        this.user = p;
+    this.service.getAllMessages().subscribe((response) => {
+      this.skeleton.all = false;
+      if (response.success) {
+        this.message = (response.data as Message[]).map((p) => new CustomMessage(p));
+        this.totalRecords = this.message.length;
+        this.skeleton.load = false;
       }
     });
   }
 
-  load($event: TableLazyLoadEvent) {
-    const isAdmin = this.auth.isAdmin();
-    const page = $event as PageableDTO;
-    page.objectId = isAdmin ? undefined : this.user.id;
-    page.flag = this.flag;
-    console.log(page)
-    this.loading = true;
-    this.service.getPageable(page)
-      .subscribe((response: GenericResponse) => {
-        if (response) {
-          const data = response.data as PaginatedModel;
-          console.log(data);
-          this.totalRecords = data?.totalElements;
-          this.value = data?.content as Message[];
-          this.loading = false;
-        }
-      })
+  load(event: TableLazyLoadEvent): void {
+    console.log(event);
   }
 
-  send(msg: Message): void {
-    this.skeleton.send = true;
-    this.service.send(msg).subscribe({
-      next: (res) => {
-        if (res.success) {
-          const index = this.value?.findIndex((p) => p.id === msg.id) ?? -1;
-          if (index >= 0) {
-            this.value[index] = res.data as Message;
-            this.alert.showMsg('success', 'Envio', 'Mensagem enviada com sucesso!');
-          }
-        } else {
-          this.alert.showMsg('error', 'Envio', 'Erro ao enviar mensagem, tente novamente mais tarde!');
-        }
-        this.skeleton.send = false;
-      },
-      error: (err) => {
-        this.skeleton.send = false;
-        this.alert.showMsg('error', 'Envio', 'Erro ao enviar mensagem, tente novamente mais tarde!' + err);
-      }
-    });
+  getFields(): string[] {
+    return this.cols.map((col) => col.field);
   }
 
-  disable(msg: Message): void {
+  getClass(msg: CustomMessage, col: Column): string {
+    let classList = '';
+
+    if (col.isTag) {
+      classList += 'tag ';
+    }
+
+    if (col.isTag && col.field === 'custom_status') {
+      classList += msg.status + ' text-sm';
+    }
+
+    if (col.field === 'courses') {
+      classList += 'RECEBIDO text-sm';
+    }
+
+    return classList.trim();
+  }
+  disable(msg: CustomMessage): void {
     this.service.remove(msg.id).subscribe((resp) => {
-      if (resp.success && this.value) {
-        const index = this.value.findIndex((p) => p.id === msg.id);
+      if (resp.success && this.message) {
+        const index = this.message.findIndex((p) => p.id === msg.id);
         if (index !== -1) {
-          this.value.splice(index, 1);
+          const m = new CustomMessage(resp.data as Message);
+          m.removing = false;
+          this.message[index] = m;
         }
         this.alert.showMsg('success', 'Message', 'Messagem desabilitado com sucesso!');
       } else {
@@ -112,7 +101,8 @@ export class MessageListComponent implements OnInit {
     });
   }
 
-  remove(msg: Message) {
+  remove(msg: CustomMessage) {
+    msg.removing = true;
     this.confirm.confirm({
       header: 'Desativar mensagem',
       message: 'Ao continuar, a mensagem será desativada e inacessível ao aluno. Esta ação é irreversível. ',
@@ -126,42 +116,40 @@ export class MessageListComponent implements OnInit {
       accept: () => {
         this.disable(msg);
       },
+      reject: () => {
+        msg.removing = false;
+      }
     });
   }
 
-  edit(msg: Message): void {
+  edit(msg: CustomMessage): void {
     this.router.navigate(['msg', 'msg-manage'], { queryParams: { id: msg.id, rota: 'msg' } });
   }
 
-  view(msg: Message): void {
+  view(msg: CustomMessage): void {
     this.router.navigate(['msg', 'msg-view'], { queryParams: { id: msg.id, rota: 'msg' } });
   }
 
-  getClassTag(msg: Message): string {
-    return msg.sendDate ? '' : `tag ${msg.status}`;
-  }
-
-  getTxt(msg: Message, isDate?: boolean): string | Date {
-    return isDate && msg.sendDate ? customDate(msg.sendDate) : this.getStatus(msg.status);
-  }
-
-  getFields(): string[] {
-    return this.cols.map(col => col.field);
-  }
-
-  getCourse(courses: Course[]): string {
-    return courses.map(course => course.abbreviation).join('/');
-  }
-
-  getStatus(s: string): string {
-    return Status[s as keyof typeof Status];
-  }
-
-  getActions() {
-    return [
-      { label: 'Visualizar', class: 'view default add', icon: 'bi bi-eye', method: (msg: Message) => this.view(msg) },
-      { label: 'Editar', class: 'edit default add', icon: 'bi bi-pencil', method: (msg: Message) => this.edit(msg) },
-    ];
+  send(msg: CustomMessage): void {
+    msg.sending = true;
+    this.service.sendById(msg.id).subscribe({
+      next: (res) => {
+        if (res.success) {
+          const index = this.message?.findIndex((p) => p.id === msg.id) ?? -1;
+          if (index >= 0) {
+            this.message[index] = new CustomMessage(res.data as Message);
+            this.alert.showMsg('success', 'Envio', 'Mensagem enviada com sucesso!');
+          }
+        } else {
+          this.alert.showMsg('error', 'Envio', 'Erro ao enviar mensagem, tente novamente mais tarde!');
+        }
+        msg.sending = false;
+      },
+      error: (err) => {
+        msg.sending = false;
+        this.alert.showMsg('error', 'Envio', 'Erro ao enviar mensagem, tente novamente mais tarde!' + err);
+      }
+    });
   }
 
 }

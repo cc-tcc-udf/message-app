@@ -1,0 +1,87 @@
+<p-confirmDialog>
+  <ng-template pTemplate="message" let-message>
+    <div class="flex flex-column align-items-center w-full gap-3">
+      <i class="bi bi-exclamation-circle-fill text-5xl text-orange-500"></i>
+      <p class="w-22rem m-0">{{ message.message }}</p>
+    </div>
+  </ng-template>
+</p-confirmDialog>
+<p-table #tbMsg [paginator]="true" [rows]="8" [columns]="cols" [value]="value" [lazy]="true" (onLazyLoad)="load($event)"
+  [totalRecords]="totalRecords" [loading]="loading" [tableStyle]="{ 'min-width': '50rem' }"
+  [globalFilterFields]="getFields()">
+  <!-- Cabeçalho -->
+  <ng-template pTemplate="caption">
+    <section class="flex gap-2 justify-content-end">
+      <app-new-button icon="bi-plus" navigateTo="msg/msg-manage"></app-new-button>
+      <app-input icon="bi bi-search" iconPosition="left" #searchInput type="text" placeholder="Buscar mensagem"
+        (input)="tbMsg?.filterGlobal(searchInput.value, 'contains')" />
+    </section>
+  </ng-template>
+  <!-- Header das colunas -->
+  <ng-template pTemplate="header" let-columns>
+    <tr *ngIf="value && value.length > 0">
+      <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+        {{ col.header }}
+        <p-sortIcon [field]="col.field"></p-sortIcon>
+      </th>
+      <th> Ações </th>
+    </tr>
+  </ng-template>
+  <!-- Corpo da Tabela -->
+  <ng-template pTemplate="body" let-msg let-columns="columns">
+    <tr>
+      <td *ngFor="let td of columns">
+        <p *ngIf="!td.isTag && !td.isDate" class="m-0 font-semibold">
+          {{ msg[td.field] }}
+          <span style="border-radius: .25rem;" class="del px-1 bg-red-100 text-red-700"
+            *ngIf="msg.status === 'REMOVIDA' && td.field === 'title'">removida</span>
+        </p>
+        <span *ngIf="td.isDate" [ngClass]="getClassTag(msg)">
+          {{ getTxt(msg, td.isDate) }}
+        </span>
+        <span *ngIf="td.isTag && !td.isDate && !td.isStatus" class="course_tag" [ngClass]="{'tag': td.isTag}">
+          {{ getCourse(msg[td.field]) }}
+        </span>
+        <span class="tag" *ngIf="td.isStatus" [ngClass]="msg[td.field]">
+          {{getStatus( msg[td.field]) }}
+        </span>
+      </td>
+      <td>
+        <section class="flex gap-2">
+          <button pTooltip="Visualizar" aria-label="Visualizar" class="view default add" (click)="view(msg)">
+            <i class="text-base font-semibold bi bi-eye"></i>
+          </button>
+          <button pTooltip="Editar" aria-label="Editar" class="edit default add" (click)="edit(msg)">
+            <i class="text-base font-semibold bi bi-pencil"></i>
+          </button>
+          <button pTooltip="Enviar" [disabled]="skeleton.send" *ngIf="msg.courses.length > 0 && !msg.sendDate"
+            aria-label="Enviar" class="send default add" (click)="send(msg)">
+            <i *ngIf="!skeleton.send" class="text-base font-semibold bi bi-send"></i>
+            <i *ngIf="skeleton.send" class="pi pi-spin pi-spinner"></i>
+          </button>
+          <button *ngIf="msg.status === 'ENVIADO'" pTooltip="Desabilitar" class="del default add" (click)="remove(msg)">
+            <i class="text-base font-semibold pi pi-ban"></i>
+          </button>
+        </section>
+      </td>
+    </tr>
+  </ng-template>
+  <!-- caso não tenha mensagens -->
+  <ng-template pTemplate="emptymessage">
+    <tr>
+      <section class="w-full h-full shadow-none last_msg gap-3 
+        flex flex-column justify-content-center align-items-center" aria-label="Seção de mensagens vazias">
+        <img class="h-20rem" src="assets/img/svg/no_msg.svg"
+          alt="Ilustração indicando que não há mensagens disponíveis" />
+        <div class="text-center">
+          <span class="text-5xl font-bold">Ops! Nenhuma mensagem encontrada.</span>
+          <p class="text-2xl mt-2">
+            Clique no botão '<strong>Novo</strong>' para começar e criar uma nova mensagem.
+          </p>
+        </div>
+        <app-new-button icon="bi-plus" navigateTo="msg/msg-manage"
+          aria-label="Botão para criar uma nova mensagem"></app-new-button>
+      </section>
+    </tr>
+  </ng-template>
+</p-table>

@@ -1,5 +1,5 @@
-<div *ngIf="cols && qtd" class="h-full w-full card_default">
-  <p-table [columns]="cols" [value]="products" [tableStyle]="{ 'min-width': '50rem' }">
+<div *ngIf="cols && qtd" class="h-auto w-full card_default">
+  <p-table [columns]="cols" [value]="values" [tableStyle]="{ 'min-width': '50rem' }">
     <ng-template pTemplate="header" let-columns>
       <tr>
         @for (col of columns; track $index) {
@@ -7,13 +7,17 @@
           {{ col.header }}
         </th>
         }
+        <th class="w-1">
+          Ações
+        </th>
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-product>
       <tr>
         <td *ngFor="let j of [].constructor(qtd)"><p-skeleton /></td>
-        <td class="w-1">
-          <p-skeleton height="1.75rem" width="3.5rem" />
+        <td class="flex gap-2">
+          <p-skeleton height="2.35rem" width="3.35rem" />
+          <p-skeleton height="2.35rem" width="3.35rem" />
         </td>
       </tr>
     </ng-template>

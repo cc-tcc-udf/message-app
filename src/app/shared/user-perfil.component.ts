@@ -16,7 +16,7 @@ import { InputComponent } from "./input.component";
     ProgressBarModule, DropdownModule,
     NgClass
   ],
-  providers: [FileService],
+  viewProviders: [FileService],
   template: `
   `,
 })

@@ -1,3 +1,12 @@
-.p-tabview .p-tabview-panels {
-  padding: 0;
+.list_all_msg {
+
+  .p-datatable {
+    height: calc(100dvh - 115px) !important;
+  }
+
+  .p-paginator {
+    bottom: 0;
+    position: absolute;
+    width: 100%;
+  }
 }

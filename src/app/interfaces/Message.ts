@@ -46,6 +46,7 @@ export class CustomMessage {
   links?: Links[];
   vlrViews: string;
   sending: boolean;
+  removing: boolean;
 
   constructor(msg: Message) {
     this.id = msg.id;
@@ -61,6 +62,7 @@ export class CustomMessage {
     this.courses = msg.courses.map(course => course.abbreviation).join('/');
     this.vlrViews = msg.vlrViews;
     this.sending = false;
+    this.removing = false;
   }
 
   getStatus(s: string): string {

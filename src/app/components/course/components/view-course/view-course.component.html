@@ -1,0 +1,157 @@
+<section *ngIf="course && !skeleton" class="w-full h-full">
+  <div class="w-full infos gap-2" [ngStyle]="{ 'background-color': backgroundColor() }">
+    <section class="i">
+      <span class="text-sm font-semibold course_tag max-w-max tag">Informações</span>
+      <span class="card_default max-w-max">
+        <strong>Nome: </strong>{{ course.name }}
+      </span>
+      <span class="card_default max-w-max">
+        <strong>Descrição: </strong>{{ course.description }}
+      </span>
+      <section class="flex gap-2">
+        <span class="tag ml-1 text-sm font-semibold course_tag max-w-max">{{ course.isGroup ? 'Grupo' : 'Curso'
+          }}</span>
+        <span class="tag ml-1 text-sm font-semibold course_tag max-w-max">{{ course.abbreviation }}</span>
+        <span *ngIf="course.courses" class="tag ml-1 text-sm font-semibold course_tag max-w-max">
+          {{ course.courses.length }} curso(s)
+        </span>
+      </section>
+    </section>
+
+    <section class="resp text-sm">
+      <section class="text-center">
+        <div [style.background-image]="'url(' + getUrl() + ')'" class="perfil"></div>
+        <span class="text-sm font-semibold course_tag max-w-max tag">Responsável</span>
+      </section>
+      <span class="card_default max-w-max">{{ course.resp.name | titlecase }}</span>
+      <section class="flex gap-2">
+        <span class="card_default max-w-max">{{ course.resp.phone }}</span>
+        <span class="card_default max-w-max">{{ course.resp.email }}</span>
+      </section>
+    </section>
+  </div>
+
+  <section *ngIf="course.isGroup && course.courses && course.courses.length > 0; else singleCourse">
+    <section class="py-3 flex flex-column gap-3">
+      <ng-container *ngFor="let c of course.courses; let i = index">
+        <p-panel [toggleable]="true" [collapsed]="true" (onBeforeToggle)="handlePanelToggle($event, c)">
+          <ng-template pTemplate="header">
+            <div class="flex align-items-center gap-2">
+              <span class="font-bold">{{ c.name }}</span>
+              <span class="card_default text-sm max-w-max">{{ c.abbreviation }}</span>
+            </div>
+          </ng-template>
+          <ng-template pTemplate="footer">
+            <section class="text-right">
+              <span class="p-text-secondary text-left">{{ getAlunos(c).length }} aluno(s)</span>
+            </section>
+          </ng-template>
+          <section class="flex gap-2 flex-column users_infos">
+            <span><strong>Sobre: </strong>{{ c.description }}</span>
+            <section class="card_default" *ngIf="c.id && loadingAlunos.get(c.id); else alunosLoaded">
+              <app-list-skeleton [col]="cols" [qtd]="cols.length" [qtdValues]="3"></app-list-skeleton>
+            </section>
+            <ng-template #alunosLoaded>
+              <section class="card_default" *ngIf="getAlunos(c).length > 0; else noAlunos">
+                <p-table [columns]="cols" [value]="getAlunos(c)" [tableStyle]="{ 'min-width': '50rem' }">
+                  <ng-template pTemplate="header" let-columns>
+                    <tr>
+                      <th *ngFor="let col of columns">{{ col.header }}</th>
+                    </tr>
+                  </ng-template>
+                  <ng-template pTemplate="body" let-rowData let-columns="columns">
+                    <tr>
+                      <td *ngFor="let col of columns">
+                        <span *ngIf="col.isUser">
+                          <div [ngStyle]="{ 'background-color': rowData.color }"
+                            class="shadow-1 bg-cover bg-center bg-no-repeat border-circle"
+                            [style.background-image]="'url(' + getPicture(rowData) + ')'"
+                            style="width: 3rem; height: 3rem"></div>
+                        </span>
+                        <span *ngIf="!col.isUser">{{ rowData[col.field] }}</span>
+                      </td>
+                    </tr>
+                  </ng-template>
+                </p-table>
+              </section>
+
+              <ng-template #noAlunos>
+                <section class="w-full flex justify-content-between">
+                  <span class="text-xl font-bold max-w-max max-h-max card_default">
+                    Não há alunos vinculados a este curso no momento.
+                  </span>
+                  <img src="assets/img/svg/no_alunos.svg" class="h-15rem" alt="img" />
+                </section>
+              </ng-template>
+            </ng-template>
+          </section>
+        </p-panel>
+      </ng-container>
+    </section>
+  </section>
+
+  <ng-template #singleCourse>
+    <section class="py-3">
+      <p-panel [toggleable]="true" [collapsed]="true" (onBeforeToggle)="handlePanelToggle($event, course)">
+        <ng-template pTemplate="header">
+          <div class="flex align-items-center gap-2">
+            <span class="card_default text-sm max-w-max">Alunos</span>
+          </div>
+        </ng-template>
+        <ng-template pTemplate="footer">
+          <section class="text-right">
+            <span class="p-text-secondary text-left">{{ getAlunos(course).length }} aluno(s)</span>
+          </section>
+        </ng-template>
+        <section class="flex gap-2 flex-column users_infos">
+          <section class="card_default" *ngIf="course.id && loadingAlunos.get(course.id); else alunosLoaded">
+            <app-list-skeleton [col]="cols" [qtd]="cols.length" [qtdValues]="5"></app-list-skeleton>
+          </section>
+          <ng-template #alunosLoaded>
+            <section class="card_default" *ngIf="getAlunos(course).length > 0; else noAlunos">
+              <p-table [columns]="cols" [value]="getAlunos(course)" [tableStyle]="{ 'min-width': '50rem' }">
+                <ng-template pTemplate="header" let-columns>
+                  <tr>
+                    <th *ngFor="let col of columns">{{ col.header }}</th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-rowData let-columns="columns">
+                  <tr>
+                    <td *ngFor="let col of columns">
+                      <span *ngIf="col.isUser">
+                        <div [ngStyle]="{ 'background-color': rowData.color }"
+                          class="shadow-1 bg-cover bg-center bg-no-repeat border-circle"
+                          [style.background-image]="'url(' + getPicture(rowData) + ')'"
+                          style="width: 3rem; height: 3rem"></div>
+                      </span>
+                      <span *ngIf="!col.isUser">{{ rowData[col.field] }}</span>
+                    </td>
+                  </tr>
+                </ng-template>
+              </p-table>
+            </section>
+
+            <ng-template #noAlunos>
+              <section class="w-full flex justify-content-between">
+                <span class="text-xl font-bold card_default">Não há alunos vinculados a este curso no momento.</span>
+                <img src="assets/img/svg/no_alunos.svg" class="h-15rem" alt="img" />
+              </section>
+            </ng-template>
+          </ng-template>
+        </section>
+      </p-panel>
+    </section>
+  </ng-template>
+</section>
+<section *ngIf="!course && !skeleton" class="w-full">
+  <app-error img="404" title="Curso não encontrada."
+    sub="Se o problema persistir, entre em contato com a administração." />
+</section>
+<section *ngIf="skeleton" class="w-full flex flex-column gap-3 p-3">
+  <section class="infos card_default">
+    <section>
+      <p-skeleton *ngFor="let i of [].constructor(3)" height="4rem" />
+    </section>
+  </section>
+  <p-skeleton *ngFor="let i of [].constructor(3)" height="4rem" />
+</section>

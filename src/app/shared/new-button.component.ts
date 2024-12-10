@@ -8,7 +8,7 @@ import { DialogService, DynamicDialogRef } from "primeng/dynamicdialog";
   standalone: true,
   styleUrl: './shared.scss',
   imports: [NgIf, NgClass],
-  providers: [DialogService],
+  viewProviders: [DialogService],
   template: `
     <section class="flex justify-content-end">
         <button

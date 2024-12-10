@@ -31,7 +31,11 @@ export class Usuario {
     this.name = usr.name;
     this.email = usr.email;
     this.password = usr.password;
-    this.profilePhoto = usr.profilePhoto;
+    const photo = usr.profilePhoto;
+    if (photo) {
+      photo.url = 'assets/img/svg/photo.svg';
+    }
+    this.profilePhoto = new FileApp(photo);
     this.coverPhoto = usr.coverPhoto;
     this.phone = usr.phone;
     this.roles = usr.roles;
@@ -52,6 +56,7 @@ export class CustomUsuario {
   coverPhoto!: string;
   roles!: Roles_user[];
   id_curso: string;
+  color: string;
 
   constructor(user: Usuario) {
     this.id = user.id;
@@ -64,9 +69,19 @@ export class CustomUsuario {
     this.id_curso = user.id_curso;
     this.active = user.active;
     this.ativo = user.active ? 'Ativo' : 'Inativo';
+    this.color = '#f5f9ff';
   }
 }
 
 function getLink(file: FileApp): string {
-  return file?.url;
+  return file?.url ?? 'assets/img/svg/photo.svg';
+}
+
+
+export function getColumnsUser() {
+  return [
+    { field: '', header: '', isUser: true },
+    { field: 'name', header: 'Nome', isUser: false },
+    { field: 'email', header: 'Email', isUser: false },
+  ];
 }

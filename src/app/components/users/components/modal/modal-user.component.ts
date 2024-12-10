@@ -24,7 +24,7 @@ import { ProgressBarModule } from 'primeng/progressbar';
     ProgressBarModule, DropdownModule,
     NgClass
   ],
-  providers: [FileService],
+  viewProviders: [FileService],
   templateUrl: './modal-user.component.html',
   styleUrl: './../../users.component.scss',
   encapsulation: ViewEncapsulation.None

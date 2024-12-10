@@ -8,7 +8,6 @@ import { CourseComponent } from "../course/course.component";
   standalone: true,
   imports: [
     CommonModule,
-    CourseComponent,
     TabViewModule
   ],
   templateUrl: './configs.component.html',

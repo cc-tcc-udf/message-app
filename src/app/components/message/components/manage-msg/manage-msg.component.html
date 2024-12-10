@@ -1,14 +1,25 @@
+<p-confirmDialog>
+  <ng-template pTemplate="message" let-message>
+    <div class="flex flex-column align-items-center w-full gap-3">
+      <i class="bi bi-exclamation-circle-fill text-5xl text-orange-500"></i>
+      <p class="w-22rem m-0">{{ message.message }}</p>
+    </div>
+  </ng-template>
+</p-confirmDialog>
 <section class="w-full flex flex-column gap-3 h-auto px-4">
-  <section class="w-full py-3 flex justify-content-between">
+  <section class="w-full py-3 align-items-center flex justify-content-between">
     <span tabindex="0" (keydown.enter)="back()" (keydown.space)="back()" (click)="back()"
       class="font-light cursor-pointer">
       <i class=" bi pr-1 bi-arrow-left"></i>
       voltar
     </span>
     <section class="flex gap-4">
-      <button *ngIf="form.controls['id'].value && form.controls['status'].value === 'ENVIADO'" pTooltip="Desabilitar"
+      <button [disabled]="skeleton.remove"
+        *ngIf="form.controls['id'].value && form.controls['status'].value === 'ENVIADO'" pTooltip="Desabilitar"
         class="del default add" (click)="removeMsg()">
-        Remover <i class="text-base pl-1 font-semibold pi pi-ban"></i>
+        Remover
+        <i *ngIf="!skeleton.remove" class="text-base pl-1 font-semibold pi pi-ban"></i>
+        <i *ngIf="skeleton.remove" class="pi pi-spin pi-spinner"></i>
       </button>
       <button *ngIf="form.controls['id'].value" pTooltip="Visualizar" class="view default add" (click)="view()">
         Visualizar <i class="text-base pl-1 font-semibold bi bi-eye"></i>

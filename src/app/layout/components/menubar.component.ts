@@ -105,7 +105,7 @@ import { SkeletonModule } from 'primeng/skeleton';
       width: max-content;
     }
   `],
-  providers: [AuthService, DialogService, FileService],
+  viewProviders: [AuthService, DialogService, FileService],
   encapsulation: ViewEncapsulation.None
 })
 export class MenuBarComponent implements OnInit {
@@ -217,7 +217,7 @@ export class MenuBarComponent implements OnInit {
       items.push({
         label: 'Configurações', icon: 'bi bi-sliders',
         items: [
-          { label: 'Cursos', icon: 'bi bi-collection', command: () => this._navigate('/cursos') },
+          { label: 'Cursos', icon: 'bi bi-collection', command: () => this._navigate('/courses') },
           { label: 'Usuarios', icon: 'bi bi-people-fill', command: () => this._navigate('/users') }
         ]
       });

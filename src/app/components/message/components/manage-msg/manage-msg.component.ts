@@ -15,6 +15,8 @@ import { InputComponent } from '@shared/input.component';
 import { ModalViewComponent } from '@shared/modal-view.component';
 import { AlertService } from '@utils/services/alert.service';
 import { FileService } from '@utils/services/file.service';
+import { ConfirmationService } from 'primeng/api';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DropdownModule } from 'primeng/dropdown';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { Editor, EditorModule } from 'primeng/editor';
@@ -27,7 +29,7 @@ import { ModalLinksComponent } from '../utils/modal-links.component';
   selector: 'app-manage-msg',
   standalone: true,
   imports: [ScrollPanelModule, ReactiveFormsModule,
-    InputComponent, EditorModule, NgFor, NgIf,
+    InputComponent, EditorModule, NgFor, NgIf, ConfirmDialogModule,
     NgClass, DropdownModule, ImageModule, MultiSelectModule],
   templateUrl: './manage-msg.component.html',
   styleUrls: ['./manage-msg.component.scss'],
@@ -54,7 +56,8 @@ export class ManageMsgComponent implements AfterViewInit, OnInit {
 
   skeleton = {
     create: false,
-    send: false
+    send: false,
+    remove: false
   }
 
   editorModules = {
@@ -78,7 +81,8 @@ export class ManageMsgComponent implements AfterViewInit, OnInit {
     private auth: AuthService,
     private cr: ChangeDetectorRef,
     private courseService: CourseService,
-    private fileService: FileService
+    private fileService: FileService,
+    private confirm: ConfirmationService
   ) {
   }
 
@@ -344,9 +348,45 @@ export class ManageMsgComponent implements AfterViewInit, OnInit {
   }
 
   removeMsg() {
-    throw new Error('Method not implemented.');
+    this.skeleton.remove = true;
+    this.confirm.confirm({
+      header: 'Desativar mensagem',
+      message: 'Ao continuar, a mensagem será desativada e inacessível ao aluno. Esta ação é irreversível. ',
+      acceptButtonStyleClass: "p-button-danger p-button-text",
+      rejectButtonStyleClass: "p-button-text p-button-text",
+      acceptIcon: "none",
+      rejectIcon: "none",
+      rejectLabel: "Não",
+      acceptLabel: "Sim",
+
+      accept: () => {
+        this.disable();
+      },
+      reject: () => {
+        this.skeleton.remove = false;
+      }
+    });
   }
+
+  disable(): void {
+    const id = this.form.controls['id'].value;
+    if (id) {
+      this.service.remove(id).subscribe((resp) => {
+        this.skeleton.remove = false;
+        if (resp.success) {
+          this.form.patchValue(resp.data as Message);
+          this.alert.showMsg('success', 'Message', 'Messagem desabilitado com sucesso!');
+        } else {
+          this.alert.showMsg('error', 'Message', 'Erro ao desabilitado a messagem!');
+        }
+      });
+    } else {
+      this.skeleton.remove = false;
+      this.alert.showMsg('error', 'Message', 'Erro ao desabilitado a messagem!');
+    }
+  }
+
   view() {
-    throw new Error('Method not implemented.');
+    this.router.navigate(['msg', 'msg-view'], { queryParams: { id: this.form.controls['id'].value, rota: 'home' } });
   }
 }

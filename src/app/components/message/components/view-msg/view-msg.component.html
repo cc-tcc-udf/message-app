@@ -1,4 +1,4 @@
-<section class="w-full h-auto pt-3">
+<section *ngIf="!skeleton" class="w-full h-auto pt-3">
   <section class="flex justify-content-between align-items-center">
     <span tabindex="0" (keydown.enter)="back()" (keydown.space)="back()" (click)="back()"
       class="font-light cursor-pointer">
@@ -96,4 +96,36 @@
   <app-error img="404" title="Mensagem não encontrada."
     sub="Se o problema persistir, entre em contato com a administração." />
   }
+</section>
+
+<section class="pt-3" *ngIf="skeleton">
+  <section class="flex align-items-center justify-content-between">
+    <p-skeleton width="7rem"></p-skeleton>
+    <section class="flex gap-2">
+      <ng-container *ngFor="let width of ['7rem', '5.5rem']">
+        <p-skeleton height="2.5rem" [width]="width"></p-skeleton>
+      </ng-container>
+    </section>
+  </section>
+  <section class="flex gap-2">
+    <ng-container *ngFor="let width of ['10rem', '10rem']">
+      <p-skeleton height="2rem" [width]="width"></p-skeleton>
+    </ng-container>
+  </section>
+  <section class="flex pt-5 flex-column gap-3">
+    <section class="flex justify-content-between">
+      <ng-container *ngFor="let width of ['20rem', '17rem']">
+        <p-skeleton height="2.5rem" [width]="width"></p-skeleton>
+      </ng-container>
+    </section>
+    <ng-container *ngFor="let _ of [1, 2]">
+      <p-skeleton height="2.5rem"></p-skeleton>
+    </ng-container>
+    <p-skeleton height="15rem"></p-skeleton>
+    <section class="card_default flex flex-column gap-3">
+      <ng-container *ngFor="let _ of [1, 2, 3]">
+        <p-skeleton height="3rem"></p-skeleton>
+      </ng-container>
+    </section>
+  </section>
 </section>

@@ -2,6 +2,7 @@ import { NgIf } from '@angular/common';
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from '@auth/auth.service';
+import { CourseService } from '@components/course/course.service';
 import { SubCourse } from '@models/Course';
 import { GenericResponse } from '@models/GenericResponse';
 import { CustomUsuario, Usuario } from '@models/Usuario';
@@ -12,7 +13,6 @@ import { DropdownModule } from 'primeng/dropdown';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputTextareaModule } from 'primeng/inputtextarea';
-import { CourseService } from '../course.service';
 
 @Component({
   selector: 'app-modal-course',
@@ -22,9 +22,9 @@ import { CourseService } from '../course.service';
     InputTextareaModule, ButtonModule,
     CheckboxModule, DropdownModule, NgIf
   ],
-  providers: [CourseService],
+  viewProviders: [CourseService],
   templateUrl: './modal-course.component.html',
-  styleUrl: './../course.component.scss',
+  styleUrl: './../../course.component.scss',
   encapsulation: ViewEncapsulation.None
 })
 export class ModalCourseComponent implements OnInit {

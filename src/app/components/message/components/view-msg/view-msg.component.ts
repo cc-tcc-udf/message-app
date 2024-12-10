@@ -1,4 +1,4 @@
-import { DatePipe, NgIf } from '@angular/common';
+import { DatePipe, NgFor, NgIf } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService } from '@components/message/message.service';
@@ -8,14 +8,15 @@ import { Status } from '@models/Status';
 import { ErrosComponent } from '@shared/errors.component';
 import { ModalViewComponent } from '@shared/modal-view.component';
 import { DialogService } from 'primeng/dynamicdialog';
+import { SkeletonModule } from 'primeng/skeleton';
 import { TabViewModule } from 'primeng/tabview';
 import { ListViewsComponent } from "./list-view/list-views.component";
 
 @Component({
   selector: 'app-view-msg',
   standalone: true,
-  imports: [TabViewModule, NgIf, DatePipe,
-    ListViewsComponent, ErrosComponent],
+  imports: [TabViewModule, NgIf, NgFor, DatePipe,
+    ListViewsComponent, ErrosComponent, SkeletonModule],
   templateUrl: './view-msg.component.html',
   styleUrl: './view-msg.component.scss',
   viewProviders: [DialogService]
@@ -26,7 +27,7 @@ export class ViewMsgComponent implements OnInit {
   id!: string;
   views: ViewMessage[] = [];
   isEnviado: boolean = false;
-
+  skeleton: boolean = true;
   constructor(
     private service: MessageService,
     private route: ActivatedRoute,
@@ -42,6 +43,8 @@ export class ViewMsgComponent implements OnInit {
         if (id) {
           this.id = id;
           this.getMsg(id);
+        } else {
+          this.skeleton = false;
         }
         this.rota = params['rota'];
       })
@@ -51,12 +54,11 @@ export class ViewMsgComponent implements OnInit {
     this.service.getMsg(id)
       .subscribe((res) => {
         if (res.success) {
+          this.skeleton = false;
           if (res.data) {
             const data = res.data as Message;
             this.msg = data
-            console.log(this.getStatus(data.status))
             this.isEnviado = this.getStatus(data.status) === 'Enviado';
-            console.log(this.isEnviado)
             this.cr.detectChanges();
           }
         }

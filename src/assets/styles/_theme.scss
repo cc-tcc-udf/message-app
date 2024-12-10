@@ -306,7 +306,8 @@
   .p-dropdown-panel .p-dropdown-items .p-dropdown-item:not(.p-highlight):not(.p-disabled).p-focus,
   .p-dropdown-panel .p-dropdown-items .p-dropdown-item.p-highlight.p-focus,
   .p-dropdown-panel .p-dropdown-header,
-  .p-menu .p-menuitem:not(.p-highlight):not(.p-disabled)>.p-menuitem-content:hover {
+  .p-menu .p-menuitem:not(.p-highlight):not(.p-disabled)>.p-menuitem-content:hover,
+  .p-panel .p-panel-header .p-panel-header-icon:enabled:hover {
     background: $primary;
     color: $txt;
   }
@@ -474,6 +475,19 @@
     border: none;
     outline: none;
     box-shadow: none;
+  }
+
+  .p-panel .p-panel-header,
+  .p-panel .p-panel-footer {
+    border: none;
+    background: $primary;
+    color: $txt;
+  }
+
+  .p-panel .p-panel-content {
+    background: $background;
+    color: $txt;
+    border: 1px solid $primary;
   }
 
   .addLink {

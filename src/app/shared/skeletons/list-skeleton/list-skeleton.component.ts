@@ -13,13 +13,16 @@ import { TableModule } from 'primeng/table';
 })
 export class ListSkeletonComponent implements OnInit {
   @Optional() @Input() qtd: number | null = null;
+  @Optional() @Input() qtdValues: number = 5;
   @Input() col: unknown[] = [];
   cols: Column[] | null = null;
-  products = Array.from({ length: this.qtd ?? 5 }).map((_, i) => `Item #${i}`);
+  values: string[] = [];
 
   ngOnInit(): void {
     if (this.col) {
       this.cols = this.col as Column[];
     }
+
+    this.values = Array.from({ length: this.qtdValues }).map((_, i) => `Item #${i}`);
   }
 }

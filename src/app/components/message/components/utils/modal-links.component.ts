@@ -16,7 +16,6 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
     InputTextareaModule, ButtonModule,
     CheckboxModule, DropdownModule, InputComponent
   ],
-  providers: [],
   template: `
   <section class="flex flex-column gap-2" style="width: 30dvw;">
   <form class="flex flex-column gap-2" [formGroup]="form">

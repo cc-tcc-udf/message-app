@@ -94,7 +94,7 @@ export function getCourseCols() {
   return [
     { field: 'name', header: 'Nome' },
     { field: 'description', header: 'Descrição' },
-    { field: 'resp', header: 'Responsavel', isImg: true },
+    { field: 'resp', header: 'Responsável', isImg: true },
     { field: 'abbreviation', header: 'Sigla', isTag: true },
     { field: 'isGroup', header: 'Grupo', isBoolean: true },
     { field: 'qtdCursos', header: 'Qtd Cursos' },
