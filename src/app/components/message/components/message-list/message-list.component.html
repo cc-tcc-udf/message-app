@@ -19,14 +19,12 @@
   </ng-template>
   <!-- Header das colunas -->
   <ng-template pTemplate="header" let-columns>
-    <tr *ngIf="value.length > 0">
+    <tr *ngIf="value && value.length > 0">
       <th *ngFor="let col of columns" [pSortableColumn]="col.field">
         {{ col.header }}
         <p-sortIcon [field]="col.field"></p-sortIcon>
       </th>
-      <th>
-        Ações
-      </th>
+      <th> Ações </th>
     </tr>
   </ng-template>
   <!-- Corpo da Tabela -->

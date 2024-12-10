@@ -1,9 +1,24 @@
-<section class="w-full h-auto py-1">
+<section class="w-full h-auto pt-3">
+  <section class="flex justify-content-between align-items-center">
+    <span tabindex="0" (keydown.enter)="back()" (keydown.space)="back()" (click)="back()"
+      class="font-light cursor-pointer">
+      <i class=" bi pr-1 bi-arrow-left"></i>
+      voltar
+    </span>
+    <section class="flex align-items-center gap-2">
+      <button *ngIf="isEnviado" pTooltip="Desabilitar" class="del default add" (click)="removeMsg()">
+        Remover <i class="text-base pl-1 font-semibold pi pi-ban"></i>
+      </button>
+      <button *ngIf="msg" pTooltip="Editar" aria-label="Editar" class="edit default add" (click)="edit()">
+        Editar <i class="text-base pl-1 font-semibold bi bi-pencil"></i>
+      </button>
+    </section>
+  </section>
   @if (msg) {
   <p-tabView (activeIndexChange)="onTabChange($event)">
     <p-tabPanel header="Mensagem">
       <section class="flex flex-column gap-3 h-auto py-2">
-        <section class="flex justify-content-between">
+        <section class="flex justify-content-between align-items-center">
           <p class="m-0 card_default"><strong>Cursos:</strong> {{getCourse()}}</p>
           <p *ngIf="msg.sendDate" class="m-0 card_default">
             <strong>Envio:</strong> {{ msg.sendDate | date:'EEEE, dd/MM/yyyy - HH:mm' }}
@@ -55,7 +70,7 @@
     </p-tabPanel>
     <p-tabPanel header="Visualizações">
       <section class="w-full flex flex-column gap-2">
-        <section class="flex justify-content-end">
+        <section class="flex align-items-center gap-2 justify-content-end">
           <span class="tag">
             Visualizações:
             <strong class="px-1">{{msg.vlrViews}}</strong>
@@ -64,16 +79,21 @@
         @if(views.length > 0){
         <app-list-views [views]="views" />
         }@else {
-        <section class="w-full">
-          ainda não teve Visualizações;
+        <section class="w-full py-4 h-full shadow-none last_msg gap-3 
+          flex flex-column justify-content-center align-items-center">
+          <img class="h-20rem" src="assets/img/svg/no_view.svg" alt="Nenhuma mensagem enviada">
+          <span class="text-5xl font-bold">Nenhuma visualização até o momento!</span>
+          <span class="text-2xl text-center">
+            Assim que houver ao menos uma visualização, iremos listá-la aqui para você.
+          </span>
         </section>
+
         }
       </section>
     </p-tabPanel>
   </p-tabView>
   }@else {
-  <section class="w-full">
-    <p>Erro ao carregar a mensagem</p>
-  </section>
+  <app-error img="404" title="Mensagem não encontrada."
+    sub="Se o problema persistir, entre em contato com a administração." />
   }
 </section>

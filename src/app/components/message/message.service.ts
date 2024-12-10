@@ -49,6 +49,10 @@ export class MessageService {
     return this.http.post<GenericResponse>(`${this.api}/private/msg/send`, obj);
   }
 
+  sendById(id: string) {
+    return this.http.get<GenericResponse>(`${this.api}/private/msg/send/${id}`);
+  }
+
   getMessages(page: number, size: number, isAdmin: boolean, id?: string) {
     const url = isAdmin
       ? `${this.api}/private/msg/listAll?page=${page}&size=${size}`

@@ -1,4 +1,3 @@
-import { DatePipe, NgIf } from "@angular/common";
 import { Component, inject, Input } from "@angular/core";
 import { Router } from "@angular/router";
 import { MessageService } from "@components/message/message.service";
@@ -14,8 +13,8 @@ import { TooltipModule } from "primeng/tooltip";
   selector: 'app-list-home',
   standalone: true,
   imports: [
-    TableModule, NgIf,
-    DatePipe, TooltipModule,
+    TableModule,
+    TooltipModule,
     ConfirmDialogModule
   ],
   templateUrl: './list-home.component.html',

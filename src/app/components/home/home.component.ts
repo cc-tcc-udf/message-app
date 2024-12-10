@@ -1,4 +1,4 @@
-import { DatePipe, NgFor, NgIf } from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -18,7 +18,7 @@ import { HomeListComponent } from './components/list-home.component';
   selector: 'app-home',
   standalone: true,
   imports: [
-    HomeListComponent, DatePipe,
+    HomeListComponent,
     DropdownModule, NewButtonComponent,
     NgIf, SkeletonModule, NgFor,
     ListSkeletonComponent, FormsModule

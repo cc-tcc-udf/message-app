@@ -1,9 +1,10 @@
 <section class="w-full h-full msg_list">
-  <p-tabView (activeIndexChange)="onTabChange($event)">
+  <p-tabView class="p-0" (activeIndexChange)="onTabChange($event)">
     <p-tabPanel header="Todas">
-      <app-message-list *ngIf="selectedIndex === 0" flag="all" />
+      <!-- <app-message-list *ngIf="selectedIndex === 0" flag="all" /> -->
+      <app-messages-list *ngIf="selectedIndex === 0" flag="all" />
     </p-tabPanel>
-    <p-tabPanel header="Enviadas">
+    <!-- <p-tabPanel header="Enviadas">
       <app-message-list *ngIf="selectedIndex === 1" flag="ENVIADO" />
     </p-tabPanel>
     <p-tabPanel header="Não enviadas">
@@ -11,6 +12,6 @@
     </p-tabPanel>
     <p-tabPanel header="Removidas">
       <app-message-list *ngIf="selectedIndex === 3" flag="REMOVIDA" />
-    </p-tabPanel>
+    </p-tabPanel> -->
   </p-tabView>
 </section>

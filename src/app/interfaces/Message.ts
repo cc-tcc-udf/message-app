@@ -1,3 +1,4 @@
+import { customDate } from "@utils/date.formate";
 import { Course } from "./Course";
 import { FileApp } from "./File";
 import { Links } from "./Links";
@@ -37,25 +38,33 @@ export class CustomMessage {
   summary?: string;
   sendDate?: string;
   status: Status;
+  custom_status: string;
   message: string;
   courses: string;
   responsible: string;
   attachments?: FileApp[];
   links?: Links[];
   vlrViews: string;
+  sending: boolean;
 
   constructor(msg: Message) {
     this.id = msg.id;
     this.title = msg.title;
     this.summary = msg.summary;
     this.status = msg.status;
-    this.sendDate = msg.sendDate;
+    this.custom_status = this.getStatus(msg.status);
+    this.sendDate = msg.sendDate ? customDate(msg.sendDate) : '-';
     this.message = msg.message;
     this.responsible = msg.responsible;
     this.attachments = msg.attachments;
     this.links = msg.links;
     this.courses = msg.courses.map(course => course.abbreviation).join('/');
     this.vlrViews = msg.vlrViews;
+    this.sending = false;
+  }
+
+  getStatus(s: string): string {
+    return Status[s as keyof typeof Status];
   }
 }
 
@@ -110,7 +119,7 @@ export class CustomViewMessage {
 
 export function getCommonColumns() {
   return [
-    { field: 'title', header: 'Titulo' },
+    { field: 'title', header: 'Assunto' },
     { field: 'sendDate', header: 'Data Envio', isDate: true },
     { field: 'courses', header: 'Cursos', isTag: true },
   ];
@@ -119,7 +128,7 @@ export function getCommonColumns() {
 export function getMessagecolumns() {
   return [
     ...getCommonColumns(),
-    { field: 'status', header: 'Status', isTag: true, isStatus: true },
+    { field: 'custom_status', header: 'Status', isTag: true, isStatus: true },
     { field: 'vlrViews', header: 'Visualizações' },
   ];
 }

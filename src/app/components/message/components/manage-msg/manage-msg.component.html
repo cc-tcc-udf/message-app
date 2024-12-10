@@ -6,9 +6,16 @@
       voltar
     </span>
     <section class="flex gap-4">
+      <button *ngIf="form.controls['id'].value && form.controls['status'].value === 'ENVIADO'" pTooltip="Desabilitar"
+        class="del default add" (click)="removeMsg()">
+        Remover <i class="text-base pl-1 font-semibold pi pi-ban"></i>
+      </button>
+      <button *ngIf="form.controls['id'].value" pTooltip="Visualizar" class="view default add" (click)="view()">
+        Visualizar <i class="text-base pl-1 font-semibold bi bi-eye"></i>
+      </button>
       <button [disabled]="skeleton.create" (click)="save('create')" class="basic flex gap-1 align-items-center theme">
-        <i *ngIf="!skeleton.create" class="bi pr-1 bi-floppy"></i>
         salvar rascunho
+        <i *ngIf="!skeleton.create" class="bi pl-1 bi-floppy"></i>
         <i *ngIf="skeleton.create" class="pi pi-spin pi-spinner"></i>
       </button>
       <button [disabled]="skeleton.send" (click)="save('send')" class="success theme">

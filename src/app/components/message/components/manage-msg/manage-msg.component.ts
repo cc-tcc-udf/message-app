@@ -135,9 +135,11 @@ export class ManageMsgComponent implements AfterViewInit, OnInit {
             }
           });
       } catch (error) {
+        this.skeleton[type] = false;
         this.alert.showMsg('error', 'Erro', 'Ocorreu um erro ao salvar o formulário' + error);
       }
     } else {
+      this.skeleton[type] = false;
       this.alert.showMsg('error', 'Erro', 'Formulário inválido');
     }
   }
@@ -339,5 +341,12 @@ export class ManageMsgComponent implements AfterViewInit, OnInit {
 
   showError(control: string): boolean {
     return !!(this.getControl(control) && this.getControl(control).invalid && this.getControl(control).touched);
+  }
+
+  removeMsg() {
+    throw new Error('Method not implemented.');
+  }
+  view() {
+    throw new Error('Method not implemented.');
   }
 }

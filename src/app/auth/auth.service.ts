@@ -150,7 +150,6 @@ export class AuthService {
         tap((token: RefreshToken) => {
           if (token) {
             this.setToken(token.refreshToken);
-            this.alert.showMsg('success', 'Token', 'token atualizado com sucesso');
           }
           this.attToken = false;
         }),

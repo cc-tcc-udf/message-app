@@ -4,8 +4,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService } from '@components/message/message.service';
 import { FileApp } from '@models/File';
 import { Message, ViewMessage } from '@models/Message';
+import { Status } from '@models/Status';
+import { ErrosComponent } from '@shared/errors.component';
 import { ModalViewComponent } from '@shared/modal-view.component';
-import { AlertService } from '@utils/services/alert.service';
 import { DialogService } from 'primeng/dynamicdialog';
 import { TabViewModule } from 'primeng/tabview';
 import { ListViewsComponent } from "./list-view/list-views.component";
@@ -13,7 +14,8 @@ import { ListViewsComponent } from "./list-view/list-views.component";
 @Component({
   selector: 'app-view-msg',
   standalone: true,
-  imports: [TabViewModule, NgIf, DatePipe, ListViewsComponent],
+  imports: [TabViewModule, NgIf, DatePipe,
+    ListViewsComponent, ErrosComponent],
   templateUrl: './view-msg.component.html',
   styleUrl: './view-msg.component.scss',
   viewProviders: [DialogService]
@@ -23,9 +25,9 @@ export class ViewMsgComponent implements OnInit {
   rota: string = '';
   id!: string;
   views: ViewMessage[] = [];
+  isEnviado: boolean = false;
 
   constructor(
-    private alert: AlertService,
     private service: MessageService,
     private route: ActivatedRoute,
     private router: Router,
@@ -49,10 +51,20 @@ export class ViewMsgComponent implements OnInit {
     this.service.getMsg(id)
       .subscribe((res) => {
         if (res.success) {
-          this.msg = res.data as Message;
-          this.cr.detectChanges();
+          if (res.data) {
+            const data = res.data as Message;
+            this.msg = data
+            console.log(this.getStatus(data.status))
+            this.isEnviado = this.getStatus(data.status) === 'Enviado';
+            console.log(this.isEnviado)
+            this.cr.detectChanges();
+          }
         }
       })
+  }
+
+  getStatus(s: string): string {
+    return Status[s as keyof typeof Status];
   }
 
   openModal(obj: unknown, wh: string, title: string) {
@@ -75,8 +87,16 @@ export class ViewMsgComponent implements OnInit {
     return name?.split('.').pop()?.toLowerCase();
   }
 
+  removeMsg() {
+    throw new Error('Method not implemented.');
+  }
+
   back() {
     this.router.navigate([this.rota]);
+  }
+
+  edit(): void {
+    this.router.navigate(['msg', 'msg-manage'], { queryParams: { id: this.msg.id, rota: this.rota } });
   }
 
   getCourse() {

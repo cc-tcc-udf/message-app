@@ -1,7 +1,7 @@
 import { CommonModule, NgIf } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
 import { TabViewModule } from 'primeng/tabview';
-import { MessageListComponent } from "./components/message-list/message-list.component";
+import { MessageListComponent } from '../../message-list/message-list.component';
 
 
 @Component({
@@ -9,10 +9,11 @@ import { MessageListComponent } from "./components/message-list/message-list.com
   standalone: true,
   imports: [
     TabViewModule, CommonModule,
-    MessageListComponent, NgIf
+    MessageListComponent, NgIf,
   ],
   templateUrl: './message.component.html',
-  styleUrl: './message.component.scss'
+  styleUrl: './message.component.scss',
+  encapsulation: ViewEncapsulation.None
 })
 export class MessageComponent {
   selectedIndex: number = 0;

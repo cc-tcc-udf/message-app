@@ -9,7 +9,7 @@
 
   .base_layout {
     .base_content {
-      padding: 1rem 0;
+      padding-bottom: 1rem
     }
   }
 
@@ -503,13 +503,13 @@
     color: var(--red-700) !important;
   }
 
-  .RECEBIDO,
+  .ENVIADO,
   .Ativo {
     background-color: var(--green-100) !important;
     color: var(--green-700) !important;
   }
 
-  .ENVIADO {
+  .RECEBIDO {
     background-color: var(--blue-100) !important;
     color: var(--blue-700) !important;
   }
