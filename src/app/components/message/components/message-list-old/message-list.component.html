@@ -68,20 +68,18 @@
   </ng-template>
   <!-- caso não tenha mensagens -->
   <ng-template pTemplate="emptymessage">
-    <tr>
-      <section class="w-full h-full shadow-none last_msg gap-3 
+    <section class="w-full h-full shadow-none last_msg gap-3 
         flex flex-column justify-content-center align-items-center" aria-label="Seção de mensagens vazias">
-        <img class="h-20rem" src="assets/img/svg/no_msg.svg"
-          alt="Ilustração indicando que não há mensagens disponíveis" />
-        <div class="text-center">
-          <span class="text-5xl font-bold">Ops! Nenhuma mensagem encontrada.</span>
-          <p class="text-2xl mt-2">
-            Clique no botão '<strong>Novo</strong>' para começar e criar uma nova mensagem.
-          </p>
-        </div>
-        <app-new-button icon="bi-plus" navigateTo="msg/msg-manage"
-          aria-label="Botão para criar uma nova mensagem"></app-new-button>
-      </section>
-    </tr>
+      <img class="h-20rem" src="assets/img/svg/no_msg.svg"
+        alt="Ilustração indicando que não há mensagens disponíveis" />
+      <div class="text-center">
+        <span class="text-5xl font-bold">Ops! Nenhuma mensagem encontrada.</span>
+        <p class="text-2xl mt-2">
+          Clique no botão '<strong>Novo</strong>' para começar e criar uma nova mensagem.
+        </p>
+      </div>
+      <app-new-button icon="bi-plus" navigateTo="msg/msg-manage"
+        aria-label="Botão para criar uma nova mensagem"></app-new-button>
+    </section>
   </ng-template>
 </p-table>

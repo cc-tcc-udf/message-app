@@ -1,9 +1,13 @@
 import { NgClass, NgFor, NgIf } from '@angular/common';
-import { Component, ViewEncapsulation, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { AuthService } from '@auth/auth.service';
+import { GenericResponse, PaginatedModel } from '@models/GenericResponse';
 import { CustomMessage, getMessagecolumns, Message } from '@models/Message';
+import { PageableDTO } from '@models/pageable';
 import { Column } from '@models/primeng';
+import { Usuario } from '@models/Usuario';
 import { NewButtonComponent } from '@shared/new-button.component';
 import { ListSkeletonComponent } from '@shared/skeletons/list-skeleton/list-skeleton.component';
 import { AlertService } from '@utils/services/alert.service';
@@ -26,8 +30,7 @@ import { MessageService } from './message.service';
     NewButtonComponent, IconFieldModule, NgFor,
     InputIconModule, DropdownModule, NgIf,
     FormsModule, NgClass, ListSkeletonComponent,
-    InputTextModule, TooltipModule, SkeletonModule
-  ],
+    InputTextModule, TooltipModule, SkeletonModule],
   templateUrl: './message.component.html',
   styleUrl: './message.component.scss',
   encapsulation: ViewEncapsulation.None
@@ -42,28 +45,69 @@ export class MessageComponent implements OnInit {
     { label: 'Não enviado', value: 'Não enviado', original: 'NAO_ENVIADO' },
     { label: 'Removida', value: 'Removida', original: 'REMOVIDA' },
   ];
-
+  user!: Usuario;
   constructor(
     private service: MessageService,
     private router: Router,
     private alert: AlertService,
-    private confirm: ConfirmationService
+    private confirm: ConfirmationService,
+    private auth: AuthService,
+    private cr: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
-    this.service.getAllMessages()
-      .subscribe((response) => {
+    // this.service.getAllMessages()
+    //   .subscribe((response) => {
+    //     this.skeleton.all = false;
+    //     if (response.success) {
+    //       this.message = (response.data as Message[]).map((p) => new CustomMessage(p));
+    //       this.totalRecords = this.message.length;
+    //       this.skeleton.load = false;
+    //     }
+    //   });
+    this.auth.user$.subscribe((p) => {
+      if (p) {
+        this.user = p;
         this.skeleton.all = false;
-        if (response.success) {
-          this.message = (response.data as Message[]).map((p) => new CustomMessage(p));
-          this.totalRecords = this.message.length;
-          this.skeleton.load = false;
-        }
-      });
+      }
+    });
   }
 
-  load(event: TableLazyLoadEvent): void {
-    console.log(event);
+  load($event: TableLazyLoadEvent): void {
+    this.skeleton.load = true;
+    const isAdmin = this.auth.isAdmin();
+    const page: PageableDTO = {
+      ...$event as PageableDTO,
+      objectId: isAdmin ? undefined : this.user.id
+    };
+    this.service.getPageable(page)
+      .subscribe((response: GenericResponse | null) => {
+        if (response?.success) {
+          const data = response.data as PaginatedModel;
+          console.log(data);
+          this.totalRecords = data?.totalElements;
+          this.message = (data.content as Message[]).map((p) => new CustomMessage(p));
+          setTimeout(() => {
+            console.log(this.message)
+            this.skeleton.load = false;
+          }, 500)
+          // if (data?.content) {
+          //   const msgs: Message[] = data.content as Message[];
+          //   this.message = msgs as unknown as CustomMessage[]
+          //   this.totalRecords = data.totalElements;
+          //   this.cr.detectChanges()
+          // } else {
+          //   console.warn('Conteúdo vazio na resposta');
+          //   this.message = [];
+          //   this.totalRecords = 0;
+          // }
+        } else {
+          console.error('Falha na resposta da requisição', response);
+          this.message = [];
+          this.totalRecords = 0;
+        }
+        this.skeleton.load = false;
+      });
   }
 
   getFields(): string[] {

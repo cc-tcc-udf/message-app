@@ -9,7 +9,7 @@
   </p-confirmDialog>
   <p-table appendTo="body" #tbMsg [value]="message" dataKey="id" [rows]="8" [loading]="skeleton.load" [paginator]="true"
     [globalFilterFields]="getFields()" [totalRecords]="totalRecords" (onLazyLoad)="load($event)"
-    [tableStyle]="{ 'min-width': '75rem' }" [columns]="cols">
+    [tableStyle]="{ 'min-width': '75rem' }" [columns]="cols" [lazy]="true">
     <ng-template pTemplate="caption">
       <section class="flex gap-2 justify-content-end align-items-center">
         <app-new-button icon=" bi-plus" navigateTo="msg/msg-manage"></app-new-button>
@@ -41,7 +41,7 @@
           <p-columnFilter *ngIf="col.field === 'custom_status'" field="custom_status" matchMode="equals"
             [showMenu]="false">
             <ng-template pTemplate="filter" let-value let-filter="filterCallback">
-              <p-dropdown [ngModel]="value" [options]="statuses" (onChange)="filter($event.value)"
+              <p-dropdown appendTo="body" [ngModel]="value" [options]="statuses" (onChange)="filter($event.value)"
                 placeholder="Selecione um" [showClear]="true">
                 <ng-template let-option pTemplate="item">
                   <span class="tag text-sm w-full font-semibold" [ngClass]="option.original">{{ option.label }}</span>
@@ -82,9 +82,19 @@
       </tr>
     </ng-template>
     <ng-template pTemplate="emptymessage">
-      <tr>
-        <td colspan="5">No customers found.</td>
-      </tr>
+      <section class="w-full h-full shadow-none last_msg gap-3 
+          flex flex-column justify-content-center align-items-center" aria-label="Seção de mensagens vazias">
+        <img class="h-20rem" src="assets/img/svg/no_msg.svg"
+          alt="Ilustração indicando que não há mensagens disponíveis" />
+        <div class="text-center">
+          <span class="text-5xl font-bold">Ops! Nenhuma mensagem encontrada.</span>
+          <p class="text-2xl mt-2">
+            Clique no botão '<strong>Novo</strong>' para começar e criar uma nova mensagem.
+          </p>
+        </div>
+        <app-new-button icon="bi-plus" navigateTo="msg/msg-manage"
+          aria-label="Botão para criar uma nova mensagem"></app-new-button>
+      </section>
     </ng-template>
   </p-table>
 </section>

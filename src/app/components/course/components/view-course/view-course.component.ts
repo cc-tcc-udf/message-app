@@ -69,7 +69,8 @@ export class ViewCourseComponent implements OnInit {
           this.extract('assets/img/svg/photo.svg');
           this.skeleton = false;
         }
-        console.log(this.course)
+      } else {
+        this.skeleton = false;
       }
     });
   }

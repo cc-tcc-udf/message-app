@@ -61,8 +61,7 @@ export class MessageListComponent implements OnInit {
     const isAdmin = this.auth.isAdmin();
     const page = $event as PageableDTO;
     page.objectId = isAdmin ? undefined : this.user.id;
-    page.flag = this.flag;
-    console.log(page)
+    // page.flag = this.flag;
     this.loading = true;
     this.service.getPageable(page)
       .subscribe((response: GenericResponse) => {

@@ -1,14 +1,8 @@
 <section *ngIf="course && !skeleton" class="w-full h-full">
   <div class="w-full infos gap-2" [ngStyle]="{ 'background-color': backgroundColor() }">
     <section class="i">
-      <span class="text-sm font-semibold course_tag max-w-max tag">Informações</span>
-      <span class="card_default max-w-max">
-        <strong>Nome: </strong>{{ course.name }}
-      </span>
-      <span class="card_default max-w-max">
-        <strong>Descrição: </strong>{{ course.description }}
-      </span>
       <section class="flex gap-2">
+        <span class="text-sm font-semibold course_tag max-w-max tag">Informações</span>
         <span class="tag ml-1 text-sm font-semibold course_tag max-w-max">{{ course.isGroup ? 'Grupo' : 'Curso'
           }}</span>
         <span class="tag ml-1 text-sm font-semibold course_tag max-w-max">{{ course.abbreviation }}</span>
@@ -16,6 +10,12 @@
           {{ course.courses.length }} curso(s)
         </span>
       </section>
+      <span class="card_default max-w-max">
+        <strong>Nome: </strong>{{ course.name }}
+      </span>
+      <span class="card_default max-w-max">
+        <strong>Descrição: </strong>{{ course.description }}
+      </span>
     </section>
 
     <section class="resp text-sm">
@@ -77,7 +77,7 @@
 
               <ng-template #noAlunos>
                 <section class="w-full flex justify-content-between">
-                  <span class="text-xl font-bold max-w-max max-h-max card_default">
+                  <span class="text-xl font-bold k_ card_default">
                     Não há alunos vinculados a este curso no momento.
                   </span>
                   <img src="assets/img/svg/no_alunos.svg" class="h-15rem" alt="img" />
@@ -105,7 +105,7 @@
         </ng-template>
         <section class="flex gap-2 flex-column users_infos">
           <section class="card_default" *ngIf="course.id && loadingAlunos.get(course.id); else alunosLoaded">
-            <app-list-skeleton [col]="cols" [qtd]="cols.length" [qtdValues]="5"></app-list-skeleton>
+            <app-list-skeleton [col]="cols" [qtd]="cols.length" [qtdValues]="3"></app-list-skeleton>
           </section>
           <ng-template #alunosLoaded>
             <section class="card_default" *ngIf="getAlunos(course).length > 0; else noAlunos">
@@ -133,7 +133,7 @@
 
             <ng-template #noAlunos>
               <section class="w-full flex justify-content-between">
-                <span class="text-xl font-bold card_default">Não há alunos vinculados a este curso no momento.</span>
+                <span class="text-xl k_ font-bold card_default">Não há alunos vinculados a este curso no momento.</span>
                 <img src="assets/img/svg/no_alunos.svg" class="h-15rem" alt="img" />
               </section>
             </ng-template>
