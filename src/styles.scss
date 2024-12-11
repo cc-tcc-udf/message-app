@@ -120,3 +120,9 @@ body {
 ::-webkit-scrollbar {
   display: none;
 }
+
+@media screen and (max-width: 960px) {
+  .pictu {
+    display: none !important;
+  }
+}

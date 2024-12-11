@@ -37,7 +37,7 @@ import { SkeletonModule } from 'primeng/skeleton';
           <ng-template pTemplate="end">
             <p-menu appendTo="body" #menu [model]="itemsPopup" [popup]="true" />
             <div (click)="menu.toggle($event)" (keydown.enter)="menu.toggle($event)"
-            class="flex cursor-pointer align-items-center ml-2 gap-2" tabindex="0" role="button"
+            class="cursor-pointer flex pictu align-items-center ml-2 gap-2" tabindex="0" role="button"
             aria-label="Menu de perfil">
             <div class="shadow-1 bg-cover bg-primary-50 bg-center bg-no-repeat border-circle"
             [style.background-image]="'url(' + (user?.profilePhoto ?? 'assets/img/svg/photo.svg') + ')'" 
@@ -151,6 +151,7 @@ export class MenuBarComponent implements OnInit {
           this.user = u;
           this.imagePreview.set(u.profilePhoto ?? '');
           this.items = this._setItems();
+          this.form.patchValue(u);
           setTimeout(() => {
             this.skeleton = false;
             this.cf.detectChanges();

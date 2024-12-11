@@ -3,7 +3,7 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from '@auth/auth.service';
 import { CourseService } from '@components/course/course.service';
-import { SubCourse } from '@models/Course';
+import { Course, SubCourse } from '@models/Course';
 import { GenericResponse } from '@models/GenericResponse';
 import { CustomUsuario, Usuario } from '@models/Usuario';
 import { AlertService } from '@utils/services/alert.service';
@@ -57,9 +57,15 @@ export class ModalCourseComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    const data = this.ref.data.data;
+    const data = this.ref.data.data as Course;
     if (data) {
       this.form.patchValue(data);
+      if (data.resp) {
+        this.resps.push(new CustomUsuario(data.resp));
+      }
+      if(!data.isGroup && data.courseGroupId === null){
+        
+      }
     }
     this.getGroups();
     this.getProf();
@@ -109,7 +115,8 @@ export class ModalCourseComponent implements OnInit {
       .subscribe((response: GenericResponse) => {
         if (response.success) {
           const data = response.data as Usuario[];
-          this.resps = data.map((p: Usuario) => new CustomUsuario(p)).filter(c => c.id);
+          if (data.length > 0)
+            this.resps = data.map((p: Usuario) => new CustomUsuario(p)).filter(c => c.id);
         }
       });
   }

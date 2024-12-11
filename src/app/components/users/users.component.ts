@@ -1,6 +1,7 @@
 import { NgClass, NgFor, NgStyle } from '@angular/common';
 import { ChangeDetectorRef, Component, inject, OnInit, ViewEncapsulation } from '@angular/core';
 import { GenericResponse } from '@models/GenericResponse';
+import { Roles_user } from '@models/Roles';
 import { CustomUsuario, Usuario } from '@models/Usuario';
 import { ThemeService } from '@utils/services/theme.service';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
@@ -81,4 +82,16 @@ export class UsersComponent implements OnInit {
     });
   }
 
+  getRoler(u: Roles_user) {
+    switch (u) {
+      case Roles_user.ADMIN:
+        return 'Administrador';
+      case Roles_user.USER:
+        return 'Usuário';
+      case Roles_user.PROF:
+        return 'Coordenador';
+      default:
+        return 'Usuário';
+    }
+  }
 }

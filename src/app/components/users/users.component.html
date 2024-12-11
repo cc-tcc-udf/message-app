@@ -25,7 +25,7 @@
           </div>
           <div class="flex flex-wrap gap-2">
             <p class="m-0 font-bold">Permissões:</p>
-            <span class="default-tag" *ngFor="let roler of usr.roles" [ngClass]="roler">{{roler}}</span>
+            <span class="default-tag" *ngFor="let roler of usr.roles" [ngClass]="roler">{{getRoler(roler)}}</span>
           </div>
         </div>
       </section>

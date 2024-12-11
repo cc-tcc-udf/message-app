@@ -13,7 +13,7 @@
     <ng-template pTemplate="caption">
       <section class="flex gap-2 justify-content-end align-items-center">
         <app-new-button icon=" bi-plus" navigateTo="msg/msg-manage"></app-new-button>
-        <div class="flex">
+        <!-- <div class="flex">
           <p-iconField iconPosition="left" class="ml-auto">
             <p-inputIcon>
               <i class="pi pi-search"></i>
@@ -21,7 +21,7 @@
             <input pInputText type="text" #searchInput (input)="tbMsg.filterGlobal(searchInput.value, 'contains')"
               placeholder="Buscar" />
           </p-iconField>
-        </div>
+        </div> -->
       </section>
     </ng-template>
     <ng-template pTemplate="header" let-columns>
