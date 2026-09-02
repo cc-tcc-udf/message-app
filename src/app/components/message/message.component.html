@@ -1,108 +1,134 @@
-<section *ngIf="!skeleton.all" class="w-full list_all_msg h-full">
-  <p-confirmDialog>
-    <ng-template pTemplate="message" let-message>
-      <div class="flex flex-column align-items-center w-full gap-3">
-        <i class="bi bi-exclamation-circle-fill text-5xl text-orange-500"></i>
-        <p class="w-22rem m-0">{{ message.message }}</p>
-      </div>
-    </ng-template>
-  </p-confirmDialog>
-  <p-table appendTo="body" #tbMsg [value]="message" dataKey="id" [rows]="8" [loading]="skeleton.load" [paginator]="true"
-    [globalFilterFields]="getFields()" [totalRecords]="totalRecords" (onLazyLoad)="load($event)"
-    [tableStyle]="{ 'min-width': '75rem' }" [columns]="cols" [lazy]="true">
-    <ng-template pTemplate="caption">
-      <section class="flex gap-2 justify-content-end align-items-center">
-        <app-new-button icon=" bi-plus" navigateTo="msg/msg-manage"></app-new-button>
-        <!-- <div class="flex">
+@if (!skeleton.all) {
+  <section class="w-full list_all_msg h-full">
+    <p-confirmDialog>
+      <ng-template pTemplate="message" let-message>
+        <div class="flex flex-column align-items-center w-full gap-3">
+          <i class="bi bi-exclamation-circle-fill text-5xl text-orange-500"></i>
+          <p class="w-22rem m-0">{{ message.message }}</p>
+        </div>
+      </ng-template>
+    </p-confirmDialog>
+    <p-table appendTo="body" #tbMsg [value]="message" dataKey="id" [rows]="8" [loading]="skeleton.load" [paginator]="true"
+      [globalFilterFields]="getFields()" [totalRecords]="totalRecords" (onLazyLoad)="load($event)"
+      [tableStyle]="{ 'min-width': '75rem' }" [columns]="cols" [lazy]="true">
+      <ng-template pTemplate="caption">
+        <section class="flex gap-2 justify-content-end align-items-center">
+          <app-new-button icon=" bi-plus" navigateTo="msg/msg-manage"></app-new-button>
+          <!-- <div class="flex">
           <p-iconField iconPosition="left" class="ml-auto">
             <p-inputIcon>
               <i class="pi pi-search"></i>
             </p-inputIcon>
             <input pInputText type="text" #searchInput (input)="tbMsg.filterGlobal(searchInput.value, 'contains')"
               placeholder="Buscar" />
-          </p-iconField>
-        </div> -->
-      </section>
-    </ng-template>
-    <ng-template pTemplate="header" let-columns>
-      <tr>
-        <th *ngFor="let col of columns" [pSortableColumn]="col.field">
-          {{ col.header }}
-          <p-sortIcon [field]="col.field"></p-sortIcon>
-        </th>
-        <th class="w-1">Ações</th>
-      </tr>
-      <tr>
-      <tr>
-        <th *ngFor="let col of columns">
-          <p-columnFilter *ngIf="col.field !== 'vlrViews' && col.field !== 'custom_status'" [showMenu]="false"
-            type="text" [field]="col.field" placeholder="Filtrar {{ col.header }}"
-            [matchMode]="'contains'"></p-columnFilter>
-          <p-columnFilter *ngIf="col.field === 'custom_status'" field="custom_status" matchMode="equals"
-            [showMenu]="false">
-            <ng-template pTemplate="filter" let-value let-filter="filterCallback">
-              <p-dropdown appendTo="body" [ngModel]="value" [options]="statuses" (onChange)="filter($event.value)"
-                placeholder="Selecione um" [showClear]="true">
-                <ng-template let-option pTemplate="item">
-                  <span class="tag text-sm w-full font-semibold" [ngClass]="option.original">{{ option.label }}</span>
-                </ng-template>
-              </p-dropdown>
-            </ng-template>
-          </p-columnFilter>
-        </th>
-      </tr>
-    </ng-template>
-    <ng-template pTemplate="body" let-msg let-columns="columns">
-      <tr>
-        <td *ngFor="let td of columns">
-          <span class="font-semibold" [ngClass]="getClass(msg, td)">
-            {{ msg[td.field] ?? '-' }}
-          </span>
-        </td>
-        <td>
-          <section class=" flex gap-2">
-            <button pTooltip="Visualizar" aria-label="Visualizar" class="view default add" (click)="view(msg)">
-              <i class="text-base font-semibold bi bi-eye"></i>
-            </button>
-            <button pTooltip="Editar" aria-label="Editar" class="edit default add" (click)="edit(msg)">
-              <i class="text-base font-semibold bi bi-pencil"></i>
-            </button>
-            <button pTooltip="Enviar" [disabled]="msg.sending" *ngIf="msg.courses.length > 0 && msg.sendDate === '-'"
-              aria-label="Enviar" class="send default add" (click)="send(msg)">
-              <i *ngIf="!msg.sending" class="text-base font-semibold bi bi-send"></i>
-              <i *ngIf="msg.sending" class="pi pi-spin pi-spinner"></i>
-            </button>
-            <button [disabled]="msg.removing" *ngIf="msg.status === 'ENVIADO'" pTooltip="Desabilitar"
-              class="del default add" (click)="remove(msg)">
-              <i *ngIf="!msg.removing" class="text-base font-semibold pi pi-ban"></i>
-              <i *ngIf="msg.removing" class="pi pi-spin pi-spinner"></i>
-            </button>
-          </section>
-        </td>
-      </tr>
-    </ng-template>
-    <ng-template pTemplate="emptymessage">
+            </p-iconField>
+          </div> -->
+        </section>
+      </ng-template>
+      <ng-template pTemplate="header" let-columns>
+        <tr>
+          @for (col of columns; track col) {
+            <th [pSortableColumn]="col.field">
+              {{ col.header }}
+              <p-sortIcon [field]="col.field"></p-sortIcon>
+            </th>
+          }
+          <th class="w-1">Ações</th>
+        </tr>
+        <tr>
+          <tr>
+            @for (col of columns; track col) {
+              <th>
+                @if (col.field !== 'vlrViews' && col.field !== 'custom_status') {
+                  <p-columnFilter [showMenu]="false"
+                    type="text" [field]="col.field" placeholder="Filtrar {{ col.header }}"
+                  [matchMode]="'contains'"></p-columnFilter>
+                }
+                @if (col.field === 'custom_status') {
+                  <p-columnFilter field="custom_status" matchMode="equals"
+                    [showMenu]="false">
+                    <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+                      <p-dropdown appendTo="body" [ngModel]="value" [options]="statuses" (onChange)="filter($event.value)"
+                        placeholder="Selecione um" [showClear]="true">
+                        <ng-template let-option pTemplate="item">
+                          <span class="tag text-sm w-full font-semibold" [ngClass]="option.original">{{ option.label }}</span>
+                        </ng-template>
+                      </p-dropdown>
+                    </ng-template>
+                  </p-columnFilter>
+                }
+              </th>
+            }
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-msg let-columns="columns">
+          <tr>
+            @for (td of columns; track td) {
+              <td>
+                <span class="font-semibold" [ngClass]="getClass(msg, td)">
+                  {{ msg[td.field] ?? '-' }}
+                </span>
+              </td>
+            }
+            <td>
+              <section class=" flex gap-2">
+                <button pTooltip="Visualizar" aria-label="Visualizar" class="view default add" (click)="view(msg)">
+                  <i class="text-base font-semibold bi bi-eye"></i>
+                </button>
+                <button pTooltip="Editar" aria-label="Editar" class="edit default add" (click)="edit(msg)">
+                  <i class="text-base font-semibold bi bi-pencil"></i>
+                </button>
+                @if (msg.courses.length > 0 && msg.sendDate === '-') {
+                  <button pTooltip="Enviar" [disabled]="msg.sending"
+                    aria-label="Enviar" class="send default add" (click)="send(msg)">
+                    @if (!msg.sending) {
+                      <i class="text-base font-semibold bi bi-send"></i>
+                    }
+                    @if (msg.sending) {
+                      <i class="pi pi-spin pi-spinner"></i>
+                    }
+                  </button>
+                }
+                @if (msg.status === 'ENVIADO') {
+                  <button [disabled]="msg.removing" pTooltip="Desabilitar"
+                    class="del default add" (click)="remove(msg)">
+                    @if (!msg.removing) {
+                      <i class="text-base font-semibold pi pi-ban"></i>
+                    }
+                    @if (msg.removing) {
+                      <i class="pi pi-spin pi-spinner"></i>
+                    }
+                  </button>
+                }
+              </section>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
       <section class="w-full h-full shadow-none last_msg gap-3 
           flex flex-column justify-content-center align-items-center" aria-label="Seção de mensagens vazias">
-        <img class="h-20rem" src="assets/img/svg/no_msg.svg"
-          alt="Ilustração indicando que não há mensagens disponíveis" />
-        <div class="text-center">
-          <span class="text-5xl font-bold">Ops! Nenhuma mensagem encontrada.</span>
-          <p class="text-2xl mt-2">
-            Clique no botão '<strong>Novo</strong>' para começar e criar uma nova mensagem.
-          </p>
-        </div>
-        <app-new-button icon="bi-plus" navigateTo="msg/msg-manage"
-          aria-label="Botão para criar uma nova mensagem"></app-new-button>
+            <img class="h-20rem" src="assets/img/svg/no_msg.svg"
+              alt="Ilustração indicando que não há mensagens disponíveis" />
+              <div class="text-center">
+                <span class="text-5xl font-bold">Ops! Nenhuma mensagem encontrada.</span>
+                <p class="text-2xl mt-2">
+                  Clique no botão '<strong>Novo</strong>' para começar e criar uma nova mensagem.
+                </p>
+              </div>
+              <app-new-button icon="bi-plus" navigateTo="msg/msg-manage"
+              aria-label="Botão para criar uma nova mensagem"></app-new-button>
+            </section>
+          </ng-template>
+        </p-table>
       </section>
-    </ng-template>
-  </p-table>
-</section>
+    }
 
-<section class="py-3" *ngIf="skeleton.all">
-  <section class="flex py-3 justify-content-end align-items-center gap-2">
-    <p-skeleton height="2.5rem" width="7rem" />
-    <p-skeleton height="2.75rem" width="15rem" />
-  </section>
-  <app-list-skeleton [col]="cols" [qtd]="cols.length" [qtdValues]="8" />
-</section>
+    @if (skeleton.all) {
+      <section class="py-3">
+        <section class="flex py-3 justify-content-end align-items-center gap-2">
+          <p-skeleton height="2.5rem" width="7rem" />
+          <p-skeleton height="2.75rem" width="15rem" />
+        </section>
+        <app-list-skeleton [col]="cols" [qtd]="cols.length" [qtdValues]="8" />
+      </section>
+    }

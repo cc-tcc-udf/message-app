@@ -1,4 +1,4 @@
-import { NgFor, NgIf } from '@angular/common';
+
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -19,10 +19,12 @@ import { HomeListComponent } from './components/list-home.component';
   standalone: true,
   imports: [
     HomeListComponent,
-    DropdownModule, NewButtonComponent,
-    NgIf, SkeletonModule, NgFor,
-    ListSkeletonComponent, FormsModule
-  ],
+    DropdownModule,
+    NewButtonComponent,
+    SkeletonModule,
+    ListSkeletonComponent,
+    FormsModule
+],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })

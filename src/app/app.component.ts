@@ -1,4 +1,4 @@
-import { AsyncPipe, NgIf } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, OnInit, ViewEncapsulation } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { AuthService } from '@auth/auth.service';
@@ -9,11 +9,7 @@ import { ToastModule } from 'primeng/toast';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports:
-    [RouterOutlet, NgIf,
-      ToastModule,
-      ProgressBarModule, AsyncPipe
-    ],
+  imports: [RouterOutlet, ToastModule, ProgressBarModule, AsyncPipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',

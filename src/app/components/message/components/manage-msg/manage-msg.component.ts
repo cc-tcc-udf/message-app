@@ -1,5 +1,6 @@
-import { NgClass, NgFor, NgIf } from '@angular/common';
-import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { NgClass } from '@angular/common';
+import { AfterViewInit, ChangeDetectorRef, Component, DestroyRef, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { SafeUrl } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -28,9 +29,7 @@ import { ModalLinksComponent } from '../utils/modal-links.component';
 @Component({
   selector: 'app-manage-msg',
   standalone: true,
-  imports: [ScrollPanelModule, ReactiveFormsModule,
-    InputComponent, EditorModule, NgFor, NgIf, ConfirmDialogModule,
-    NgClass, DropdownModule, ImageModule, MultiSelectModule],
+  imports: [ScrollPanelModule, ReactiveFormsModule, InputComponent, EditorModule, ConfirmDialogModule, NgClass, DropdownModule, ImageModule, MultiSelectModule],
   templateUrl: './manage-msg.component.html',
   styleUrls: ['./manage-msg.component.scss'],
   viewProviders: [DialogService, FileService]
@@ -72,6 +71,8 @@ export class ManageMsgComponent implements AfterViewInit, OnInit {
 
   @ViewChild('editor', { static: false }) editor!: Editor;
 
+  private destroyRef = inject(DestroyRef);
+
   constructor(
     private alert: AlertService,
     private service: MessageService,
@@ -91,6 +92,7 @@ export class ManageMsgComponent implements AfterViewInit, OnInit {
       this.getGroups(this.user?.id);
     }
     this.route.queryParams
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(params => {
         const id = params['id'];
         if (id) {

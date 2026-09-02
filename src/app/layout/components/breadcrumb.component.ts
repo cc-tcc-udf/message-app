@@ -1,4 +1,5 @@
-import { Component, inject, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, ViewEncapsulation } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MenuItem } from 'primeng/api';
 import { BreadcrumbModule } from 'primeng/breadcrumb';
 import { BreadcrumbService } from '../services/breadcrumb.service';
@@ -24,14 +25,17 @@ import { BreadcrumbService } from '../services/breadcrumb.service';
 })
 export class BreadcrumbComponent implements OnInit {
   private service = inject(BreadcrumbService);
+  private destroyRef = inject(DestroyRef);
 
   items: MenuItem[] | undefined;
   home: MenuItem | undefined;
 
   ngOnInit() {
     this.home = { icon: 'bi bi-house', routerLink: '/home' };
-    this.service.breadcrumbs$.subscribe(breadcrumbs => {
-      this.items = breadcrumbs;
-    });
+    this.service.breadcrumbs$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(breadcrumbs => {
+        this.items = breadcrumbs;
+      });
   }
 }

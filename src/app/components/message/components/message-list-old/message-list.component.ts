@@ -1,4 +1,4 @@
-import { CommonModule, NgClass, NgFor, NgIf } from '@angular/common';
+import { CommonModule, NgClass } from '@angular/common';
 import { Component, inject, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '@auth/auth.service';
@@ -23,11 +23,14 @@ import { TooltipModule } from 'primeng/tooltip';
   selector: 'app-message-list-old',
   standalone: true,
   imports: [
-    NgIf, NgFor, NgClass,
-    TableModule, CommonModule,
-    InputComponent, NewButtonComponent,
-    ConfirmDialogModule, TooltipModule
-  ],
+    NgClass,
+    TableModule,
+    CommonModule,
+    InputComponent,
+    NewButtonComponent,
+    ConfirmDialogModule,
+    TooltipModule
+],
   templateUrl: './message-list.component.html',
   styleUrls: ['./message-list.component.scss'],
   encapsulation: ViewEncapsulation.None,

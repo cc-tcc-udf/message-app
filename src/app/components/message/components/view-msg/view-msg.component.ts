@@ -1,5 +1,6 @@
-import { DatePipe, NgFor, NgIf } from '@angular/common';
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { DatePipe } from '@angular/common';
+import { ChangeDetectorRef, Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService } from '@components/message/message.service';
 import { FileApp } from '@models/File';
@@ -15,8 +16,7 @@ import { ListViewsComponent } from "./list-view/list-views.component";
 @Component({
   selector: 'app-view-msg',
   standalone: true,
-  imports: [TabViewModule, NgIf, NgFor, DatePipe,
-    ListViewsComponent, ErrosComponent, SkeletonModule],
+  imports: [TabViewModule, DatePipe, ListViewsComponent, ErrosComponent, SkeletonModule],
   templateUrl: './view-msg.component.html',
   styleUrl: './view-msg.component.scss',
   viewProviders: [DialogService]
@@ -28,6 +28,8 @@ export class ViewMsgComponent implements OnInit {
   views: ViewMessage[] = [];
   isEnviado: boolean = false;
   skeleton: boolean = true;
+  private destroyRef = inject(DestroyRef);
+
   constructor(
     private service: MessageService,
     private route: ActivatedRoute,
@@ -38,6 +40,7 @@ export class ViewMsgComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.queryParams
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(params => {
         const id = params['id'];
         if (id) {
@@ -47,7 +50,7 @@ export class ViewMsgComponent implements OnInit {
           this.skeleton = false;
         }
         this.rota = params['rota'];
-      })
+      });
   }
 
   private getMsg(id: number | string) {

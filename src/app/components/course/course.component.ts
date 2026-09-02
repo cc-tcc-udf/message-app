@@ -1,4 +1,4 @@
-import { NgClass, NgIf, SlicePipe } from '@angular/common';
+import { NgClass, SlicePipe } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
 import { Course, CourseCustom, getCourseCols, getSubCourseCols, SubCourse } from '@models/Course';
@@ -16,12 +16,14 @@ import { CourseService } from './course.service';
   selector: 'app-course',
   standalone: true,
   imports: [
-    TableModule, NgClass,
-    ButtonModule, NgIf,
+    TableModule,
+    NgClass,
+    ButtonModule,
     DynamicDialogModule,
     ListSkeletonComponent,
-    SkeletonModule, SlicePipe
-  ],
+    SkeletonModule,
+    SlicePipe
+],
   viewProviders: [DialogService],
   templateUrl: './course.component.html',
   styleUrl: './course.component.scss',

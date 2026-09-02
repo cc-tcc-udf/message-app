@@ -1,4 +1,4 @@
-import { NgClass, NgIf } from "@angular/common";
+import { NgClass } from "@angular/common";
 import { Component, OnInit } from "@angular/core";
 import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
 import { FileApp } from "@models/File";
@@ -6,16 +6,18 @@ import { DynamicDialogConfig } from "primeng/dynamicdialog";
 
 @Component({
   selector: 'app-modal-view',
-  imports: [NgClass, NgIf],
+  imports: [NgClass],
   standalone: true,
   template: `
   @if(safeUrl){
-      <iframe [src]="safeUrl" width="100%" height="100%" frameborder="0"></iframe>
+    <iframe [src]="safeUrl" width="100%" height="100%" frameborder="0"></iframe>
   }
-  @if(fileExterno) {    
+  @if(fileExterno) {
     <section class="flex text-center h-full flex-column justify-content-between gap-1 align-items-center">
       <i style="font-size: 4rem;" class="icon_ bi" [ngClass]="getClass()"></i>
-      <span *ngIf="anexo?.name">{{anexo?.name}}</span>
+      @if (anexo?.name) {
+        <span>{{anexo?.name}}</span>
+      }
       <p class="m-0 font-semibold">Será necessário fazer <strong>download</strong> do arquivo para visualização em aplicações externas.</p>
       <button [ngClass]="getExtension()+'_'" class="success theme" (click)="download()">Baixar arquivo<i class="bi text-xl bi-file-earmark-arrow-down-fill"></i></button>
     </section>

@@ -1,5 +1,6 @@
-import { NgFor, NgIf, NgStyle, TitleCasePipe } from '@angular/common';
-import { ChangeDetectorRef, Component, OnInit, signal } from '@angular/core';
+import { NgStyle, TitleCasePipe } from '@angular/common';
+import { ChangeDetectorRef, Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CourseService } from '@components/course/course.service';
 import { UsersService } from '@components/users/users.service';
@@ -20,9 +21,7 @@ import { TableModule } from 'primeng/table';
 @Component({
   selector: 'app-view-course',
   standalone: true,
-  imports: [NgIf, NgStyle, TitleCasePipe, MenuModule,
-    PanelModule, ButtonModule, TableModule, NgFor,
-    ListSkeletonComponent, ErrosComponent, SkeletonModule],
+  imports: [NgStyle, TitleCasePipe, MenuModule, PanelModule, ButtonModule, TableModule, ListSkeletonComponent, ErrosComponent, SkeletonModule],
   templateUrl: './view-course.component.html',
   styleUrl: './view-course.component.scss',
   viewProviders: [DialogService]
@@ -36,6 +35,8 @@ export class ViewCourseComponent implements OnInit {
   skeleton = true;
   cols: Column[] = getColumnsUser();
 
+  private destroyRef = inject(DestroyRef);
+
   constructor(
     private service: CourseService,
     private route: ActivatedRoute,
@@ -47,15 +48,17 @@ export class ViewCourseComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.route.queryParams.subscribe((params) => {
-      const id = params['id'];
-      if (id) {
-        this.id = id;
-        this.getCourse(id);
-      } else {
-        this.skeleton = false;
-      }
-    });
+    this.route.queryParams
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((params) => {
+        const id = params['id'];
+        if (id) {
+          this.id = id;
+          this.getCourse(id);
+        } else {
+          this.skeleton = false;
+        }
+      });
   }
 
   private getCourse(id: string) {

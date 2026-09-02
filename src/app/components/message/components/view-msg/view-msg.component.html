@@ -1,131 +1,140 @@
-<section *ngIf="!skeleton" class="w-full h-auto pt-3">
-  <section class="flex justify-content-between align-items-center">
-    <span tabindex="0" (keydown.enter)="back()" (keydown.space)="back()" (click)="back()"
-      class="font-light cursor-pointer">
-      <i class=" bi pr-1 bi-arrow-left"></i>
-      voltar
-    </span>
-    <section class="flex align-items-center gap-2">
-      <button *ngIf="isEnviado" pTooltip="Desabilitar" class="del default add" (click)="removeMsg()">
-        Remover <i class="text-base pl-1 font-semibold pi pi-ban"></i>
-      </button>
-      <button *ngIf="msg" pTooltip="Editar" aria-label="Editar" class="edit default add" (click)="edit()">
-        Editar <i class="text-base pl-1 font-semibold bi bi-pencil"></i>
-      </button>
-    </section>
-  </section>
-  @if (msg) {
-  <p-tabView (activeIndexChange)="onTabChange($event)">
-    <p-tabPanel header="Mensagem">
-      <section class="flex flex-column gap-3 h-auto py-2">
-        <section class="flex justify-content-between align-items-center">
-          <p class="m-0 card_default"><strong>Cursos:</strong> {{getCourse()}}</p>
-          <p *ngIf="msg.sendDate" class="m-0 card_default">
-            <strong>Envio:</strong> {{ msg.sendDate | date:'EEEE, dd/MM/yyyy - HH:mm' }}
-          </p>
-        </section>
-        <p class="m-0 card_default"><strong>Titulo:</strong> {{msg.title}}</p>
-        <p class="m-0 card_default"><strong>Resumo:</strong> {{msg.summary}}</p>
-        <section class="card_default"><strong>Mensagem:</strong>
-          <section class="px-2">
-            <div [innerHTML]="msg.message"></div>
-          </section>
-        </section>
-
-        <section *ngIf="msg.links.length > 0 || msg.attachments.length > 0"
-          class="flex gap-3 h-auto flex-column card_default lg:flex-row">
-          @if (msg.links.length > 0) {
-          <section class="w-full lg:w-6">
-            <p class="m-0 font-bold py-2">Links</p>
-            <section class="w-full py-1 flex flex-column flex-wrap gap-3">
-              @for (link of msg.links; track $index) {
-              <section class="flex h-5rem p-3 justify-content-between w-full card_custom">
-                <p class="m-0 font-bold">{{link.title}}</p>
-                <button (click)="openModal(link.link, '30%', 'link')" class="link view">
-                  <i class="bi bi-eye"></i>
-                </button>
-              </section>
-              }
-            </section>
-          </section>
-          }
-          @if (msg.attachments.length > 0) {
-          <section class="w-full lg:w-6">
-            <p class="m-0 font-bold py-2">Anexos</p>
-            <section class="w-full py-1 flex flex-column flex-wrap gap-3">
-              @for (file of msg.attachments; track $index) {
-              <section class="flex h-5rem py-3 justify-content-between w-full card_custom">
-                <p class="m-0 font-bold">{{file.name}}</p>
-                <button (click)="viewAnexo(file)" class="link view">
-                  <i class="bi bi-eye"></i>
-                </button>
-              </section>
-              }
-            </section>
-          </section>
-          }
-        </section>
-
-      </section>
-    </p-tabPanel>
-    <p-tabPanel header="Visualizações">
-      <section class="w-full flex flex-column gap-2">
-        <section class="flex align-items-center gap-2 justify-content-end">
-          <span class="tag">
-            Visualizações:
-            <strong class="px-1">{{msg.vlrViews}}</strong>
-          </span>
-        </section>
-        @if(views.length > 0){
-        <app-list-views [views]="views" />
-        }@else {
-        <section class="w-full py-4 h-full shadow-none last_msg gap-3 
-          flex flex-column justify-content-center align-items-center">
-          <img class="h-20rem" src="assets/img/svg/no_view.svg" alt="Nenhuma mensagem enviada">
-          <span class="text-5xl font-bold">Nenhuma visualização até o momento!</span>
-          <span class="text-2xl text-center">
-            Assim que houver ao menos uma visualização, iremos listá-la aqui para você.
-          </span>
-        </section>
-
+@if (!skeleton) {
+  <section class="w-full h-auto pt-3">
+    <section class="flex justify-content-between align-items-center">
+      <span tabindex="0" (keydown.enter)="back()" (keydown.space)="back()" (click)="back()"
+        class="font-light cursor-pointer">
+        <i class=" bi pr-1 bi-arrow-left"></i>
+        voltar
+      </span>
+      <section class="flex align-items-center gap-2">
+        @if (isEnviado) {
+          <button pTooltip="Desabilitar" class="del default add" (click)="removeMsg()">
+            Remover <i class="text-base pl-1 font-semibold pi pi-ban"></i>
+          </button>
+        }
+        @if (msg) {
+          <button pTooltip="Editar" aria-label="Editar" class="edit default add" (click)="edit()">
+            Editar <i class="text-base pl-1 font-semibold bi bi-pencil"></i>
+          </button>
         }
       </section>
-    </p-tabPanel>
-  </p-tabView>
-  }@else {
-  <app-error img="404" title="Mensagem não encontrada."
-    sub="Se o problema persistir, entre em contato com a administração." />
-  }
-</section>
+    </section>
+    @if (msg) {
+      <p-tabView (activeIndexChange)="onTabChange($event)">
+        <p-tabPanel header="Mensagem">
+          <section class="flex flex-column gap-3 h-auto py-2">
+            <section class="flex justify-content-between align-items-center">
+              <p class="m-0 card_default"><strong>Cursos:</strong> {{getCourse()}}</p>
+              @if (msg.sendDate) {
+                <p class="m-0 card_default">
+                  <strong>Envio:</strong> {{ msg.sendDate | date:'EEEE, dd/MM/yyyy - HH:mm' }}
+                </p>
+              }
+            </section>
+            <p class="m-0 card_default"><strong>Titulo:</strong> {{msg.title}}</p>
+            <p class="m-0 card_default"><strong>Resumo:</strong> {{msg.summary}}</p>
+            <section class="card_default"><strong>Mensagem:</strong>
+            <section class="px-2">
+              <div [innerHTML]="msg.message"></div>
+            </section>
+          </section>
+          @if (msg.links.length > 0 || msg.attachments.length > 0) {
+            <section
+              class="flex gap-3 h-auto flex-column card_default lg:flex-row">
+              @if (msg.links.length > 0) {
+                <section class="w-full lg:w-6">
+                  <p class="m-0 font-bold py-2">Links</p>
+                  <section class="w-full py-1 flex flex-column flex-wrap gap-3">
+                    @for (link of msg.links; track $index) {
+                      <section class="flex h-5rem p-3 justify-content-between w-full card_custom">
+                        <p class="m-0 font-bold">{{link.title}}</p>
+                        <button (click)="openModal(link.link, '30%', 'link')" class="link view">
+                          <i class="bi bi-eye"></i>
+                        </button>
+                      </section>
+                    }
+                  </section>
+                </section>
+              }
+              @if (msg.attachments.length > 0) {
+                <section class="w-full lg:w-6">
+                  <p class="m-0 font-bold py-2">Anexos</p>
+                  <section class="w-full py-1 flex flex-column flex-wrap gap-3">
+                    @for (file of msg.attachments; track $index) {
+                      <section class="flex h-5rem py-3 justify-content-between w-full card_custom">
+                        <p class="m-0 font-bold">{{file.name}}</p>
+                        <button (click)="viewAnexo(file)" class="link view">
+                          <i class="bi bi-eye"></i>
+                        </button>
+                      </section>
+                    }
+                  </section>
+                </section>
+              }
+            </section>
+          }
+        </section>
+      </p-tabPanel>
+      <p-tabPanel header="Visualizações">
+        <section class="w-full flex flex-column gap-2">
+          <section class="flex align-items-center gap-2 justify-content-end">
+            <span class="tag">
+              Visualizações:
+              <strong class="px-1">{{msg.vlrViews}}</strong>
+            </span>
+          </section>
+          @if(views.length > 0){
+            <app-list-views [views]="views" />
+            }@else {
+        <section class="w-full py-4 h-full shadow-none last_msg gap-3 
+          flex flex-column justify-content-center align-items-center">
+              <img class="h-20rem" src="assets/img/svg/no_view.svg" alt="Nenhuma mensagem enviada">
+              <span class="text-5xl font-bold">Nenhuma visualização até o momento!</span>
+              <span class="text-2xl text-center">
+                Assim que houver ao menos uma visualização, iremos listá-la aqui para você.
+              </span>
+            </section>
+          }
+        </section>
+      </p-tabPanel>
+    </p-tabView>
+    }@else {
+    <app-error img="404" title="Mensagem não encontrada."
+      sub="Se o problema persistir, entre em contato com a administração." />
+    }
+  </section>
+}
 
-<section class="pt-3" *ngIf="skeleton">
-  <section class="flex align-items-center justify-content-between">
-    <p-skeleton width="7rem"></p-skeleton>
+@if (skeleton) {
+  <section class="pt-3">
+    <section class="flex align-items-center justify-content-between">
+      <p-skeleton width="7rem"></p-skeleton>
+      <section class="flex gap-2">
+        @for (width of ['7rem', '5.5rem']; track width) {
+          <p-skeleton height="2.5rem" [width]="width"></p-skeleton>
+        }
+      </section>
+    </section>
     <section class="flex gap-2">
-      <ng-container *ngFor="let width of ['7rem', '5.5rem']">
-        <p-skeleton height="2.5rem" [width]="width"></p-skeleton>
-      </ng-container>
+      @for (width of ['10rem', '10rem']; track width) {
+        <p-skeleton height="2rem" [width]="width"></p-skeleton>
+      }
+    </section>
+    <section class="flex pt-5 flex-column gap-3">
+      <section class="flex justify-content-between">
+        @for (width of ['20rem', '17rem']; track width) {
+          <p-skeleton height="2.5rem" [width]="width"></p-skeleton>
+        }
+      </section>
+      @for (_ of [1, 2]; track _) {
+        <p-skeleton height="2.5rem"></p-skeleton>
+      }
+      <p-skeleton height="15rem"></p-skeleton>
+      <section class="card_default flex flex-column gap-3">
+        @for (_ of [1, 2, 3]; track _) {
+          <p-skeleton height="3rem"></p-skeleton>
+        }
+      </section>
     </section>
   </section>
-  <section class="flex gap-2">
-    <ng-container *ngFor="let width of ['10rem', '10rem']">
-      <p-skeleton height="2rem" [width]="width"></p-skeleton>
-    </ng-container>
-  </section>
-  <section class="flex pt-5 flex-column gap-3">
-    <section class="flex justify-content-between">
-      <ng-container *ngFor="let width of ['20rem', '17rem']">
-        <p-skeleton height="2.5rem" [width]="width"></p-skeleton>
-      </ng-container>
-    </section>
-    <ng-container *ngFor="let _ of [1, 2]">
-      <p-skeleton height="2.5rem"></p-skeleton>
-    </ng-container>
-    <p-skeleton height="15rem"></p-skeleton>
-    <section class="card_default flex flex-column gap-3">
-      <ng-container *ngFor="let _ of [1, 2, 3]">
-        <p-skeleton height="3rem"></p-skeleton>
-      </ng-container>
-    </section>
-  </section>
-</section>
+}

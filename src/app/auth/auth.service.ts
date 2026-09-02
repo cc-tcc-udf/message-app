@@ -32,24 +32,32 @@ export class AuthService {
 
   private setSessionStorage(response: UserResponse): void {
     this.setToken(response.token);
-    sessionStorage.setItem('user_email', response.email);
+    if (typeof window !== 'undefined' && typeof window.sessionStorage !== 'undefined') {
+      sessionStorage.setItem('user_email', response.email);
+    }
   }
 
   setToken(token: string) {
-    sessionStorage.setItem('access_token', token);
+    if (typeof window !== 'undefined' && typeof window.sessionStorage !== 'undefined') {
+      sessionStorage.setItem('access_token', token);
+    }
   }
   setUserInSessionStorage(user: Usuario): void {
     this.userSubject.next(user);
-    sessionStorage.setItem('user', JSON.stringify(user));
+    if (typeof window !== 'undefined' && typeof window.sessionStorage !== 'undefined') {
+      sessionStorage.setItem('user', JSON.stringify(user));
+    }
   }
 
   getUserFromSessionStorage(): Usuario | null {
-    const user = typeof window !== 'undefined' ? sessionStorage.getItem('user') : null;
+    const user = typeof window !== 'undefined' && typeof window.sessionStorage !== 'undefined' ? sessionStorage.getItem('user') : null;
     return user ? JSON.parse(user) as Usuario : null;
   }
 
   private clearSessionStorage(): void {
-    sessionStorage.clear();
+    if (typeof window !== 'undefined' && typeof window.sessionStorage !== 'undefined') {
+      sessionStorage.clear();
+    }
   }
 
   initUser(): void {
@@ -124,11 +132,12 @@ export class AuthService {
   }
 
   isTokenExpired(): boolean {
-    const token = sessionStorage.getItem('access_token');
-    if (!token) { return true };
+    const token = this.getAccessToken();
+    if (!token) { return true; }
 
     const payload = this.decodeToken(token);
-    const expirationDate = new Date(payload?.exp * 1000);
+    if (!payload?.exp) { return true; }
+    const expirationDate = new Date(payload.exp * 1000);
     return new Date() > expirationDate;
   }
 

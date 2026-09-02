@@ -1,4 +1,4 @@
-import { NgClass, NgIf } from "@angular/common";
+import { NgClass } from "@angular/common";
 import { Component, inject, Input, Type } from "@angular/core";
 import { Params, Router } from "@angular/router";
 import { DialogService, DynamicDialogRef } from "primeng/dynamicdialog";
@@ -7,23 +7,27 @@ import { DialogService, DynamicDialogRef } from "primeng/dynamicdialog";
   selector: 'app-new-button',
   standalone: true,
   styleUrl: './shared.scss',
-  imports: [NgIf, NgClass],
+  imports: [NgClass],
   viewProviders: [DialogService],
   template: `
     <section class="flex justify-content-end">
-        <button
-          aria-label="button-action"
-          class="add default h-auto"
-          (click)="handleClick()"
+      <button
+        aria-label="button-action"
+        class="add default h-auto"
+        (click)="handleClick()"
         >
         <span class="flex align-items-center">
-          <i *ngIf="icon && iconPosition === 'right'" class="text-xl font-semibold bi pr-1" [ngClass]="icon"></i>
+          @if (icon && iconPosition === 'right') {
+            <i class="text-xl font-semibold bi pr-1" [ngClass]="icon"></i>
+          }
           {{ buttonText }}
-          <i *ngIf="icon && iconPosition === 'left'" class="text-xl font-semibold bi pl-1" [ngClass]="icon"></i>
+          @if (icon && iconPosition === 'left') {
+            <i class="text-xl font-semibold bi pl-1" [ngClass]="icon"></i>
+          }
         </span>
-        </button>
-      </section>
-  `
+      </button>
+    </section>
+    `
 })
 export class NewButtonComponent {
   @Input() buttonText: string = 'Novo';

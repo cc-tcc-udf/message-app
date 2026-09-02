@@ -1,4 +1,4 @@
-import { NgClass, NgFor, NgStyle } from '@angular/common';
+import { NgClass, NgStyle } from '@angular/common';
 import { ChangeDetectorRef, Component, inject, OnInit, ViewEncapsulation } from '@angular/core';
 import { GenericResponse } from '@models/GenericResponse';
 import { Roles_user } from '@models/Roles';
@@ -13,9 +13,10 @@ import { UsersService } from './users.service';
   selector: 'app-users',
   standalone: true,
   imports: [
-    ScrollPanelModule, NgFor,
-    NgStyle, NgClass
-  ],
+    ScrollPanelModule,
+    NgStyle,
+    NgClass
+],
   templateUrl: './users.component.html',
   styleUrl: './users.component.scss',
   viewProviders: [DialogService],

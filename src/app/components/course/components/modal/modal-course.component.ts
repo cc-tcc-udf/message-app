@@ -1,5 +1,6 @@
-import { NgIf } from '@angular/common';
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+
+import { Component, DestroyRef, inject, OnInit, ViewEncapsulation } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from '@auth/auth.service';
 import { CourseService } from '@components/course/course.service';
@@ -18,10 +19,13 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
   selector: 'app-modal-course',
   standalone: true,
   imports: [
-    ReactiveFormsModule, InputTextModule,
-    InputTextareaModule, ButtonModule,
-    CheckboxModule, DropdownModule, NgIf
-  ],
+    ReactiveFormsModule,
+    InputTextModule,
+    InputTextareaModule,
+    ButtonModule,
+    CheckboxModule,
+    DropdownModule
+],
   viewProviders: [CourseService],
   templateUrl: './modal-course.component.html',
   styleUrl: './../../course.component.scss',
@@ -48,6 +52,8 @@ export class ModalCourseComponent implements OnInit {
     isGroup: new FormControl<boolean | null>(null),
   })
 
+  private destroyRef = inject(DestroyRef);
+
   constructor(
     private ref: DynamicDialogConfig,
     private dialog: DynamicDialogRef,
@@ -63,9 +69,6 @@ export class ModalCourseComponent implements OnInit {
       if (data.resp) {
         this.resps.push(new CustomUsuario(data.resp));
       }
-      if(!data.isGroup && data.courseGroupId === null){
-        
-      }
     }
     this.getGroups();
     this.getProf();
@@ -73,16 +76,18 @@ export class ModalCourseComponent implements OnInit {
   }
 
   private valuesChange() {
-    this.form.valueChanges.subscribe((p) => {
-      if (p.isGroup !== null) {
-        if (!p.isGroup) {
-          if (p.courseGroupId) {
-            const group = this.groups.find((g) => g.id === p.courseGroupId);
-            this.form.get('resp.id')?.patchValue(group?.resp?.id, { emitEvent: false });
+    this.form.valueChanges
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((p) => {
+        if (p.isGroup !== null) {
+          if (!p.isGroup) {
+            if (p.courseGroupId) {
+              const group = this.groups.find((g) => g.id === p.courseGroupId);
+              this.form.get('resp.id')?.patchValue(group?.resp?.id, { emitEvent: false });
+            }
           }
         }
-      }
-    });
+      });
   }
 
   save() {

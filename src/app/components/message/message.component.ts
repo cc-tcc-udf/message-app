@@ -1,5 +1,6 @@
-import { NgClass, NgFor, NgIf } from '@angular/common';
-import { ChangeDetectorRef, Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { NgClass } from '@angular/common';
+import { Component, DestroyRef, inject, OnInit, ViewEncapsulation } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '@auth/auth.service';
@@ -26,16 +27,19 @@ import { MessageService } from './message.service';
 @Component({
   selector: 'app-message',
   standalone: true,
-  imports: [ConfirmDialogModule, TableModule,
-    NewButtonComponent, IconFieldModule, NgFor,
-    InputIconModule, DropdownModule, NgIf,
-    FormsModule, NgClass, ListSkeletonComponent,
-    InputTextModule, TooltipModule, SkeletonModule],
+  imports: [ConfirmDialogModule, TableModule, NewButtonComponent, IconFieldModule, InputIconModule, DropdownModule, FormsModule, NgClass, ListSkeletonComponent, InputTextModule, TooltipModule, SkeletonModule],
   templateUrl: './message.component.html',
   styleUrl: './message.component.scss',
   encapsulation: ViewEncapsulation.None
 })
 export class MessageComponent implements OnInit {
+  private service = inject(MessageService);
+  private router = inject(Router);
+  private alert = inject(AlertService);
+  private confirm = inject(ConfirmationService);
+  private auth = inject(AuthService);
+  private destroyRef = inject(DestroyRef);
+
   totalRecords = 0;
   message: CustomMessage[] = [];
   cols = getMessagecolumns();
@@ -46,31 +50,16 @@ export class MessageComponent implements OnInit {
     { label: 'Removida', value: 'Removida', original: 'REMOVIDA' },
   ];
   user!: Usuario;
-  constructor(
-    private service: MessageService,
-    private router: Router,
-    private alert: AlertService,
-    private confirm: ConfirmationService,
-    private auth: AuthService,
-    private cr: ChangeDetectorRef
-  ) { }
 
   ngOnInit(): void {
-    // this.service.getAllMessages()
-    //   .subscribe((response) => {
-    //     this.skeleton.all = false;
-    //     if (response.success) {
-    //       this.message = (response.data as Message[]).map((p) => new CustomMessage(p));
-    //       this.totalRecords = this.message.length;
-    //       this.skeleton.load = false;
-    //     }
-    //   });
-    this.auth.user$.subscribe((p) => {
-      if (p) {
-        this.user = p;
-        this.skeleton.all = false;
-      }
-    });
+    this.auth.user$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((p) => {
+        if (p) {
+          this.user = p;
+          this.skeleton.all = false;
+        }
+      });
   }
 
   load($event: TableLazyLoadEvent): void {
@@ -84,23 +73,11 @@ export class MessageComponent implements OnInit {
       .subscribe((response: GenericResponse | null) => {
         if (response?.success) {
           const data = response.data as PaginatedModel;
-          console.log(data);
           this.totalRecords = data?.totalElements;
           this.message = (data.content as Message[]).map((p) => new CustomMessage(p));
           setTimeout(() => {
-            console.log(this.message)
             this.skeleton.load = false;
-          }, 500)
-          // if (data?.content) {
-          //   const msgs: Message[] = data.content as Message[];
-          //   this.message = msgs as unknown as CustomMessage[]
-          //   this.totalRecords = data.totalElements;
-          //   this.cr.detectChanges()
-          // } else {
-          //   console.warn('Conteúdo vazio na resposta');
-          //   this.message = [];
-          //   this.totalRecords = 0;
-          // }
+          }, 500);
         } else {
           console.error('Falha na resposta da requisição', response);
           this.message = [];

@@ -1,4 +1,4 @@
-import { NgClass, NgIf } from "@angular/common";
+import { NgClass } from "@angular/common";
 import { Component, forwardRef, Input, OnInit, Optional } from "@angular/core";
 import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, Validators } from "@angular/forms";
 
@@ -6,7 +6,7 @@ import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, Validators } from
   selector: 'app-input',
   standalone: true,
   styleUrls: ['./shared.scss'],
-  imports: [NgIf, NgClass],
+  imports: [NgClass],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -16,16 +16,18 @@ import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, Validators } from
   ],
   template: `
   <div class="input_" [ngClass]="{'gap-2': label}">
-    <label [for]="inputId">{{ label }} <b *ngIf="isRequired()" class="text-red-500">*</b></label>
+    <label [for]="inputId">{{ label }} @if (isRequired()) {
+      <b class="text-red-500">*</b>
+    }</label>
     <div [ngClass]="{'is-invalid': showError()}"  class="content" [ngClass]="{'icon-left': iconPosition === 'left', 'icon-right': iconPosition === 'right'}">
       <!-- Ícone à esquerda -->
-      <ng-container *ngIf="icon && iconPosition === 'left'">
+      @if (icon && iconPosition === 'left') {
         <section class="flex align-items-center px-2">
           <i class="font-bold" [class]="icon"></i>
         </section>
-      </ng-container>
-      
-      <input 
+      }
+  
+      <input
         [id]="inputId"
         [autocomplete]="autocomplete"
         [type]="showPassword ? 'text' : type"
@@ -37,38 +39,45 @@ import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, Validators } from
         [placeholder]="placeholder"
         [attr.maxlength]="maxlength"
         (keydown.enter)="$event.preventDefault()"/>
-      
-      <!-- Ícone à direita -->
-      <ng-container *ngIf="icon && iconPosition === 'right'">
-        <section class="vertical-align-middle text-center">
-          <i [class]="icon"></i>
-        </section>
-      </ng-container>
-
-      <!-- Botão para alternar a visibilidade da senha -->
-      <button 
-        aria-label="mostrar ou esconder senha"
-        *ngIf="type === 'password'"
-        type="button" 
-        (click)="togglePasswordVisibility()"
-        class="toggle-password-btn">
-        <i [class]="showPassword ? 'bi bi-eye-slash-fill' : 'bi bi-eye-fill'"></i>
-      </button>
-
-      <!-- Ícone à direita -->
-      <i *ngIf="showError()" class="bi mx-2 bi-exclamation-circle text-red-500"></i>
+  
+        <!-- Ícone à direita -->
+        @if (icon && iconPosition === 'right') {
+          <section class="vertical-align-middle text-center">
+            <i [class]="icon"></i>
+          </section>
+        }
+  
+        <!-- Botão para alternar a visibilidade da senha -->
+        @if (type === 'password') {
+          <button
+            aria-label="mostrar ou esconder senha"
+            type="button"
+            (click)="togglePasswordVisibility()"
+            class="toggle-password-btn">
+            <i [class]="showPassword ? 'bi bi-eye-slash-fill' : 'bi bi-eye-fill'"></i>
+          </button>
+        }
+  
+        <!-- Ícone à direita -->
+        @if (showError()) {
+          <i class="bi mx-2 bi-exclamation-circle text-red-500"></i>
+        }
+      </div>
+  
+      <!-- Exibição de erros -->
+      @if (showError()) {
+        <div class="error-message">
+          {{ getErrorMessage() }}
+        </div>
+      }
+  
+      <!-- Exibição do contador de caracteres restantes -->
+      @if (maxlength && !showError() && isInfoLength) {
+        <small [id]="inputId" class="text-muted">
+          {{ remainingChars }} caracteres restantes
+        </small>
+      }
     </div>
-    
-    <!-- Exibição de erros -->
-    <div *ngIf="showError()" class="error-message">
-      {{ getErrorMessage() }}
-    </div>
-
-    <!-- Exibição do contador de caracteres restantes -->
-    <small *ngIf="maxlength && !showError() && isInfoLength" [id]="inputId" class="text-muted">
-      {{ remainingChars }} caracteres restantes
-    </small>
-  </div>
   `,
 })
 export class InputComponent implements ControlValueAccessor, OnInit {

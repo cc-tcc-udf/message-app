@@ -1,4 +1,4 @@
-import { NgClass, NgIf, NgStyle } from "@angular/common";
+import { NgClass, NgStyle } from "@angular/common";
 import { Component, OnInit } from "@angular/core";
 import { ReactiveFormsModule } from "@angular/forms";
 import { FileService } from "@utils/services/file.service";
@@ -11,11 +11,14 @@ import { InputComponent } from "./input.component";
   selector: 'app-modal-user-adm',
   standalone: true,
   imports: [
-    ReactiveFormsModule, MultiSelectModule,
-    NgIf, InputComponent, NgStyle,
-    ProgressBarModule, DropdownModule,
+    ReactiveFormsModule,
+    MultiSelectModule,
+    InputComponent,
+    NgStyle,
+    ProgressBarModule,
+    DropdownModule,
     NgClass
-  ],
+],
   viewProviders: [FileService],
   template: `
   `,

@@ -1,8 +1,8 @@
 import { HttpErrorResponse, HttpEvent, HttpHandlerFn, HttpInterceptorFn, HttpRequest } from "@angular/common/http";
 import { inject } from "@angular/core";
-import { Router } from "@angular/router";
 import { AuthService } from "@auth/auth.service";
 import { RefreshToken } from "@models/RefreshToken";
+import { AlertService } from "@utils/services/alert.service";
 import { catchError, finalize, Observable, switchMap, throwError } from "rxjs";
 import { ThemeService } from "./services/theme.service";
 
@@ -10,24 +10,27 @@ export const HttpInterceptor: HttpInterceptorFn = (
   req: HttpRequest<unknown>,
   next: HttpHandlerFn
 ): Observable<HttpEvent<unknown>> => {
-  const router = inject(Router);
   const auth = inject(AuthService);
   const theme = inject(ThemeService);
+  const alert = inject(AlertService);
 
   const handleError = (error: HttpErrorResponse): Observable<never> => {
     console.error('HTTP Error:', error);
 
     const status = error.status;
     const message =
-      status === 401
+      error.error?.message ||
+      (status === 401
         ? 'Você não tem permissão para realizar essa requisição'
-        : `Erro ${status}: ${error.message || 'Desconhecido'}`;
+        : `Erro ${status}: ${error.statusText || 'Falha na comunicação com o servidor'}`);
 
-    router.navigate(['/error'], {
-      queryParams: { errorCode: status, message },
-    });
-    if (status === 0) {
+    if (status === 401) {
+      alert.showMsg('error', 'Sessão Expirada', 'Sua sessão expirou. Faça login novamente.');
       auth.logout();
+    } else if (status === 0) {
+      alert.showMsg('error', 'Falha de Conexão', 'Não foi possível conectar ao servidor backend. Verifique se o serviço está ativo.');
+    } else {
+      alert.showMsg(alert.getSeverity(status), 'Erro na Requisição', message);
     }
 
     return throwError(() => error);

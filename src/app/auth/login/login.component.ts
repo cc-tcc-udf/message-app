@@ -49,14 +49,11 @@ export class LoginComponent implements OnInit {
     this.auth.login(usr as Login)
       .subscribe({
         next: () => {
-          this.auth.user$.subscribe(u => {
-            if (u) {
-              this.router.navigate(['']);
-            }
-          })
+          this.theme.hide();
+          this.router.navigate(['']);
         },
         error: (error) => {
-          console.log(error);
+          console.error(error);
           const summary = error.status >= 400 && error.status < 500 ? 'Ação não autorizada' : 'Erro inesperado';
           const severity = this.alert.getSeverity(error.status);
           const message = error.status === 0
@@ -65,7 +62,7 @@ export class LoginComponent implements OnInit {
           this.alert.showMsg(severity, summary, message);
           this.theme.hide();
         }
-      })
+      });
   }
 
   private verify() {
