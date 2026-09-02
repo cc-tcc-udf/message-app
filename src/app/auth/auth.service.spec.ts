@@ -1,12 +1,15 @@
-import { TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
-import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import {
+  HttpTestingController,
+  provideHttpClientTesting,
+} from '@angular/common/http/testing';
+import { TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
+import { environment } from '@env/env';
+import { UserResponse } from '@models/UserResponse';
+import { Login } from '@models/Usuario';
 import { MessageService } from 'primeng/api';
 import { AuthService } from './auth.service';
-import { Login } from '@models/Usuario';
-import { UserResponse } from '@models/UserResponse';
-import { environment } from '@env/env';
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -22,8 +25,8 @@ describe('AuthService', () => {
         MessageService,
         provideHttpClient(),
         provideHttpClientTesting(),
-        { provide: Router, useValue: mockRouter }
-      ]
+        { provide: Router, useValue: mockRouter },
+      ],
     });
 
     service = TestBed.inject(AuthService);
@@ -61,14 +64,26 @@ describe('AuthService', () => {
   });
 
   it('should send POST request to login endpoint and store tokens', () => {
-    const mockLogin = new Login({ email: 'test@ibm.com', password: 'password123', isMobile: false });
-    const mockToken = 'header.' + btoa(JSON.stringify({ sub: 'test@ibm.com', exp: Math.floor(Date.now() / 1000) + 3600 })) + '.signature';
+    const mockLogin = new Login({
+      email: 'test@teste.com',
+      password: 'password123',
+      isMobile: false,
+    });
+    const mockToken =
+      'header.' +
+      btoa(
+        JSON.stringify({
+          sub: 'test@teste.com',
+          exp: Math.floor(Date.now() / 1000) + 3600,
+        }),
+      ) +
+      '.signature';
     const mockResponse: UserResponse = {
       token: mockToken,
-      email: 'test@ibm.com'
+      email: 'test@teste.com',
     };
 
-    service.login(mockLogin).subscribe(response => {
+    service.login(mockLogin).subscribe((response) => {
       expect(response).toEqual(mockResponse);
     });
 
@@ -77,8 +92,10 @@ describe('AuthService', () => {
     expect(req.request.body.email).toBe(mockLogin.email);
     req.flush(mockResponse);
 
-    const getUserReq = httpMock.expectOne(`${environment.API_URL}/private/auth/getUser?email=test%40ibm.com`);
-    getUserReq.flush({ id: '1', name: 'Test User', email: 'test@ibm.com' });
+    const getUserReq = httpMock.expectOne(
+      `${environment.API_URL}/private/auth/getUser?email=test%40teste.com`,
+    );
+    getUserReq.flush({ id: '1', name: 'Test User', email: 'test@teste.com' });
 
     expect(service.getAccessToken()).toBe(mockToken);
   });

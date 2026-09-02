@@ -1,12 +1,12 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
+import { AuthService } from '@auth/auth.service';
+import { UserResponse } from '@models/UserResponse';
 import { MessageService } from 'primeng/api';
 import { of } from 'rxjs';
 import { LoginComponent } from './login.component';
-import { AuthService } from '@auth/auth.service';
-import { UserResponse } from '@models/UserResponse';
 
 describe('LoginComponent', () => {
   let component: LoginComponent;
@@ -14,11 +14,15 @@ describe('LoginComponent', () => {
   let authServiceSpy: jasmine.SpyObj<AuthService>;
 
   beforeEach(async () => {
-    authServiceSpy = jasmine.createSpyObj('AuthService', ['login', 'isAuthenticated', 'getAccessToken']);
+    authServiceSpy = jasmine.createSpyObj('AuthService', [
+      'login',
+      'isAuthenticated',
+      'getAccessToken',
+    ]);
     authServiceSpy.isAuthenticated.and.returnValue(false);
     const mockUserResponse: UserResponse = {
       token: 'fake-jwt-token',
-      email: 'user@ibm.com'
+      email: 'user@teste.com',
     };
     authServiceSpy.login.and.returnValue(of(mockUserResponse));
 
@@ -29,8 +33,8 @@ describe('LoginComponent', () => {
         provideHttpClientTesting(),
         provideRouter([]),
         MessageService,
-        { provide: AuthService, useValue: authServiceSpy }
-      ]
+        { provide: AuthService, useValue: authServiceSpy },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(LoginComponent);
@@ -50,15 +54,17 @@ describe('LoginComponent', () => {
 
   it('should call auth.login when send() is invoked', () => {
     component.form.patchValue({
-      email: 'user@ibm.com',
-      password: 'password123'
+      email: 'user@teste.com',
+      password: 'password123',
     });
 
     component.send();
 
-    expect(authServiceSpy.login).toHaveBeenCalledWith(jasmine.objectContaining({
-      email: 'user@ibm.com',
-      password: 'password123'
-    }));
+    expect(authServiceSpy.login).toHaveBeenCalledWith(
+      jasmine.objectContaining({
+        email: 'user@teste.com',
+        password: 'password123',
+      }),
+    );
   });
 });
