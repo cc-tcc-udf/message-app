@@ -1,7 +1,7 @@
 @import 'primeflex/primeflex.scss';
-@import '@variables';
-@import '@theme';
-@import '@sharedStyle';
+@import './assets/styles/variables';
+@import './assets/styles/theme';
+@import './app/shared/shared';
 @import "../node_modules/quill/dist/quill.core.css";
 @import "primeicons/primeicons.css";
 @import "../node_modules/quill/dist/quill.snow.css";
