@@ -8,8 +8,10 @@
     "build:prod": "ng build --configuration=production --base-href=/message-app/",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
+    "test:ci": "ng test --watch=false --browsers=ChromeHeadlessCustom",
     "serve:ssr:message-app": "node dist/message-app/server/server.mjs",
     "lint": "ng lint --fix",
+    "lint:ci": "ng lint",
     "prepare": "husky"
   },
   "private": true,
