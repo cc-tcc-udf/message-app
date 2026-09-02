@@ -3,6 +3,7 @@ import { AuthComponent } from '@auth/auth.component';
 import { LoginComponent } from '@auth/login/login.component';
 import { RegisterComponent } from '@auth/register/register.component';
 import { ConfigsComponent } from '@components/configs/configs.component';
+import { ViewCourseComponent } from '@components/course/components/view-course/view-course.component';
 import { CourseComponent } from '@components/course/course.component';
 import { HomeComponent } from '@components/home/home.component';
 import { ManageMsgComponent } from '@components/message/components/manage-msg/manage-msg.component';
@@ -37,7 +38,14 @@ export const routes: Routes = [
       },
       { path: 'configs', component: ConfigsComponent, data: { breadcrumb: ['Configurações'] } },
       { path: 'users', component: UsersComponent, data: { breadcrumb: ['Configurações', 'Usuarios'] } },
-      { path: 'cursos', component: CourseComponent, data: { breadcrumb: ['Configurações', 'Cursos'] } }
+      {
+        path: 'courses', data: { breadcrumb: ['Configurações', 'Cursos'] },
+        children: [
+          { path: '', component: CourseComponent, data: { breadcrumb: ['Todos os Cursos'] } },
+          { path: 'view', component: ViewCourseComponent, data: { breadcrumb: ['Visualizar'] } },
+
+        ]
+      }
     ]
   },
   { path: '**', redirectTo: 'auth/login' }

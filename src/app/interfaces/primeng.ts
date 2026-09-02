@@ -4,6 +4,8 @@ export interface Column {
   isTag?: boolean;
   isImg?: boolean;
   isDate?: boolean;
+  isStatus?: boolean;
   isBoolean?: boolean;
+  isUser?: boolean;
   isAction?: boolean;
 }

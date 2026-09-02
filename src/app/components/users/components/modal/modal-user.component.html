@@ -1,22 +1,33 @@
 <section class="flex flex-column">
-  <section class="w-full modal_usr flex align-items-center justify-content-center">
+  <section class="w-full modal_usr flex flex-column align-items-center justify-content-center">
     <input (change)="onFileChange($event)" hidden accept="image/*" type="file" #fileInput>
     <section class="foto">
-      <section class="img h-7rem w-7rem" [ngStyle]="{'background-image': 'url(' + (imagePreview() || '') + ')', 
+      <section class="img bg-primary-50 h-7rem w-7rem" [ngStyle]="{'background-image': 'url(' + (imagePreview() || 'assets/img/svg/photo.svg') + ')', 
         'background-size': 'cover', 'background-position': 'center'}">
-        <section *ngIf="value === 0" tabindex="0" (click)="fileInput.click()" (keydown.enter)="fileInput.click()"
-          (keydown.space)="fileInput.click()"
-          class="w-full hidden edit_photo justify-content-center align-items-center h-full">
-          <i *ngIf="imagePreview()" class="bi text-orange-500 text-xl bi-pencil"></i>
-          <i *ngIf="!imagePreview()" class="bi text-xl bi-person-bounding-box "></i>
-        </section>
-        <section *ngIf="value > 0" class="w-full flex loading justify-content-center align-items-center h-full">
-          <section class="w-5rem">
-            <p-progressBar [value]="value" />
+        @if (value === 0) {
+          <section tabindex="0" (click)="fileInput.click()" (keydown.enter)="fileInput.click()"
+            (keydown.space)="fileInput.click()"
+            class="w-full hidden edit_photo justify-content-center align-items-center h-full">
+            @if (imagePreview()) {
+              <i class="bi text-orange-500 text-xl bi-pencil"></i>
+            }
+            @if (!imagePreview()) {
+              <i class="bi text-xl bi-person-bounding-box "></i>
+            }
           </section>
-        </section>
+        }
+        @if (value > 0) {
+          <section class="w-full flex loading justify-content-center align-items-center h-full">
+            <section class="w-5rem">
+              <p-progressBar [value]="value" />
+            </section>
+          </section>
+        }
       </section>
     </section>
+    @if (!imagePreview()) {
+      <span class="font-bold py-1"> Adicione uma foto de perfil </span>
+    }
   </section>
   <form [formGroup]="form">
     <section class="flex flex-column gap-3">
@@ -27,28 +38,34 @@
         <p-multiSelect [ngClass]="{'ng-dirty ng-invalid': showError('roles')}" id="select" appendTo="body"
           [options]="roles" formControlName="roles" placeholder="Selecione a permissão" optionLabel="label"
           display="chip" [showClear]="true" optionValue="value" />
-        <div *ngIf="showError('roles')" class="error-message">
-          {{ getErrorMessage('roles') }}
-        </div>
+          @if (showError('roles')) {
+            <div class="error-message">
+              {{ getErrorMessage('roles') }}
+            </div>
+          }
+        </section>
+        <app-input [control]="getControl('phone')" label="Telefone" formControlName="phone" type="text" mask="phone"
+          [maxlength]="15" />
+          @if (isProfSelected() && groups.length > 1) {
+            <div class="flex flex-column gap-2">
+              <label for="group">Grupo</label>
+              <p-dropdown appendTo="body" id="group" [options]="groups" formControlName="id_curso"
+                placeholder="Selecione um grupo" [editable]="true" optionLabel="name" optionValue="id" />
+              </div>
+            }
+            @if (!form.controls['id'].value) {
+              <app-input autocomplete="current-password" type="password" label="Senha"
+                formControlName="password" />
+            }
+            <div class="flex flex-column gap-2">
+              <label for="tipo">Ativo</label>
+              <p-dropdown id="tipo" [options]="tipoOptions" formControlName="active" placeholder="Selecione o tipo"
+                optionLabel="label" optionValue="value">
+              </p-dropdown>
+            </div>
+          </section>
+        </form>
+        <section class="flex justify-content-end align-items-center pt-5">
+          <button class="default add" (click)="save()">Salvar</button>
+        </section>
       </section>
-      <app-input [control]="getControl('phone')" label="Telefone" formControlName="phone" type="text" mask="phone"
-        maxlength="15" />
-      <div *ngIf="isProfSelected() && groups.length > 1" class="flex flex-column gap-2">
-        <label for="group">Grupo</label>
-        <p-dropdown appendTo="body" id="group" [options]="groups" formControlName="id_curso"
-          placeholder="Selecione um grupo" [editable]="true" optionLabel="name" optionValue="id" />
-      </div>
-      <app-input *ngIf="!form.controls['id'].value" autocomplete="current-password" type="password" label="Senha"
-        formControlName="password" />
-      <div class="flex flex-column gap-2">
-        <label for="tipo">Ativo</label>
-        <p-dropdown id="tipo" [options]="tipoOptions" formControlName="active" placeholder="Selecione o tipo"
-          optionLabel="label" optionValue="value">
-        </p-dropdown>
-      </div>
-    </section>
-  </form>
-  <section class="flex justify-content-end align-items-center pt-5">
-    <button class="default add" (click)="save()">Salvar</button>
-  </section>
-</section>

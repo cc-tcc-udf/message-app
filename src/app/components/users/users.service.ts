@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { environment } from '@env/env';
 import { GenericResponse } from '@models/GenericResponse';
 import { Usuario } from '@models/Usuario';
-
 @Injectable({
   providedIn: 'root'
 })
@@ -15,6 +14,10 @@ export class UsersService {
 
   getUsers() {
     return this._http.get<GenericResponse>(`${this.api}/adm/list`);
+  }
+
+  getAlunos(id: string) {
+    return this._http.get<GenericResponse>(`${this.api}/adm/users/${id}`);
   }
 
   createAdm(form: Usuario) {

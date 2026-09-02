@@ -49,12 +49,30 @@ button.theme_toogle {
   }
 
   .btn__icon.animated {
-    animation: spin 0.5s;
+    animation: spin-right 0.5s;
   }
 
-  @keyframes spin {
+  .isDark .btn__icon.animated {
+    animation: spin-left 0.5s;
+  }
+
+  @keyframes spin-right {
+    from {
+      transform: rotate(0deg);
+    }
+
     to {
       transform: rotate(360deg);
+    }
+  }
+
+  @keyframes spin-left {
+    from {
+      transform: rotate(0deg);
+    }
+
+    to {
+      transform: rotate(-360deg);
     }
   }
 

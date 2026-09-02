@@ -1,5 +1,12 @@
-export function customDate(value: string): string {
+export function customDate(value: string | null | undefined): string {
+  if (!value) {
+    return "-";
+  }
   const date = new Date(value);
+
+  if (isNaN(date.getTime())) {
+    return "-";
+  }
   const hours = String(date.getHours()).padStart(2, '0');
   const minutes = String(date.getMinutes()).padStart(2, '0');
   const day = String(date.getDate()).padStart(2, '0');

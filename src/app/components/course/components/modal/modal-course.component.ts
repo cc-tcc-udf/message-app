@@ -1,8 +1,10 @@
-import { NgIf } from '@angular/common';
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+
+import { Component, DestroyRef, inject, OnInit, ViewEncapsulation } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from '@auth/auth.service';
-import { SubCourse } from '@models/Course';
+import { CourseService } from '@components/course/course.service';
+import { Course, SubCourse } from '@models/Course';
 import { GenericResponse } from '@models/GenericResponse';
 import { CustomUsuario, Usuario } from '@models/Usuario';
 import { AlertService } from '@utils/services/alert.service';
@@ -12,19 +14,21 @@ import { DropdownModule } from 'primeng/dropdown';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputTextareaModule } from 'primeng/inputtextarea';
-import { CourseService } from '../course.service';
 
 @Component({
   selector: 'app-modal-course',
   standalone: true,
   imports: [
-    ReactiveFormsModule, InputTextModule,
-    InputTextareaModule, ButtonModule,
-    CheckboxModule, DropdownModule, NgIf
-  ],
-  providers: [CourseService],
+    ReactiveFormsModule,
+    InputTextModule,
+    InputTextareaModule,
+    ButtonModule,
+    CheckboxModule,
+    DropdownModule
+],
+  viewProviders: [CourseService],
   templateUrl: './modal-course.component.html',
-  styleUrl: './../course.component.scss',
+  styleUrl: './../../course.component.scss',
   encapsulation: ViewEncapsulation.None
 })
 export class ModalCourseComponent implements OnInit {
@@ -37,16 +41,18 @@ export class ModalCourseComponent implements OnInit {
   ];
 
   form: FormGroup = new FormGroup({
-    id: new FormControl<number | null>(null),
+    id: new FormControl<string | null>(null),
     abbreviation: new FormControl<string | null>(null),
     name: new FormControl<string | null>(null),
     description: new FormControl<string | null>(null),
-    courseGroupId: new FormControl<number | null>(null),
+    courseGroupId: new FormControl<string | null>(null),
     resp: new FormGroup({
-      id: new FormControl<number | null>(null)
+      id: new FormControl<string | null>(null)
     }),
     isGroup: new FormControl<boolean | null>(null),
   })
+
+  private destroyRef = inject(DestroyRef);
 
   constructor(
     private ref: DynamicDialogConfig,
@@ -57,9 +63,12 @@ export class ModalCourseComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    const data = this.ref.data.data;
+    const data = this.ref.data.data as Course;
     if (data) {
       this.form.patchValue(data);
+      if (data.resp) {
+        this.resps.push(new CustomUsuario(data.resp));
+      }
     }
     this.getGroups();
     this.getProf();
@@ -67,16 +76,18 @@ export class ModalCourseComponent implements OnInit {
   }
 
   private valuesChange() {
-    this.form.valueChanges.subscribe((p) => {
-      if (p.isGroup !== null) {
-        if (!p.isGroup) {
-          if (p.courseGroupId) {
-            const group = this.groups.find((g) => g.id === p.courseGroupId);
-            this.form.get('resp.id')?.patchValue(group?.resp?.id, { emitEvent: false });
+    this.form.valueChanges
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((p) => {
+        if (p.isGroup !== null) {
+          if (!p.isGroup) {
+            if (p.courseGroupId) {
+              const group = this.groups.find((g) => g.id === p.courseGroupId);
+              this.form.get('resp.id')?.patchValue(group?.resp?.id, { emitEvent: false });
+            }
           }
         }
-      }
-    });
+      });
   }
 
   save() {
@@ -87,7 +98,7 @@ export class ModalCourseComponent implements OnInit {
     this.service.create(form).subscribe((p) => {
       if (p.success) {
         this.alert.showMsg("success", form.isGroup ? 'Grupo' : 'Curso', p.message);
-        this.dialog.close();
+        this.dialog.close(p);
       } else {
         this.alert.showMsg("error", 'Curso', p.message);
       }
@@ -100,7 +111,6 @@ export class ModalCourseComponent implements OnInit {
         if (response.success) {
           const data = response.data as SubCourse[];
           this.groups = [{ id: null, name: 'Nenhum' }, ...data.filter(c => c.id)];
-          console.log(this.groups);
         }
       });
   }
@@ -110,7 +120,8 @@ export class ModalCourseComponent implements OnInit {
       .subscribe((response: GenericResponse) => {
         if (response.success) {
           const data = response.data as Usuario[];
-          this.resps = data.map((p: Usuario) => new CustomUsuario(p)).filter(c => c.id);
+          if (data.length > 0)
+            this.resps = data.map((p: Usuario) => new CustomUsuario(p)).filter(c => c.id);
         }
       });
   }

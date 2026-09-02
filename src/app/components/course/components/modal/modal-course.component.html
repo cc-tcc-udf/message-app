@@ -1,0 +1,104 @@
+<section class="flex justify-content-between flex-column gap-2" style="width: 30dvw; min-height: 10rem;">
+  <form class="flex flex-column gap-2" [formGroup]="form">
+    <div class="flex flex-column gap-2">
+      <label for="tipo">Tipo</label>
+      <p-dropdown id="tipo" [options]="tipoOptions" formControlName="isGroup" placeholder="Selecione o tipo"
+        optionLabel="label" optionValue="value">
+      </p-dropdown>
+    </div>
+    @if (form.controls['isGroup'].value !== null) {
+      <div>
+        @if (form.controls['isGroup'].value) {
+          <div class="flex flex-column gap-2">
+            <div formGroupName="resp" class="flex flex-column gap-2">
+              <label for="group">Responsável</label>
+              <p-dropdown appendTo="body" id="resp" [options]="resps" formControlName="id"
+                placeholder="Selecione um responsável" [showClear]="true" [filter]="true" filterBy="name"
+                optionLabel="name" optionValue="id">
+                <ng-template pTemplate="selectedItem">
+                  <div class="flex align-items-center gap-2">
+                    <div class="shadow-1 bg-cover bg-center bg-no-repeat border-circle"
+                      [style.background-image]="'url(' + getValueProf('img') + ')'" style="width: 1.5rem; height:1.5rem">
+                    </div>
+                    <p class="m-0">{{ getValueProf('name') }}</p>
+                  </div>
+                </ng-template>
+                <ng-template let-resp pTemplate="item">
+                  <div class="flex align-items-center gap-2">
+                    <div class="shadow-1 bg-cover bg-center bg-no-repeat w-2rem h-2rem border-circle"
+                    [style.background-image]="'url(' + resp.profilePhoto + ')'"></div>
+                    <p class="m-0">{{ resp.name }}</p>
+                  </div>
+                </ng-template>
+              </p-dropdown>
+            </div>
+            @if (form.get('resp.id')?.value) {
+              <div class="flex flex-column gap-2">
+                <label for="name">Nome</label>
+                <input pInputText id="name" aria-describedby="name-help" formControlName="name" />
+              </div>
+            }
+            @if (form.get('resp.id')?.value) {
+              <div class="flex flex-column gap-2">
+                <label for="abbreviation">Sigla</label>
+                <input pInputText id="abbreviation" aria-describedby="code-help" formControlName="abbreviation" />
+              </div>
+            }
+            @if (form.get('resp.id')?.value) {
+              <div class="flex flex-column gap-2">
+                <label for="description">Descrição</label>
+                <textarea id="description" rows="5" cols="30" formControlName="description" pInputTextarea></textarea>
+              </div>
+            }
+          </div>
+        }
+        @if (!form.controls['isGroup'].value) {
+          <div class="flex flex-column gap-2">
+            <div class="flex flex-column gap-2">
+              <label for="group">Grupo</label>
+              <p-dropdown appendTo="body" id="group" [options]="groups" formControlName="courseGroupId"
+                placeholder="Selecione um grupo" [editable]="true" optionLabel="name" optionValue="id" />
+              </div>
+              <!-- <div *ngIf="form.controls['isGroup']?.value" formGroupName="resp" class="flex flex-column gap-2">
+              <label for="group">Responsavel</label>
+              <p-dropdown appendTo="body" id="resp" [options]="resps" formControlName="id"
+                placeholder="Selecione um responsavel" [showClear]="true" [filter]="true" filterBy="name" optionLabel="name"
+                optionValue="id">
+                <ng-template pTemplate="selectedItem">
+                  <div class="flex align-items-center gap-2">
+                    <div class="shadow-1 bg-cover bg-center bg-no-repeat border-circle"
+                      [style.background-image]="'url(' + getValueProf('img') + ')'" style="width: 1.5rem; height:1.5rem">
+                    </div>
+                    <p class="m-0">{{ getValueProf('name') }}</p>
+                  </div>
+                </ng-template>
+                <ng-template let-resp pTemplate="item">
+                  <div class="flex align-items-center gap-2">
+                    <div class="shadow-1 bg-cover bg-center bg-no-repeat w-2rem h-2rem border-circle"
+                    [style.background-image]="'url(' + resp.profilePhoto + ')'"></div>
+                    <p class="m-0">{{ resp.name }}</p>
+                  </div>
+                </ng-template>
+              </p-dropdown>
+            </div> -->
+            <div class="flex flex-column gap-2">
+              <label for="name">Nome</label>
+              <input pInputText id="name" aria-describedby="name-help" formControlName="name" />
+            </div>
+            <div class="flex flex-column gap-2">
+              <label for="abbreviation">Sigla</label>
+              <input pInputText id="abbreviation" aria-describedby="code-help" formControlName="abbreviation" />
+            </div>
+            <div class="flex flex-column gap-2">
+              <label for="description">Descrição</label>
+              <textarea id="description" rows="5" cols="30" formControlName="description" pInputTextarea></textarea>
+            </div>
+          </div>
+        }
+      </div>
+    }
+  </form>
+  <div class="flex justify-content-end gap-2">
+    <p-button size="small" severity="success" label="Salvar" (onClick)="save()" />
+  </div>
+</section>

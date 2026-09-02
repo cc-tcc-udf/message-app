@@ -6,7 +6,7 @@ import { GenericResponse } from '@models/GenericResponse';
 import { RefreshToken } from '@models/RefreshToken';
 import { Roles_user } from '@models/Roles';
 import { UserResponse } from '@models/UserResponse';
-import { Usuario } from '@models/Usuario';
+import { Login, Usuario } from '@models/Usuario';
 import { AlertService } from '@utils/services/alert.service';
 import { BehaviorSubject, catchError, Observable, of, tap, throwError } from 'rxjs';
 
@@ -16,6 +16,8 @@ import { BehaviorSubject, catchError, Observable, of, tap, throwError } from 'rx
 export class AuthService {
   private userSubject = new BehaviorSubject<Usuario | null>(null);
   user$: Observable<Usuario | null> = this.userSubject.asObservable();
+  private authInitializedSubject = new BehaviorSubject<boolean>(false);
+  isAuthInitialized$ = this.authInitializedSubject.asObservable();
   private isUserInitialized = false;
   private attToken = false;
   constructor(
@@ -30,31 +32,40 @@ export class AuthService {
 
   private setSessionStorage(response: UserResponse): void {
     this.setToken(response.token);
-    sessionStorage.setItem('user_email', response.email);
+    if (typeof window !== 'undefined' && typeof window.sessionStorage !== 'undefined') {
+      sessionStorage.setItem('user_email', response.email);
+    }
   }
 
   setToken(token: string) {
-    sessionStorage.setItem('access_token', token);
+    if (typeof window !== 'undefined' && typeof window.sessionStorage !== 'undefined') {
+      sessionStorage.setItem('access_token', token);
+    }
   }
   setUserInSessionStorage(user: Usuario): void {
-    sessionStorage.setItem('user', JSON.stringify(user));
+    this.userSubject.next(user);
+    if (typeof window !== 'undefined' && typeof window.sessionStorage !== 'undefined') {
+      sessionStorage.setItem('user', JSON.stringify(user));
+    }
   }
 
   getUserFromSessionStorage(): Usuario | null {
-    const user = typeof window !== 'undefined' ? sessionStorage.getItem('user') : null;
+    const user = typeof window !== 'undefined' && typeof window.sessionStorage !== 'undefined' ? sessionStorage.getItem('user') : null;
     return user ? JSON.parse(user) as Usuario : null;
   }
 
   private clearSessionStorage(): void {
-    sessionStorage.clear();
+    if (typeof window !== 'undefined' && typeof window.sessionStorage !== 'undefined') {
+      sessionStorage.clear();
+    }
   }
 
   initUser(): void {
     if (this.isUserInitialized) return;
+
     const user = this.getUserFromSessionStorage();
     if (user) {
       this.userSubject.next(user);
-      this.isUserInitialized = true;
     } else {
       const userEmail = this.getUserEmail();
       const token = this.getAccessToken();
@@ -66,20 +77,24 @@ export class AuthService {
               this.userSubject.next(user);
               this.setUserInSessionStorage(user);
             }),
-            catchError(() => of(null))
+            catchError(() => {
+              this.userSubject.next(null);
+              return of(null);
+            })
           )
           .subscribe();
-
-        this.isUserInitialized = true;
       } else {
         this.userSubject.next(null);
-        this.isUserInitialized = true;
       }
     }
+    this.isUserInitialized = true;
+    this.authInitializedSubject.next(true);
   }
 
 
-  login(usr: Usuario): Observable<UserResponse> {
+
+  login(usr: Login): Observable<UserResponse> {
+    usr.isMobile = false;
     return this.http.post<UserResponse>(`${environment.API_URL}/public/auth/login`, usr)
       .pipe(
         tap(response => {
@@ -87,10 +102,13 @@ export class AuthService {
           this.getUser({ email: response.email, token: response.token })
             .pipe(
               tap(user => {
-                this.setUserInSessionStorage(user);
                 this.userSubject.next(user);
+                this.setUserInSessionStorage(user);
               }),
-              catchError(() => of(null))
+              catchError(() => {
+                this.userSubject.next(null);
+                return of(null);
+              })
             )
             .subscribe();
         }),
@@ -98,11 +116,12 @@ export class AuthService {
       );
   }
 
+
   logout(): void {
     this.clearSessionStorage();
-    this.router.navigate(['/auth/login']);
     this.userSubject.next(null);
     this.isUserInitialized = false;
+    this.router.navigate(['/auth/login']);
   }
 
   getUser(dados: UserResponse): Observable<Usuario> {
@@ -113,11 +132,12 @@ export class AuthService {
   }
 
   isTokenExpired(): boolean {
-    const token = sessionStorage.getItem('access_token');
-    if (!token) { return true };
+    const token = this.getAccessToken();
+    if (!token) { return true; }
 
     const payload = this.decodeToken(token);
-    const expirationDate = new Date(payload?.exp * 1000);
+    if (!payload?.exp) { return true; }
+    const expirationDate = new Date(payload.exp * 1000);
     return new Date() > expirationDate;
   }
 
@@ -134,12 +154,11 @@ export class AuthService {
         this.logout();
         return of(null);
       }
-      const url = `${environment.API_URL}/public/refreshToken?email=${encodeURIComponent(email)}`;
+      const url = `${environment.API_URL}/public/refreshToken?email=${encodeURIComponent(email)}&isMobile=false`;
       return this.http.get<RefreshToken>(url).pipe(
         tap((token: RefreshToken) => {
           if (token) {
             this.setToken(token.refreshToken);
-            this.alert.showMsg('success', 'Token', 'token atualizado com sucesso');
           }
           this.attToken = false;
         }),
@@ -217,6 +236,4 @@ export class AuthService {
     const user = this.getUserFromSessionStorage();
     return user?.roles.includes(role) ?? false;
   }
-
-
 }

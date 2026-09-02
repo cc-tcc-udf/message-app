@@ -1,6 +1,8 @@
 <p-toast></p-toast>
 <main class="w-full h-full">
-  <p-progressBar *ngIf="theme.loading$ | async" mode="indeterminate" [style]="{ height: '.25em'}" />
+  @if (theme.loading$ | async) {
+    <p-progressBar mode="indeterminate" [style]="{ height: '.25em'}" />
+  }
   <section class="content w-full h-full">
     <router-outlet></router-outlet>
   </section>

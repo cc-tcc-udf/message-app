@@ -2,9 +2,7 @@ import { Component, OnInit, ViewEncapsulation, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '@auth/auth.service';
-import { ToggleThemeComponent } from '@layout/components/toggle-theme.component';
-import { UserResponse } from '@models/UserResponse';
-import { Usuario } from '@models/Usuario';
+import { Login } from '@models/Usuario';
 import { AlertService } from '@utils/services/alert.service';
 import { ThemeService } from '@utils/services/theme.service';
 import { InputTextModule } from 'primeng/inputtext';
@@ -18,7 +16,6 @@ import { InputComponent } from "../../shared/input.component";
     ReactiveFormsModule,
     InputTextModule,
     PasswordModule,
-    ToggleThemeComponent,
     InputComponent
   ],
   templateUrl: './login.component.html',
@@ -31,7 +28,6 @@ export class LoginComponent implements OnInit {
   private auth = inject(AuthService);
   public theme = inject(ThemeService);
   public alert = inject(AlertService);
-
 
   form!: FormGroup;
 
@@ -50,36 +46,20 @@ export class LoginComponent implements OnInit {
   send() {
     this.theme.show();
     const usr = this.form.getRawValue();
-    this.auth.login(usr as Usuario)
+    this.auth.login(usr as Login)
       .subscribe({
-        next: (res: UserResponse) => {
-          sessionStorage.setItem('access_token', res.token);
-          sessionStorage.setItem('user_email', res.email);
-          this.getUser(res);
-        },
-        error: (error) => {
-          const summary = error.status >= 400 && error.status < 500 ? 'Não autorizado' : 'Erro';
-          const severity = this.alert.getSeverity(error.status);
-          this.alert.showMsg(severity, summary, error.error?.message);
-          this.theme.hide();
-        }
-      })
-  }
-
-  private getUser(usr: UserResponse) {
-    this.auth.getUser(usr)
-      .subscribe({
-        next: (user: Usuario) => {
-          this.alert.showMsg('success', 'Bem vindo', user.name);
+        next: () => {
           this.theme.hide();
           this.router.navigate(['']);
         },
         error: (error) => {
-          this.alert.showMsg(
-            'error',
-            "Erro ao recuperar usuário",
-            error.error?.message
-          );
+          console.error(error);
+          const summary = error.status >= 400 && error.status < 500 ? 'Ação não autorizada' : 'Erro inesperado';
+          const severity = this.alert.getSeverity(error.status);
+          const message = error.status === 0
+            ? 'Falha ao realizar login. Tente novamente mais tarde. Se o problema persistir, entre em contato com os administradores.'
+            : error.error?.message || 'Ocorreu um erro.';
+          this.alert.showMsg(severity, summary, message);
           this.theme.hide();
         }
       });

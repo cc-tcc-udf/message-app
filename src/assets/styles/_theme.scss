@@ -9,7 +9,7 @@
 
   .base_layout {
     .base_content {
-      padding: 1rem 0;
+      padding-bottom: 1rem
     }
   }
 
@@ -61,6 +61,19 @@
     @extend .default-transition;
   }
 
+  .card_custom {
+    padding: .5rem;
+    background: $background;
+    color: $txt;
+    border-radius: .5rem;
+
+    button {
+      height: 2rem !important;
+    }
+
+    @extend .default-transition;
+  }
+
   .card_default {
     background: $primary;
     border-radius: $border-radius;
@@ -75,6 +88,10 @@
 
   .default-radius {
     border-radius: $border-radius !important;
+  }
+
+  .last_msg {
+    box-shadow: $shadow;
   }
 
   i.default {
@@ -289,7 +306,8 @@
   .p-dropdown-panel .p-dropdown-items .p-dropdown-item:not(.p-highlight):not(.p-disabled).p-focus,
   .p-dropdown-panel .p-dropdown-items .p-dropdown-item.p-highlight.p-focus,
   .p-dropdown-panel .p-dropdown-header,
-  .p-menu .p-menuitem:not(.p-highlight):not(.p-disabled)>.p-menuitem-content:hover {
+  .p-menu .p-menuitem:not(.p-highlight):not(.p-disabled)>.p-menuitem-content:hover,
+  .p-panel .p-panel-header .p-panel-header-icon:enabled:hover {
     background: $primary;
     color: $txt;
   }
@@ -426,7 +444,8 @@
   }
 
   .p-tabview-panels {
-    height: 80dvh;
+    height: auto;
+    min-height: 80dvh;
   }
 
   .p-datatable .p-datatable-thead>tr>th,
@@ -452,19 +471,59 @@
     background-color: $skeleton;
   }
 
+  .p-button {
+    border: none;
+    outline: none;
+    box-shadow: none;
+  }
+
+  .p-panel .p-panel-header,
+  .p-panel .p-panel-footer {
+    border: none;
+    background: $primary;
+    color: $txt;
+  }
+
+  .p-panel .p-panel-content {
+    background: $background;
+    color: $txt;
+    border: 1px solid $primary;
+  }
+
+  .addLink {
+    .p-image-preview-container {
+      height: 100%;
+      max-width: 100%;
+
+      .p-image-preview-indicator {
+        border-radius: 5px;
+      }
+
+      img {
+        max-width: 100%;
+        height: 100%;
+        border-radius: 5px;
+      }
+
+      .p-image-preview {
+        max-height: 80dvh;
+      }
+    }
+  }
+
   .NAO_ENVIADO,
   .Inativo {
     background-color: var(--red-100) !important;
     color: var(--red-700) !important;
   }
 
-  .RECEBIDO,
+  .ENVIADO,
   .Ativo {
     background-color: var(--green-100) !important;
     color: var(--green-700) !important;
   }
 
-  .ENVIADO {
+  .RECEBIDO {
     background-color: var(--blue-100) !important;
     color: var(--blue-700) !important;
   }

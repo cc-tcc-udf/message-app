@@ -1,0 +1,41 @@
+<p-confirmDialog>
+  <ng-template pTemplate="message" let-message>
+    <div class="flex flex-column align-items-center w-full gap-3">
+      <i class="bi bi-exclamation-circle-fill text-5xl text-orange-500"></i>
+      <p class="w-22rem m-0">{{ message.message }}</p>
+    </div>
+  </ng-template>
+</p-confirmDialog>
+<div class="h-full w-full card_default">
+  <p-table [columns]="cols" [value]="msgs || []" [tableStyle]="{ 'min-width': '50rem' }">
+    <ng-template pTemplate="header" let-columns>
+      <tr>
+        @for (col of columns; track $index) {
+        <th>
+          {{ col.header }}
+        </th>
+        }
+        <th class="w-1"> Ações </th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-msg let-columns="columns">
+      <tr>
+        @for (td of columns; track $index) {
+        <td>
+          <span>
+            {{ msg[td.field] }}
+          </span>
+        </td>
+        }
+        <td class="flex gap-2">
+          <button pTooltip="Visualizar" class="view default add" (click)="view(msg)">
+            <i class="text-base font-semibold bi bi-eye"></i>
+          </button>
+          <button pTooltip="Desabilitar" class="del default add" (click)="remove(msg)">
+            <i class="text-base font-semibold pi pi-ban"></i>
+          </button>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>

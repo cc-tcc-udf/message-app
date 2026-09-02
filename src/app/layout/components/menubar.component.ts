@@ -1,4 +1,4 @@
-import { NgIf, NgStyle } from '@angular/common';
+import { NgStyle } from '@angular/common';
 import { ChangeDetectorRef, Component, ElementRef, inject, OnInit, signal, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -20,80 +20,93 @@ import { SkeletonModule } from 'primeng/skeleton';
   selector: 'app-menu-bar',
   standalone: true,
   imports: [
-    MenubarModule, AvatarModule,
-    DynamicDialogModule, MenuModule, DialogModule,
-    InputComponent, ReactiveFormsModule, NgStyle,
-    ProgressBarModule, NgIf, SkeletonModule
-  ],
+    MenubarModule,
+    AvatarModule,
+    DynamicDialogModule,
+    MenuModule,
+    DialogModule,
+    InputComponent,
+    ReactiveFormsModule,
+    NgStyle,
+    ProgressBarModule,
+    SkeletonModule
+],
   template: `
     @if(skeleton){
-      <div class="flex align-items-center gap-3">        
-        <p-skeleton width="6rem" height="1.75rem"/>
-        <p-skeleton width="6rem" height="1.75rem"/>
-        <p-skeleton width="6rem" height="1.75rem"/>
-        <p-skeleton shape="circle" size="2.5rem"/>        
+      <div class="flex align-items-center gap-3">
+        @for (i of [].constructor(4); track i) {
+          <p-skeleton width="6rem" height="1.75rem"/>
+        }
+        <p-skeleton shape="circle" size="2.5rem"/>
       </div>
     } @else {
-    <section class="w-full h-full flex-column justify-content-center align-items-center flex">
-      <p-menubar appendTo="body" [model]="items">
+      <section class="w-full h-full flex-column justify-content-center align-items-center flex">
+        <p-menubar appendTo="body" [model]="items">
           <ng-template pTemplate="end">
             <p-menu appendTo="body" #menu [model]="itemsPopup" [popup]="true" />
             <div (click)="menu.toggle($event)" (keydown.enter)="menu.toggle($event)"
-            class="flex cursor-pointer align-items-center ml-2 gap-2" tabindex="0" role="button"
-            aria-label="Menu de perfil">
-              <div class="shadow-1 bg-cover bg-center bg-no-repeat border-circle"
-              [style.background-image]="'url(' + user?.profilePhoto + ')'" style="width: 2.5rem; height:2.5rem">
+              class="cursor-pointer flex pictu align-items-center ml-2 gap-2" tabindex="0" role="button"
+              aria-label="Menu de perfil">
+              <div class="shadow-1 bg-cover bg-primary-50 bg-center bg-no-repeat border-circle"
+                [style.background-image]="'url(' + (user?.profilePhoto ?? 'assets/img/svg/photo.svg') + ')'"
+                style="width: 2.5rem; height: 2.5rem">
+              </div>
+              <i class="default bi bi-chevron-down"></i>
             </div>
-            <i class="default bi bi-chevron-down"></i>
-          </div>
-        </ng-template>
-      </p-menubar>
-      <p-dialog [modal]="true" [(visible)]="visible" [style]="{ width: '25rem' }">
-        <ng-template pTemplate="header">
-          <div class="inline-flex align-items-center justify-content-center gap-2">
-            <span class="font-bold white-space-nowrap">
-              {{user?.name}}
-            </span>
-          </div>
-        </ng-template>
-        <section class="w-full modal_usr flex align-items-center justify-content-center">
-          <input (change)="onFileChange($event)" hidden accept="image/*" type="file" #fileInput>
-          <section class="foto">
-            <section class="img h-7rem w-7rem" [ngStyle]="{'background-image': 'url(' + (imagePreview() || '') + ')', 
+          </ng-template>
+        </p-menubar>
+        @if (user) {
+          <p-dialog [modal]="true" [(visible)]="visible" [style]="{ width: '25rem' }">
+            <ng-template pTemplate="header">
+              <div class="inline-flex align-items-center justify-content-center gap-2">
+                <span class="font-bold white-space-nowrap">
+                  {{user.name}}
+                </span>
+              </div>
+            </ng-template>
+            <section class="w-full modal_usr flex align-items-center justify-content-center">
+              <input (change)="onFileChange($event)" hidden accept="image/*" type="file" #fileInput>
+              <section class="foto">
+            <section class="img h-7rem w-7rem" [ngStyle]="{'background-image': 'url(' + (imagePreview() || 'assets/img/svg/photo.svg') + ')', 
               'background-size': 'cover', 'background-position': 'center'}">
-                <section *ngIf="value === 0" 
-                  tabindex="0" 
-                  (click)="fileInput.click()" 
-                  (keydown.enter)="fileInput.click()" 
-                  (keydown.space)="fileInput.click()" 
-                  class="w-full hidden edit_photo justify-content-center align-items-center h-full">
-                  <i class="bi text-orange-500 text-xl bi-pencil"></i>
-                </section>
-              <section *ngIf="value > 0" class="w-full flex loading justify-content-center align-items-center h-full">
-                <section class="w-5rem">                  
-                  <p-progressBar [value]="value" />
+                  @if (value === 0) {
+                    <section
+                      tabindex="0"
+                      (click)="fileInput.click()"
+                      (keydown.enter)="fileInput.click()"
+                      (keydown.space)="fileInput.click()"
+                      class="w-full hidden edit_photo justify-content-center align-items-center h-full">
+                      <i class="bi text-orange-500 text-xl bi-pencil"></i>
+                    </section>
+                  }
+                  @if (value > 0) {
+                    <section class="w-full flex loading justify-content-center align-items-center h-full">
+                      <section class="w-5rem">
+                        <p-progressBar [value]="value" />
+                      </section>
+                    </section>
+                  }
                 </section>
               </section>
             </section>
-          </section>
-        </section>
-        <form [formGroup]="form">
-          <section class="w-full h-full flex flex-column gap-3">
-            <app-input label="Nome" formControlName="name" type="text" />
-            <app-input label="Email" formControlName="email" type="email" />
-            <app-input maxlength="15" mask="phone" label="Telefone" formControlName="phone" type="text" />
-          </section>
-        </form>
-        <ng-template pTemplate="footer">
-          <section class="flex justify-content-end">
-            <button (click)="saveProfile()" aria-label="salvar dados do usuario" class="add default">Salvar</button>
-          </section>
-        </ng-template>
-      </p-dialog>
-    </section>
+            <form [formGroup]="form">
+              <section class="w-full h-full flex flex-column gap-3">
+                <app-input label="Nome" formControlName="name" type="text" />
+                <app-input label="Email" formControlName="email" type="email" />
+                <app-input [maxlength]="15" mask="phone" label="Telefone" formControlName="phone" type="text" />
+              </section>
+            </form>
+            <ng-template pTemplate="footer">
+              <section class="flex justify-content-end">
+                <button (click)="saveProfile()" aria-label="salvar dados do usuario" class="add default">Salvar</button>
+              </section>
+            </ng-template>
+          </p-dialog>
+        }
+      </section>
     }
-
-  `,
+    
+    `,
   styles: [`
     .p-menubar {
       padding: 0.5rem;
@@ -106,7 +119,7 @@ import { SkeletonModule } from 'primeng/skeleton';
       width: max-content;
     }
   `],
-  providers: [AuthService, DialogService, FileService],
+  viewProviders: [AuthService, DialogService, FileService],
   encapsulation: ViewEncapsulation.None
 })
 export class MenuBarComponent implements OnInit {
@@ -118,8 +131,11 @@ export class MenuBarComponent implements OnInit {
   @ViewChild('fileInput') fileInput: ElementRef | undefined;
 
   ref: DynamicDialogRef | undefined;
-  items: MenuItem[] = this.setItems();
-  itemsPopup: MenuItem[] | undefined;
+  items: MenuItem[] = [];
+  itemsPopup: MenuItem[] = [
+    { label: 'Meu perfil', icon: 'bi bi-person-circle', command: () => this._toggleProfileDialog(true) },
+    { label: 'Sair', icon: 'bi bi-box-arrow-left', command: () => this.auth.logout() }
+  ];
   user: CustomUsuario | null = null;
 
   visible: boolean = false;
@@ -129,122 +145,103 @@ export class MenuBarComponent implements OnInit {
   skeleton = true;
 
   form: FormGroup = new FormGroup({
+    id: new FormControl<string | null>(null),
     email: new FormControl<string | null>(null),
     name: new FormControl<string | null>(null),
     phone: new FormControl<string | null>(null),
     profilePhoto: new FormControl<FileApp | null>(null)
-  })
+  });
 
   ngOnInit(): void {
-    this.setItems();
-    this.setItemsPopup();
-    this.loadUser();
+    this.auth.initUser();
+    this._loadUser();
   }
-  private loadUser() {
-    const usr = this.auth.getUserFromSessionStorage();
-    if (usr) {
-      this.form.patchValue(usr);
-      this.user = new CustomUsuario(usr);
-      if (this.user.profilePhoto) {
-        this.imagePreview.set(this.user.profilePhoto);
-      }
-      setTimeout(() => {
-        this.skeleton = false;
-        this.cf.detectChanges();
-      }, 1500)
-    }
+
+  private _loadUser() {
+    this.auth.user$
+      .subscribe((usr) => {
+        if (usr) {
+          const u = new CustomUsuario(usr);
+          this.user = u;
+          this.imagePreview.set(u.profilePhoto ?? '');
+          this.items = this._setItems();
+          this.form.patchValue(u);
+          setTimeout(() => {
+            this.skeleton = false;
+            this.cf.detectChanges();
+          }, 500)
+        }
+      })
   }
 
   async saveProfile() {
-    const form = this.form.getRawValue();
     if (this.form.valid) {
       if (this.selectedFile) {
-        this.value = 30;
-        await this.uploadFile(this.selectedFile, form);
+        await this._uploadFile(this.selectedFile);
       }
-
-      this.auth.updateUser(form).subscribe((u) => {
-        if (u.success) {
-          const usr = this.auth.getUserFromSessionStorage();
-          if (usr) {
-            const usrN = new Usuario(u.data as Usuario);
-            this.auth.setUserInSessionStorage(usrN);
-            this.value = 100;
+      this.auth.updateUser(this.form.getRawValue())
+        .subscribe((u) => {
+          if (u.success) {
+            this.auth.setUserInSessionStorage(new Usuario(u.data as Usuario));
+            this._loadUser();
+            this.alert.showMsg('success', 'Perfil', 'Dados atualizados com sucesso');
+            this._toggleProfileDialog(false);
           }
-          this.loadUser();
-          this.value = 0;
-          this.visible = false;
-          this.alert.showMsg('success', 'Perfil', 'dados atualizada com sucesso');
-        }
-      });
+        });
     }
   }
 
   onFileChange(event: Event): void {
-    const inputElement = event.target as HTMLInputElement;
-    const file = inputElement?.files?.[0] || null;
+    const file = (event.target as HTMLInputElement).files?.[0];
     if (file) {
       this.imagePreview.set(URL.createObjectURL(file));
       this.selectedFile = file;
     }
   }
 
-  async uploadFile(file: File | null, form: Usuario): Promise<void> {
-    this.value = 50;
-    return new Promise<void>((resolve, reject) => {
-      if (file && file.type.startsWith('image/')) {
-        this.value = 70;
-        this.fileService.createFile(file)
-          .subscribe({
-            next: (p: FileApp) => {
-              if (p) {
-                form.profilePhoto = p;
-                this.value = 80;
-                resolve();
-              }
-            },
-            error: (err) => {
-              this.alert.showMsg('error', 'Erro no upload', 'Ocorreu um erro ao enviar a imagem');
-              reject(err);
-            }
-          });
-      } else {
-        resolve();
-      }
-    });
-  }
-
-  private navigate(rota: string) {
-    this.router.navigate([rota]);
-    this.cf.detectChanges();
-  }
-
-  private setItems() {
-    const items: MenuItem[] = [
-      { label: 'Home', icon: 'bi bi-house', command: () => { this.navigate('home') } },
-    ];
-
-    if (this.auth.isProf() || this.auth.isAdmin()) {
-      items.push({ label: 'Mensagens', icon: 'bi bi-chat-square-text-fill', command: () => { this.navigate('/msg') } });
+  private async _uploadFile(file: File | null): Promise<void> {
+    if (file && file.type.startsWith('image/')) {
+      this.value = 70;
+      return new Promise<void>((resolve, reject) => {
+        this.fileService.createFile(file).subscribe({
+          next: (uploadedFile: FileApp) => {
+            this.form.patchValue({ profilePhoto: uploadedFile });
+            this.value = 100;
+            resolve();
+          },
+          error: () => {
+            this.alert.showMsg('error', 'Erro no upload', 'Ocorreu um erro ao enviar a imagem');
+            reject();
+          }
+        });
+      });
     }
+  }
 
+  private _toggleProfileDialog(show: boolean) {
+    this.visible = show;
+    this.value = 0;
+  }
+
+  private _setItems(): MenuItem[] {
+    const items: MenuItem[] = [
+      { label: 'Home', icon: 'bi bi-house', command: () => this._navigate('home') }
+    ];
+    if (this.auth.isProf() || this.auth.isAdmin()) items.push({ label: 'Mensagens', icon: 'bi bi-chat-square-text-fill', command: () => this._navigate('/msg') });
     if (this.auth.isAdmin()) {
       items.push({
         label: 'Configurações', icon: 'bi bi-sliders',
         items: [
-          { label: 'Cursos', icon: 'bi bi-collection', command: () => { this.navigate('/cursos') } },
-          { label: 'Usuarios', icon: 'bi bi-people-fill', command: () => { this.navigate('/users') } }
+          { label: 'Cursos', icon: 'bi bi-collection', command: () => this._navigate('/courses') },
+          { label: 'Usuarios', icon: 'bi bi-people-fill', command: () => this._navigate('/users') }
         ]
       });
     }
-
     return items;
   }
 
-  setItemsPopup() {
-    this.itemsPopup = [
-      { label: 'Meu perfil', icon: 'bi bi-person-circle', command: () => { this.visible = true; this.value = 0 } },
-      { label: 'Sair', icon: 'bi bi-box-arrow-left', command: () => { this.auth.logout() } }
-    ]
+  private _navigate(route: string) {
+    this.router.navigate([route]);
+    this.cf.detectChanges();
   }
 }

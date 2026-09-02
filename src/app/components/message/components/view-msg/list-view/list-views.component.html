@@ -1,0 +1,40 @@
+<div class="h-full w-full card_default shadow_default">
+  <p-table [columns]="cols" [value]="vws || []" [tableStyle]="{ 'min-width': '50rem' }">
+    <ng-template pTemplate="header" let-columns>
+      <tr>
+        @for (col of columns; track $index) {
+          <th>
+            {{ col.header }}
+          </th>
+        }
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-msg let-columns="columns">
+      <tr>
+        @for (td of columns; track $index) {
+          <td>
+            @if (!td.isDate && !td.isUser) {
+              <span
+                [ngClass]="{'tag docx_': td.isTag, 'course_tag': td.field === 'course'}">
+                {{ msg[td.field] }}
+              </span>
+            }
+            @if (td.isDate) {
+              <span>
+                {{ msg[td.field] | date:'dd/MM/yyyy - HH:mm' }}
+              </span>
+            }
+            @if (td.isUser) {
+              <span class="flex gap-2 align-items-center">
+                <div class="shadow-1 bg-cover bg-center bg-no-repeat border-circle"
+                  [style.background-image]="'url(' + getPicture(msg?.user) + ')'" style="width: 2.5rem; height:2.5rem">
+                </div>
+                <p class="m-0 font-semibold">{{ msg?.user?.name }}</p>
+              </span>
+            }
+          </td>
+        }
+      </tr>
+    </ng-template>
+  </p-table>
+</div>

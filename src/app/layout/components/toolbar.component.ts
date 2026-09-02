@@ -1,8 +1,9 @@
 import { DatePipe } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AuthService } from '@auth/auth.service';
 import { Usuario } from '@models/Usuario';
-import { Subscription } from 'rxjs';
+import { SkeletonModule } from 'primeng/skeleton';
 import { BreadcrumbComponent } from "./breadcrumb.component";
 import { MenuBarComponent } from "./menubar.component";
 import { ToggleThemeComponent } from './toggle-theme.component';
@@ -10,16 +11,36 @@ import { ToggleThemeComponent } from './toggle-theme.component';
 @Component({
   selector: 'app-toolbar',
   standalone: true,
-  imports: [ToggleThemeComponent, DatePipe, BreadcrumbComponent, MenuBarComponent],
+  imports: [
+    ToggleThemeComponent,
+    BreadcrumbComponent,
+    MenuBarComponent,
+    SkeletonModule
+],
   template: `
   <section class="flex flex-column">
     <section class="w-full h-3rem toolbar flex align-items-center justify-content-between">
-      <span class="flex font-light">Bem vindo! 
-        <p class="pl-1 font-bold">{{user$?.name}}</p>
+      <span class="flex align-items-center font-light">Bem vindo!
+        @if (skeleton) {
+          <p-skeleton class="ml-1" width="13rem"></p-skeleton>
+        }
+        @if (!skeleton) {
+          <p class="pl-1 font-bold">{{user$?.name}}</p>
+        }
       </span>
       <section class="flex align-items-center gap-2">
-        <p>{{ getDate() }}</p>
-        <app-toggle-theme></app-toggle-theme>
+        @if (!skeleton) {
+          <p>{{ getDate() }}</p>
+        }
+        @if (skeleton) {
+          <p-skeleton class="ml-1" width="10rem"></p-skeleton>
+        }
+        @if (skeleton) {
+          <p-skeleton class="ml-1" width="3rem" height="1.5rem"></p-skeleton>
+        }
+        @if (!skeleton) {
+          <app-toggle-theme></app-toggle-theme>
+        }
       </section>
     </section>
     <section class="flex gap-2 align-items-center h-3rem justify-content-between">
@@ -30,31 +51,35 @@ import { ToggleThemeComponent } from './toggle-theme.component';
   `,
   styles: [`
     .toolbar {
+      width: 100%;
+      height: 3rem;
+      display: flex;
+      justify-content: space-between;
       p {
         margin: 0;
       }
     }
   `]
 })
-export class ToolbarComponent implements OnInit, OnDestroy {
-  user$!: Usuario | null;
-  private userSubscription: Subscription | undefined;
+export class ToolbarComponent implements OnInit {
+  private datePipe = inject(DatePipe);
+  private auth = inject(AuthService);
+  private cr = inject(ChangeDetectorRef);
+  private destroyRef = inject(DestroyRef);
 
-  constructor(
-    private datePipe: DatePipe,
-    private auth: AuthService
-  ) { }
+  user$!: Usuario | null;
+  skeleton = true;
 
   ngOnInit() {
-    this.userSubscription = this.auth.user$.subscribe(user => {
-      this.user$ = user;
-    });
-  }
-
-  ngOnDestroy() {
-    if (this.userSubscription) {
-      this.userSubscription.unsubscribe();
-    }
+    this.auth.user$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(user => {
+        this.user$ = user;
+      });
+    setTimeout(() => {
+      this.skeleton = false;
+      this.cr.detectChanges();
+    }, 500);
   }
 
   getDate() {

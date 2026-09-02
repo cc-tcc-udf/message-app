@@ -1,3 +1,107 @@
-<section class="flex w-full h-full justify-content-center align-content-center gap-1">
-  <app-list-home />
+<section class="flex w-full gap-3 justify-content-between pt-3 h-full">
+  <section class="flex gap-3 flex-column list_home_i">
+    <section class="flex justify-content-between">
+      @if (courses.length > 0 && !skeleton.courses) {
+        <div class="flex flex-column gap-2">
+          <label for="group">Curso</label>
+          <p-dropdown [showClear]="true" [editable]="true" appendTo="body" id="course" [options]="courses"
+            placeholder="Selecione um curso para filtrar" optionLabel="name" optionValue="id"
+            (onChange)="getByCourse($event.value)" [(ngModel)]="selectedCourseId">
+          </p-dropdown>
+          <small id="username-help">
+            Ultimas mensagens enviadas
+          </small>
+        </div>
+      }
+      @if (skeleton.courses) {
+        <div class="flex w-3 flex-column gap-2">
+          <p-skeleton width="85%"></p-skeleton>
+          <p-skeleton height="2.5rem"></p-skeleton>
+          <p-skeleton width="70%"></p-skeleton>
+        </div>
+      }
+      @if (!skeleton.all && messages.length > 0) {
+        <div class="flex h-auto align-items-center gap-2">
+          <app-new-button icon="bi-plus" navigateTo="msg/msg-manage" />
+          <app-new-button icon="bi-eye" buttonText="Ver mais" navigateTo="msg" />
+        </div>
+      }
+      @if (skeleton.all) {
+        <div class="flex h-auto align-items-center gap-2">
+          <p-skeleton height="2.5rem" width="6rem"></p-skeleton>
+          <p-skeleton height="2.5rem" width="5.5rem"></p-skeleton>
+        </div>
+      }
+    </section>
+    @if (skeleton.messages) {
+      <app-list-skeleton [col]="cols" [qtd]="cols.length" />
+    }
+    @if (!skeleton.messages && messages.length > 0) {
+      <app-list-home [msgs]="messages"></app-list-home>
+    }
+    @if (!skeleton.messages && messages.length <= 0) {
+      <section
+        class="w-full h-full shadow-none last_msg gap-3 flex flex-column justify-content-center align-items-center">
+        <img class="h-10rem lg:h-15rem xl:h-20rem" src="assets/img/svg/home_no_msg.svg" alt="Nenhuma mensagem enviada">
+        <span class="text-xl lg:text-3xl xl:text-5xl font-bold">Nenhuma mensagem enviada ainda!</span>
+        <span class="text-normal lg:text-xl xl:text-2xl text-center">
+          Use o botão abaixo para criar e gerenciar suas mensagens agora mesmo.
+        </span>
+        <app-new-button iconPosition="left" icon="bi-chat-square-text-fill" buttonText="Mensagens" navigateTo="msg" />
+      </section>
+    }
+  </section>
+  @if (!skeleton.messages && message) {
+    <section class="w-auto h-full pictu">
+      <section class="flex align-items-center px-1 py-2 justify-content-between">
+        <span class="font-light">Ultima mensagem enviada</span>
+        @if (message.sendDate) {
+          <span class="card_default">{{message.sendDate }}</span>
+        }
+      </section>
+      <div class="last_msg p-3 justify-content-between flex w-30rem flex-column gap-2 card_default">
+        <section class="flex flex-column gap-2">
+          <section class="flex justify-content-between">
+            <span><b>Titulo:</b>{{message.title}}</span>
+            <button class="view px-2 py-1 default add" (click)="view(message.id)">
+              <i class="text-base font-semibold bi bi-eye"></i>
+            </button>
+          </section>
+          <div>
+            <strong>Mensagem:</strong>
+            <div class="overflow-auto msg__" [innerHTML]="message.message"></div>
+          </div>
+        </section>
+        <section class="text-right">
+          <img class="h-9rem" alt="imagem" src="assets/img/svg/home.svg" />
+        </section>
+      </div>
+    </section>
+  }
+  @if (skeleton.messages) {
+    <section class="w-auto pictu h-full">
+      <section class="flex p-1 justify-content-between">
+        <p-skeleton width="15rem"></p-skeleton>
+        <p-skeleton width="10rem"></p-skeleton>
+      </section>
+      <div class="last_msg p-3 justify-content-between flex w-30rem flex-column gap-2 card_default">
+        <section class="flex flex-column gap-2">
+          <section class="flex align-items-center justify-content-between">
+            <p-skeleton width="15rem"></p-skeleton>
+            <p-skeleton height="2rem" width="2rem"></p-skeleton>
+          </section>
+          <div class="w-full flex flex-column gap-3 py-2">
+            @for (j of [].constructor(5); track j) {
+              <p-skeleton></p-skeleton>
+            }
+            <p-skeleton width="80%"></p-skeleton>
+            <p-skeleton width="50%"></p-skeleton>
+          </div>
+        </section>
+        <section class="text-right">
+          <img class="h-9rem" alt="imagem" src="assets/img/svg/home.svg" />
+        </section>
+      </div>
+    </section>
+  }
 </section>

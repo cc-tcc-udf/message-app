@@ -1,8 +1,8 @@
 export class Links {
-  id!: number;
+  id!: string;
   title!: string;
   link!: string;
-  id_msg?: number;
+  id_msg?: string;
 
 
   constructor(link: Links) {

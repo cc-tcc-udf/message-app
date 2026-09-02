@@ -1,4 +1,4 @@
-import { NgClass, NgIf } from "@angular/common";
+import { NgClass } from "@angular/common";
 import { Component, inject, Input, Type } from "@angular/core";
 import { Params, Router } from "@angular/router";
 import { DialogService, DynamicDialogRef } from "primeng/dynamicdialog";
@@ -7,20 +7,27 @@ import { DialogService, DynamicDialogRef } from "primeng/dynamicdialog";
   selector: 'app-new-button',
   standalone: true,
   styleUrl: './shared.scss',
-  imports: [NgIf, NgClass],
-  providers: [DialogService],
+  imports: [NgClass],
+  viewProviders: [DialogService],
   template: `
     <section class="flex justify-content-end">
-        <button
-          aria-label="button-action"
-          class="add default"
-          (click)="handleClick()"
+      <button
+        aria-label="button-action"
+        class="add default h-auto"
+        (click)="handleClick()"
         >
-          <i *ngIf="icon" class="text-xl font-semibold bi pr-1" [ngClass]="icon"></i>
+        <span class="flex align-items-center">
+          @if (icon && iconPosition === 'right') {
+            <i class="text-xl font-semibold bi pr-1" [ngClass]="icon"></i>
+          }
           {{ buttonText }}
-        </button>
-      </section>
-  `
+          @if (icon && iconPosition === 'left') {
+            <i class="text-xl font-semibold bi pl-1" [ngClass]="icon"></i>
+          }
+        </span>
+      </button>
+    </section>
+    `
 })
 export class NewButtonComponent {
   @Input() buttonText: string = 'Novo';
@@ -29,6 +36,7 @@ export class NewButtonComponent {
   @Input() paramsRota?: Params;
   @Input() modalComponent?: Type<unknown>;
   @Input() modalTitle?: string;
+  @Input() iconPosition?: 'left' | 'right' = 'right';
   @Input() modalData?: unknown;
   @Input() onModalClose?: (result: unknown) => void;
   private dialog = inject(DialogService);

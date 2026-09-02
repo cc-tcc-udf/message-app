@@ -1,7 +1,9 @@
-import { NgClass, NgFor, NgStyle } from '@angular/common';
+import { NgClass, NgStyle } from '@angular/common';
 import { ChangeDetectorRef, Component, inject, OnInit, ViewEncapsulation } from '@angular/core';
 import { GenericResponse } from '@models/GenericResponse';
+import { Roles_user } from '@models/Roles';
 import { CustomUsuario, Usuario } from '@models/Usuario';
+import { ThemeService } from '@utils/services/theme.service';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { ScrollPanelModule } from 'primeng/scrollpanel';
 import { ModalUserComponent } from './components/modal/modal-user.component';
@@ -11,18 +13,20 @@ import { UsersService } from './users.service';
   selector: 'app-users',
   standalone: true,
   imports: [
-    ScrollPanelModule, NgFor,
-    NgStyle, NgClass
-  ],
+    ScrollPanelModule,
+    NgStyle,
+    NgClass
+],
   templateUrl: './users.component.html',
   styleUrl: './users.component.scss',
-  providers: [DialogService],
+  viewProviders: [DialogService],
   encapsulation: ViewEncapsulation.None
 })
 export class UsersComponent implements OnInit {
   private service = inject(UsersService);
   private dialog = inject(DialogService);
   private cr = inject(ChangeDetectorRef);
+  private theme = inject(ThemeService);
 
   ref: DynamicDialogRef | undefined;
   users: CustomUsuario[] = [];
@@ -31,11 +35,26 @@ export class UsersComponent implements OnInit {
     this.service.getUsers()
       .subscribe((usrs: GenericResponse) => {
         if (usrs.success) {
-          this.users = (usrs.data as Usuario[])
-            .map(user => new CustomUsuario(user));
-          this.cr.detectChanges();
+          this.loadUsers(usrs.data as Usuario[]);
         }
       });
+  }
+
+  async loadUsers(users: Usuario[]): Promise<void> {
+    try {
+      const userPromises = users.map(async (usr) => {
+        const user = new CustomUsuario(usr);
+        if (user.profilePhoto) {
+          user.color = await this.theme.extractCor(user.profilePhoto);
+        }
+        return user;
+      });
+      this.users = await Promise.all(userPromises);
+      this.cr.detectChanges();
+      console.log(this.users);
+    } catch (error) {
+      console.error('Erro ao carregar usuários:', error);
+    }
   }
 
   openModal(user?: CustomUsuario) {
@@ -62,5 +81,18 @@ export class UsersComponent implements OnInit {
         this.users.push(new CustomUsuario(result));
       }
     });
+  }
+
+  getRoler(u: Roles_user) {
+    switch (u) {
+      case Roles_user.ADMIN:
+        return 'Administrador';
+      case Roles_user.USER:
+        return 'Usuário';
+      case Roles_user.PROF:
+        return 'Coordenador';
+      default:
+        return 'Usuário';
+    }
   }
 }

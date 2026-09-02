@@ -1,4 +1,4 @@
-import { NgIf, NgStyle } from '@angular/common';
+import { NgStyle } from '@angular/common';
 import { Component, EventEmitter, Output, signal } from '@angular/core';
 import { ProgressBarModule } from 'primeng/progressbar';
 
@@ -8,31 +8,39 @@ import { ProgressBarModule } from 'primeng/progressbar';
     <section class="w-full modal_usr flex align-items-center justify-content-center">
       <input (change)="onFileChange($event)" hidden accept="image/*" type="file" [id]="fileId">
       <section class="foto">
-        <section class="img h-7rem w-7rem" 
+        <section class="img h-7rem w-7rem"
                  [ngStyle]="{
                    'background-image': 'url(' + (imagePreview() || '') + ')', 
                    'background-size': 'cover', 
                    'background-position': 'center'
                  }">
-          <section *ngIf="value === 0" tabindex="0" 
-                   (click)="clickInput()" 
-                   (keydown.enter)="clickInput()" 
-                   (keydown.space)="clickInput()"
-                   class="w-full hidden edit_photo justify-content-center align-items-center h-full">
-            <i *ngIf="imagePreview()" class="bi text-orange-500 text-xl bi-pencil"></i>
-            <i *ngIf="!imagePreview()" class="bi text-xl bi-person-bounding-box"></i>
-          </section>
-          <section *ngIf="value > 0" class="w-full flex loading justify-content-center align-items-center h-full">
-            <section class="w-5rem">
-              <p-progressBar [value]="value"></p-progressBar>
+          @if (value === 0) {
+            <section tabindex="0"
+              (click)="clickInput()"
+              (keydown.enter)="clickInput()"
+              (keydown.space)="clickInput()"
+              class="w-full hidden edit_photo justify-content-center align-items-center h-full">
+              @if (imagePreview()) {
+                <i class="bi text-orange-500 text-xl bi-pencil"></i>
+              }
+              @if (!imagePreview()) {
+                <i class="bi text-xl bi-person-bounding-box"></i>
+              }
             </section>
-          </section>
+          }
+          @if (value > 0) {
+            <section class="w-full flex loading justify-content-center align-items-center h-full">
+              <section class="w-5rem">
+                <p-progressBar [value]="value"></p-progressBar>
+              </section>
+            </section>
+          }
         </section>
       </section>
     </section>
-  `,
+    `,
   standalone: true,
-  imports: [NgStyle, NgIf, ProgressBarModule],
+  imports: [NgStyle, ProgressBarModule],
 })
 export class ImageUploaderComponent {
   fileId: string = `input-${Math.random().toString(36).substring(2)}`;

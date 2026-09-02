@@ -13,14 +13,22 @@ export class CourseService {
   constructor(private http: HttpClient) { }
 
   getAllCourses(isGroup: boolean) {
-    return this.http.get<GenericResponse>(`${this.api}/public/course/list?isGroup=${encodeURIComponent(isGroup)}`);
+    return this.http.get<GenericResponse>(`${this.api}/private/course/list?isGroup=${encodeURIComponent(isGroup)}`);
   }
 
   getGroups() {
-    return this.http.get<GenericResponse>(`${this.api}/public/course/groups`);
+    return this.http.get<GenericResponse>(`${this.api}/private/course/groups`);
   }
 
   create(obj: Course) {
-    return this.http.post<GenericResponse>(`${this.api}/public/course/create`, obj);
+    return this.http.post<GenericResponse>(`${this.api}/private/course/create`, obj);
+  }
+
+  getByResp(id: string) {
+    return this.http.get<GenericResponse>(`${this.api}/private/course/listByResp/${id}`);
+  }
+
+  getById(id: string) {
+    return this.http.get<GenericResponse>(`${this.api}/private/course/${id}`);
   }
 }

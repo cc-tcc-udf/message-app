@@ -1,0 +1,108 @@
+<p-confirmDialog>
+  <ng-template pTemplate="message" let-message>
+    <div class="flex flex-column align-items-center w-full gap-3">
+      <i class="bi bi-exclamation-circle-fill text-5xl text-orange-500"></i>
+      <p class="w-22rem m-0">{{ message.message }}</p>
+    </div>
+  </ng-template>
+</p-confirmDialog>
+<p-table #tbMsg [paginator]="true" [rows]="8" [columns]="cols" [value]="value" [lazy]="true" (onLazyLoad)="load($event)"
+  [totalRecords]="totalRecords" [loading]="loading" [tableStyle]="{ 'min-width': '50rem' }"
+  [globalFilterFields]="getFields()">
+  <!-- Cabeçalho -->
+  <ng-template pTemplate="caption">
+    <section class="flex gap-2 justify-content-end">
+      <app-new-button icon="bi-plus" navigateTo="msg/msg-manage"></app-new-button>
+      <app-input icon="bi bi-search" iconPosition="left" #searchInput type="text" placeholder="Buscar mensagem"
+        (input)="tbMsg?.filterGlobal(searchInput.value, 'contains')" />
+      </section>
+    </ng-template>
+    <!-- Header das colunas -->
+    <ng-template pTemplate="header" let-columns>
+      @if (value && value.length > 0) {
+        <tr>
+          @for (col of columns; track col) {
+            <th [pSortableColumn]="col.field">
+              {{ col.header }}
+              <p-sortIcon [field]="col.field"></p-sortIcon>
+            </th>
+          }
+          <th> Ações </th>
+        </tr>
+      }
+    </ng-template>
+    <!-- Corpo da Tabela -->
+    <ng-template pTemplate="body" let-msg let-columns="columns">
+      <tr>
+        @for (td of columns; track td) {
+          <td>
+            @if (!td.isTag && !td.isDate) {
+              <p class="m-0 font-semibold">
+                {{ msg[td.field] }}
+                @if (msg.status === 'REMOVIDA' && td.field === 'title') {
+                  <span style="border-radius: .25rem;" class="del px-1 bg-red-100 text-red-700"
+                  >removida</span>
+                }
+              </p>
+            }
+            @if (td.isDate) {
+              <span [ngClass]="getClassTag(msg)">
+                {{ getTxt(msg, td.isDate) }}
+              </span>
+            }
+            @if (td.isTag && !td.isDate && !td.isStatus) {
+              <span class="course_tag" [ngClass]="{'tag': td.isTag}">
+                {{ getCourse(msg[td.field]) }}
+              </span>
+            }
+            @if (td.isStatus) {
+              <span class="tag" [ngClass]="msg[td.field]">
+                {{getStatus( msg[td.field]) }}
+              </span>
+            }
+          </td>
+        }
+        <td>
+          <section class="flex gap-2">
+            <button pTooltip="Visualizar" aria-label="Visualizar" class="view default add" (click)="view(msg)">
+              <i class="text-base font-semibold bi bi-eye"></i>
+            </button>
+            <button pTooltip="Editar" aria-label="Editar" class="edit default add" (click)="edit(msg)">
+              <i class="text-base font-semibold bi bi-pencil"></i>
+            </button>
+            @if (msg.courses.length > 0 && !msg.sendDate) {
+              <button pTooltip="Enviar" [disabled]="skeleton.send"
+                aria-label="Enviar" class="send default add" (click)="send(msg)">
+                @if (!skeleton.send) {
+                  <i class="text-base font-semibold bi bi-send"></i>
+                }
+                @if (skeleton.send) {
+                  <i class="pi pi-spin pi-spinner"></i>
+                }
+              </button>
+            }
+            @if (msg.status === 'ENVIADO') {
+              <button pTooltip="Desabilitar" class="del default add" (click)="remove(msg)">
+                <i class="text-base font-semibold pi pi-ban"></i>
+              </button>
+            }
+          </section>
+        </td>
+      </tr>
+    </ng-template>
+    <!-- caso não tenha mensagens -->
+    <ng-template pTemplate="emptymessage">
+    <section class="w-full h-full shadow-none last_msg gap-3 
+        flex flex-column justify-content-center align-items-center" aria-label="Seção de mensagens vazias">
+        <img src="assets/img/svg/no_msg.svg" alt="Ilustração indicando que não há mensagens disponíveis" />
+        <div class="text-center">
+          <span class="text-5xl font-bold">Ops! Nenhuma mensagem encontrada.</span>
+          <p class="text-2xl mt-2">
+            Clique no botão '<strong>Novo</strong>' para começar e criar uma nova mensagem.
+          </p>
+        </div>
+        <app-new-button icon="bi-plus" navigateTo="msg/msg-manage"
+        aria-label="Botão para criar uma nova mensagem"></app-new-button>
+      </section>
+    </ng-template>
+  </p-table>

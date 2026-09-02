@@ -3,6 +3,7 @@
 @import '@theme';
 @import '@sharedStyle';
 @import "../node_modules/quill/dist/quill.core.css";
+@import "primeicons/primeicons.css";
 @import "../node_modules/quill/dist/quill.snow.css";
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
 
@@ -54,8 +55,74 @@ body {
       $dark_txt_color,
       $dark_box_shadow);
   }
+
+  .pdf {
+    color: var(--red-500) !important;
+  }
+
+  .doc,
+  .docx {
+    color: var(--blue-500) !important;
+  }
+
+  .xls,
+  .xlsx,
+  .csv {
+    color: var(--green-500) !important;
+  }
+
+  .file_ {
+    color: var(--gray-500) !important;
+  }
+
+  /////////////////////////////
+  .pdf_ {
+    color: var(--red-500) !important;
+    background: var(--red-200) !important;
+  }
+
+  .doc_,
+  .docx_ {
+    color: var(--blue-500) !important;
+    background: var(--blue-200) !important;
+  }
+
+  .xls_,
+  .xlsx_,
+  .csv_ {
+    color: var(--green-500) !important;
+    background: var(--green-200) !important;
+  }
+
+  .file__ {
+    color: var(--gray-500) !important;
+  }
+
+  .course_tag {
+    color: var(--bluegray-500) !important;
+    background: var(--bluegray-200) !important;
+  }
+
+
+  button:disabled {
+    background-color: #cccccc !important;
+    color: #666666 !important;
+    cursor: default !important;
+    opacity: 0.6 !important;
+
+    i.pi-spin {
+      opacity: 1 !important;
+    }
+  }
+
 }
 
 ::-webkit-scrollbar {
   display: none;
+}
+
+@media screen and (max-width: 960px) {
+  .pictu {
+    display: none !important;
+  }
 }

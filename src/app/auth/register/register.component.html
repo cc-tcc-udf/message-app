@@ -9,7 +9,7 @@
         <section class="inputs">
           <app-input [control]="getControl('email')" label="Email" formControlName="email" type="email" />
           <app-input [control]="getControl('name')" label="Nome completo" formControlName="name" type="text" />
-          <app-input maxlength="15" mask="phone" [control]="getControl('phone')" label="Telefone"
+          <app-input [maxlength]="15" mask="phone" [control]="getControl('phone')" label="Telefone"
             formControlName="phone" type="text" />
           <app-input [control]="getControl('password')" type="password" label="Senha" formControlName="password" />
         </section>
@@ -20,8 +20,8 @@
           (keydown.enter)="navigate('auth/login')">Entre aqui!</a>
       </p>
       <section class="btn">
-        <button class="add cursor-pointer theme" style="background: #1c2837;" (click)="send()" tabindex="0"
-          (keydown.enter)="send()" aria-label="realizar o login">
+        <button class="add cursor-pointer theme" (click)="send()" tabindex="0" (keydown.enter)="send()"
+          aria-label="realizar o login">
           Criar conta
         </button>
       </section>

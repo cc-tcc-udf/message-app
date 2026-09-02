@@ -1,104 +1,133 @@
 <section class="w-full h-full config-courses flex flex-column gap-2">
   <section class="w-full flex p-1 justify-content-end align-content-center">
-    <button aria-label="adicionar curso" class="add default" (click)="newCourse()">
-      <i class="text-xl font-semibold bi bi-plus"></i>
-      Novo
-    </button>
+    @if (!loading) {
+      <button aria-label="adicionar curso" class="add default" (click)="newCourse()">
+        <i class="text-xl font-semibold bi bi-plus"></i>
+        Novo
+      </button>
+    }
+    @if (loading) {
+      <p-skeleton height="2.5rem" width="5.5rem"></p-skeleton>
+    }
   </section>
-  <section class="w-full" *ngIf="!loading">
-    <p-table [value]="courses" dataKey="name">
-      <ng-template pTemplate="header">
-        <tr>
-          <th style="width: 3rem"></th>
-          @for (th of cols; track $index) {
-          <th>
-            {{th.header}}
-          </th>
-          }
-        </tr>
-      </ng-template>
-      <ng-template pTemplate="body" let-list let-expanded="expanded">
-        <tr>
-          <td>
-            <button aria-label="expandir lista de subcursos" class="cursor-pointer theme"
-              [disabled]="list.isGroup && list.courses?.length <= 0">
-              <i [hidden]="list.courses?.length <= 0" class="bi" [pRowToggler]="list"
+  @if (!loading) {
+    <section class="w-full">
+      <p-table [value]="courses" dataKey="name">
+        <ng-template pTemplate="header">
+          <tr>
+            <th style="width: 3rem"></th>
+            @for (th of cols; track $index) {
+              <th>
+                {{th.header}}
+              </th>
+            }
+            <th class="w-1">
+              Ações
+            </th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-list let-expanded="expanded">
+          <tr>
+            <td>
+              <button aria-label="expandir lista de subcursos" class="cursor-pointer theme"
+                [disabled]="list.isGroup && list.courses?.length <= 0">
+                <i [hidden]="list.courses?.length <= 0" class="bi" [pRowToggler]="list"
                 [ngClass]="expanded ? 'bi-chevron-down' : 'bi-chevron-right'"></i>
-            </button>
-          </td>
-          @for (td of cols; track $index) {
-          <td>
-            <span *ngIf="!td.isAction && td.field !== 'qtdCursos' && !td.isImg"
-              [ngClass]="{'tag' : td.isTag, 'bolTrue': td.isBoolean && list[td.field], 'bolFalse': td.isBoolean && !list[td.field] }">
-              {{list[td.field]}}
-            </span>
-            <span *ngIf="!td.isAction && td.field === 'qtdCursos' && list.isGroup && !td.isImg"
-              [ngClass]="{'tag' : td.isTag, 'bolTrue': td.isBoolean && list[td.field], 'bolFalse': td.isBoolean && !list[td.field] }">
-              {{list.courses ? list.courses.length : 0}}
-            </span>
-            <span *ngIf="td.isImg && list.resp" class="flex gap-2 align-items-center">
-              <div class="shadow-1 bg-cover bg-center bg-no-repeat border-circle"
-                [style.background-image]="'url(' + list.resp.profilePhoto + ')'" style="width: 2.5rem; height:2.5rem">
+              </button>
+            </td>
+            @for (td of cols; track $index) {
+              <td>
+                <!-- Exibir valor simples, exceto para qtdCursos e imagens -->
+                @if (!td.isAction && !td.isImg) {
+                  @if (td.field !== 'qtdCursos') {
+<span [ngClass]="{'tag': td.isTag, 'bolTrue': td.isBoolean && list[td.field], 
+                          'bolFalse': td.isBoolean && !list[td.field], 'course_tag': td.header === 'Sigla'}">
+                      {{ list[td.field]?.length > 150 ? (list[td.field] | slice:0:150) + '...' : list[td.field] }}
+                    </span>
+                  }
+                  <!-- Exibir contagem de cursos se for grupo -->
+                  @if (td.field === 'qtdCursos' && list.isGroup) {
+                    <span
+                      [ngClass]="{'tag': td.isTag, 'bolTrue': td.isBoolean && list[td.field], 'bolFalse': td.isBoolean && !list[td.field]}">
+                      {{ list.courses ? list.courses.length : 0 }}
+                    </span>
+                  }
+                }
+                <!-- Exibir imagem e nome se for uma imagem e tiver responsavel -->
+                @if (td.isImg && list.resp) {
+                  <span class="flex gap-2 align-items-center">
+                    <div class="shadow-1 bg-cover bg-center bg-no-repeat border-circle"
+                      [style.background-image]="'url(' + list.resp.profilePhoto + ')'" style="width: 2.5rem; height:2.5rem">
+                    </div>
+                    <p class="m-0 font-semibold">{{ list.resp.name }}</p>
+                  </span>
+                }
+              </td>
+            }
+            <td class="w-1">
+              <section class="flex gap-2">
+                <button pTooltip="Visualizar" aria-label="Visualizar" class="view default add" (click)="view(list)">
+                  <i class="text-base font-semibold bi bi-eye"></i>
+                </button>
+                <button aria-label="alterar curso" class="add edit default" (click)="newCourse(list)">
+                  <i class="text-base font-semibold bi bi-pencil"></i>
+                </button>
+              </section>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="rowexpansion" let-list>
+          <tr>
+            <td colspan="7">
+              <div class="card_default">
+                <p-table [value]="list.courses">
+                  <ng-template pTemplate="header">
+                    <tr>
+                      @for (th of colsSub; track $index) {
+                        <th>
+                          {{th.header}}
+                        </th>
+                      }
+                      <th class="w-1">
+                        Ações
+                      </th>
+                    </tr>
+                  </ng-template>
+                  <ng-template pTemplate="body" let-course>
+                    <tr>
+                      @for (td of colsSub; track $index) {
+                        <td>
+                          <span [ngClass]="{'tag' : td.isTag, 'bolFalse': td.isBoolean }">
+                            {{ course[td.field]?.length > 150 ? (course[td.field] | slice:0:150) + '...' : course[td.field] }}
+                          </span>
+                        </td>
+                      }
+                      <td class="w-1">
+                        <section class="flex gap-2">
+                          <button pTooltip="Visualizar" aria-label="Visualizar" class="view default add" (click)="view(course)">
+                            <i class="text-base font-semibold bi bi-eye"></i>
+                          </button>
+                          <button aria-label="editar curso" class="add edit default" (click)="newCourse(course)">
+                            <i class="text-base font-semibold bi bi-pencil"></i>
+                          </button>
+                          <button aria-label="excluir curso" class="add del default" (click)="newCourse()">
+                            <i class="text-base font-semibold bi bi-trash"></i>
+                          </button>
+                        </section>
+                      </td>
+                    </tr>
+                  </ng-template>
+                </p-table>
               </div>
-              <p class="m-0 font-semibold">{{list.resp.name}} </p>
-            </span>
-          </td>
-          }
-          <td class="w-1">
-            <section class="flex gap-1">
-              <button aria-label="alterar curso" class="add edit default" (click)="newCourse(list)">
-                <i class="text-base font-semibold bi bi-pencil"></i>
-              </button>
-              <button aria-label="excluir curso" class="add del default" (click)="newCourse()">
-                <i class="text-base font-semibold bi bi-trash"></i>
-              </button>
-            </section>
-          </td>
-        </tr>
-      </ng-template>
-      <ng-template pTemplate="rowexpansion" let-list>
-        <tr>
-          <td colspan="7">
-            <div class="card_default">
-              <p-table [value]="list.courses">
-                <ng-template pTemplate="header">
-        <tr>
-          @for (th of colsSub; track $index) {
-          <th>
-            {{th.header}}
-          </th>
-          }
-        </tr>
-      </ng-template>
-      <ng-template pTemplate="body" let-list>
-        <tr>
-          @for (td of colsSub; track $index) {
-          <td>
-            <span [ngClass]="{'tag' : td.isTag, 'bolFalse': td.isBoolean }">
-              {{list[td.field]}}
-            </span>
-          </td>
-          }
-          <td class="w-1">
-            <section class="flex gap-1">
-              <button aria-label="editar curso" class="add edit default" (click)="newCourse(list)">
-                <i class="text-base font-semibold bi bi-pencil"></i>
-              </button>
-              <button aria-label="excluir curso" class="add del default" (click)="newCourse()">
-                <i class="text-base font-semibold bi bi-trash"></i>
-              </button>
-            </section>
-          </td>
-        </tr>
-      </ng-template>
-    </p-table>
-    </div>
-    </td>
-    </tr>
-    </ng-template>
-    </p-table>
-  </section>
-  <section *ngIf="loading" class="flex w-full justify-content-between align-content-center">
-    <p class="font-bold text-6xl">Loading...</p>
-  </section>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </section>
+  }
+  @if (loading) {
+    <section class="w-full">
+      <app-list-skeleton [col]="cols" [qtd]="cols.length" [qtdValues]="8" />
+    </section>
+  }
 </section>

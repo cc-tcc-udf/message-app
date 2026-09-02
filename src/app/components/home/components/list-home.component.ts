@@ -1,35 +1,67 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, inject, Input } from "@angular/core";
+import { Router } from "@angular/router";
+import { MessageService } from "@components/message/message.service";
+import { CustomMessage, getColumnsMsg } from "@models/Message";
+import { Column } from "@models/primeng";
+import { AlertService } from "@utils/services/alert.service";
+import { ConfirmationService } from "primeng/api";
+import { ConfirmDialogModule } from "primeng/confirmdialog";
 import { TableModule } from "primeng/table";
+import { TooltipModule } from "primeng/tooltip";
 
 @Component({
   selector: 'app-list-home',
   standalone: true,
-  imports: [TableModule],
-  template: `
-  <div class="flex h-full h-full align-items-center">
-    <p class="font-bold text-6xl">Em construção</p>
-    </div>
-  `,
+  imports: [
+    TableModule,
+    TooltipModule,
+    ConfirmDialogModule
+  ],
+  templateUrl: './list-home.component.html',
   styles: [``]
 })
-export class HomeListComponent implements OnInit {
+export class HomeListComponent {
+  @Input() msgs: CustomMessage[] | null = [];
+  cols: Column[] = getColumnsMsg();
+  private router = inject(Router);
+  constructor(
+    private confirm: ConfirmationService,
+    private alert: AlertService,
+    private service: MessageService
+  ) { }
 
-  products!: unknown[];
+  view(msg: CustomMessage): void {
+    this.router.navigate(['msg', 'msg-view'], { queryParams: { id: msg.id, rota: 'home' } });
+  }
 
-  ngOnInit(): void {
-    this.products = [
-      {
-        id: '1000',
-        code: 'f230fh0g3',
-        name: 'Bamboo Watch',
-        description: 'Product Description',
-        image: 'bamboo-watch.jpg',
-        price: 65,
-        category: 'Accessories',
-        quantity: 24,
-        inventoryStatus: 'INSTOCK',
-        rating: 5
+  disable(msg: CustomMessage): void {
+    this.service.remove(msg.id).subscribe((resp) => {
+      if (resp.success && this.msgs) {
+        const index = this.msgs.findIndex((p) => p.id === msg.id);
+        if (index !== -1) {
+          this.msgs.splice(index, 1);
+        }
+        this.alert.showMsg('success', 'Message', 'Messagem desabilitado com sucesso!');
+      } else {
+        this.alert.showMsg('error', 'Message', 'Erro ao desabilitado a messagem!');
+      }
+    });
+  }
+
+  remove(msg: CustomMessage) {
+    this.confirm.confirm({
+      header: 'Desativar mensagem',
+      message: 'Ao continuar, a mensagem será desativada e inacessível ao aluno. Esta ação é irreversível. ',
+      acceptButtonStyleClass: "p-button-danger p-button-text",
+      rejectButtonStyleClass: "p-button-text p-button-text",
+      acceptIcon: "none",
+      rejectIcon: "none",
+      rejectLabel: "Não",
+      acceptLabel: "Sim",
+
+      accept: () => {
+        this.disable(msg);
       },
-    ];
+    });
   }
 }

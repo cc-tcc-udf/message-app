@@ -1,4 +1,3 @@
-import { NgIf } from '@angular/common';
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { InputComponent } from '@shared/input.component';
@@ -15,10 +14,8 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
   imports: [
     ReactiveFormsModule, InputTextModule,
     InputTextareaModule, ButtonModule,
-    CheckboxModule, DropdownModule,
-    NgIf, InputComponent
+    CheckboxModule, DropdownModule, InputComponent
   ],
-  providers: [],
   template: `
   <section class="flex flex-column gap-2" style="width: 30dvw;">
   <form class="flex flex-column gap-2" [formGroup]="form">
@@ -36,7 +33,7 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
 export class ModalLinksComponent implements OnInit {
 
   form: FormGroup = new FormGroup({
-    id: new FormControl<number | null>(null),
+    id: new FormControl<string | null>(null),
     title: new FormControl<string | null>(null, [Validators.required]),
     link: new FormControl<string | null>(null, [Validators.required]),
   })

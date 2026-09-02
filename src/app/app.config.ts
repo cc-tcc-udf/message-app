@@ -5,10 +5,10 @@ import { DatePipe, registerLocaleData } from '@angular/common';
 import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
 import localePt from '@angular/common/locales/pt';
 import { provideClientHydration } from '@angular/platform-browser';
-import { provideAnimations } from '@angular/platform-browser/animations';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { HttpInterceptor } from '@utils/http.interceptor';
 import { ThemeService } from '@utils/services/theme.service';
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { routes } from './app.routes';
 
 registerLocaleData(localePt, 'pt');
@@ -17,11 +17,12 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
     provideClientHydration(),
-    provideAnimations(),
+    provideAnimationsAsync(),
     provideHttpClient(withFetch(), withInterceptors([HttpInterceptor])),
     { provide: LOCALE_ID, useValue: 'pt' },
     ThemeService,
     DatePipe,
-    MessageService
+    MessageService,
+    ConfirmationService
   ]
 };
