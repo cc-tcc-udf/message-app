@@ -12,24 +12,22 @@
    - Coordenadores podem criar e gerenciar grupos de cursos.
    - Discentes podem se inscrever em grupos relevantes.
 
-## Componentes
+## 🔗 Ecossistema do Projeto (Arquitetura Fullstack)
 
-### 1. API
-A API do **Campus Connect** é responsável por processar solicitações, autenticar usuários e fornecer acesso aos dados. Ela oferece endpoints para:
-   - Autenticação de coordenadores e discentes.
-   - Envio de mensagens e notificações.
-   - Gerenciamento de grupos.
+O **Campus Connect** é composto por 3 camadas integradas:
 
-### 2. Interface Web
-A interface web é acessada por coordenadores e discentes por meio de um navegador. Ela oferece as seguintes funcionalidades:
-   - Painel de controle para coordenadores gerenciarem grupos e enviar mensagens.
-   - Visualização de mensagens e notificações para discentes.
-   - Perfis personalizados para discentes.
+1. 💻 **Interface Web (Este Repositório):** Desenvolvida em Angular e TypeScript para gestão administrativa de coordenadores e acesso web de discentes.
+2. ⚙️ **Backend & Mensageria:** **[Campus Connect API (Java 21, Spring Boot, PostgreSQL, Docker, FCM)](https://github.com/cc-tcc-udf/message-api)** — Processa autenticação JWT, regras de negócio e despacho de push notifications.
+3. 📱 **Aplicativo Móvel:** **[Campus Connect Mobile (Flutter / Dart)](https://github.com/cc-tcc-udf/message-mobile)** — Aplicativo multiplataforma para recebimento de notificações push em tempo real.
 
-### 3. Aplicativo Móvel
-O aplicativo móvel **Campus Connect** será disponibilizado para dispositivos iOS e Android. Ele permite que discentes recebam notificações em tempo real e acessem suas mensagens. Funcionalidades incluem:
-   - Recebimento de notificações push.
-   - Navegação fácil entre mensagens.
+---
+
+## 🛠️ Tecnologias da Interface Web
+
+- **Framework:** Angular
+- **Linguagem:** TypeScript
+- **Estilização:** CSS / PrimeNG
+- **Comunicação:** Integração RESTful com a API Java Spring Boot
 
 ## Configuração
 
